@@ -1,0 +1,36 @@
+---
+title: "Notes"
+output: workflowr::wflow_html
+---
+
+## Reading Notes
+
+- MIRAGE is motivated by sparse rare-variant effects within genes.
+- Burden tests can lose power when many included variants are neutral.
+- Functional annotations are useful but imperfect, so MIRAGE uses them as priors rather than hard filters.
+- Empirical Bayes estimation borrows information across all genes to estimate category-level risk-variant proportions.
+- The method uses summary counts, which improves portability and avoids individual-level genotype sharing.
+
+## Implementation Questions
+
+- How much runtime is spent in numerical integration for variant BFs?
+- How many variant count patterns are duplicated in typical rare-variant input?
+- Does fixing `delta` improve stability for weak-signal datasets?
+- Which annotation grouping gives the most stable ranking across sensitivity analyses?
+- How should LD pruning be documented and validated before running MIRAGE?
+
+## Reproducibility Log
+
+```{r}
+log_entry <- data.frame(
+  date = as.character(Sys.Date()),
+  item = "Initialized workflowr website for MIRAGE project",
+  data_policy = "Toy examples and public notes only"
+)
+
+log_entry
+```
+
+## Data Policy
+
+Do not commit real WES, ASD, dbGaP, SPARK, protected, private, or large data files. This repository should use toy examples, synthetic examples, public documentation, and summary notes only.

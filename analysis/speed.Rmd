@@ -1,0 +1,77 @@
+---
+title: "Runtime And Optimization"
+output: workflowr::wflow_html
+---
+
+## Runtime Bottlenecks
+
+The main computational cost in MIRAGE is expected to come from variant-level Bayes factor calculation. In the R implementation, each variant calls a numerical integration routine to integrate over the relative-risk prior. For large rare-variant tables, this dominates runtime before the EM algorithm even begins.
+
+The second cost is repeated R-level nested looping over genes and variants during gene BF calculation, posterior expectation updates, and category aggregation.
+
+## Profiling Plan
+
+1. Time the variant BF calculation separately from the EM loop.
+2. Count duplicated `(case_count, control_count, category, gamma, sigma)` combinations.
+3. Profile with `Rprof()` or `profvis` on toy data first, then on sanitized summary-only benchmark data.
+4. Record wall time, memory use, number of variants, number of genes, number of categories, and EM iterations.
+5. Re-run the same benchmark after each optimization.
+
+## Variant BF Caching
+
+Variant BF values depend only on counts, sample sizes, and category-specific hyperparameters. Many rare variants share the same count pattern, especially singletons. A cache keyed by:
+
+```text
+No.case, No.contr, n1, n2, gamma, sigma
+```
+
+can avoid repeated numerical integration.
+
+## Log-Scale Computation
+
+The gene BF is a product across variants:
+
+```text
+B_i = product_j [(1 - eta_cij) + eta_cij * B_ij]
+```
+
+For speed and numerical stability, compute:
+
+```text
+log_B_i = sum_j log1p(eta_cij * (B_ij - 1))
+```
+
+Then exponentiate only when needed for reporting. This reduces overflow risk for genes with many variants or very large variant BFs.
+
+## Vectorized Gene Aggregation
+
+Instead of looping over genes and then variants, store all variants in a flat table with integer gene and category IDs. Per-variant log contributions can be computed vector-wise and aggregated by gene with grouped sums.
+
+Candidate tools:
+
+- base R `rowsum()`
+- `data.table`
+- `dplyr`
+- `collapse`
+- Rcpp for compiled aggregation
+
+## Parallelization
+
+Variant BF calculations are independent, so the initial BF pass can be parallelized across CPU cores.
+
+Possible approaches:
+
+- `parallel::mclapply()` on Unix-like systems.
+- `parallel::parLapply()` on Windows.
+- `future.apply::future_lapply()` for cross-platform execution.
+- RcppParallel if the integration kernel is moved to compiled code.
+
+## Validation
+
+Every speed improvement should be checked against the baseline implementation:
+
+- Same top-ranked genes.
+- Similar Bayes factors within numerical tolerance.
+- Similar posterior probabilities.
+- Same or near-identical `eta` and `delta` estimates.
+- No changes in conclusions caused only by floating-point reordering.

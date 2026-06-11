@@ -1,0 +1,21 @@
+name: "Mirage"
+output_dir: ../docs
+navbar:
+  title: "Mirage"
+  left:
+  - text: Home
+    href: index.html
+  - text: Method
+    href: method.html
+  - text: Speed
+    href: speed.html
+  - text: Examples
+    href: examples.html
+  - text: Notes
+    href: notes.html
+output:
+  workflowr::wflow_html:
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate

@@ -1,0 +1,24 @@
+---
+title: "MIRAGE Project"
+site: workflowr::wflow_site
+output: workflowr::wflow_html
+---
+
+## Project Overview
+
+This website is a reproducible research workspace for studying MIRAGE, a Bayesian method for gene-level rare-variant association analysis. It records method notes, implementation questions, toy examples, and speed optimization ideas in a versioned workflowr site.
+
+The site is intentionally limited to public notes and fake toy examples. It should not contain real WES, ASD, dbGaP, SPARK, protected, private, or large study data.
+
+## Paper Summary
+
+MIRAGE, short for mixture-model-based rare-variant analysis on genes, analyzes variant-level summary counts from population-matched case-control studies or transmitted/untransmitted family data. Instead of collapsing every rare variant in a gene into a single burden, MIRAGE treats variants as a mixture of risk and non-risk variants.
+
+The key idea is that true risk variants are sparse, even inside risk genes. Functional annotations, such as loss-of-function or predicted damaging missense categories, inform the prior probability that a variant is a risk variant. MIRAGE estimates these prior probabilities across all genes using empirical Bayes, then reports gene-level Bayes factors, posterior probabilities, and Bayesian FDR.
+
+## Website Contents
+
+- [Method](method.html): model notation, latent variables, EM algorithm, Bayes factor, posterior probability, and Bayesian FDR.
+- [Speed](speed.html): bottlenecks, profiling plan, caching, log-scale computation, vectorization, and parallelization.
+- [Examples](examples.html): fake toy input and a small example workflow.
+- [Notes](notes.html): reading notes, open implementation questions, and reproducibility log.

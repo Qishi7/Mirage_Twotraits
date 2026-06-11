@@ -1,0 +1,94 @@
+---
+title: "MIRAGE Method"
+output: workflowr::wflow_html
+---
+
+## Model Goal
+
+MIRAGE tests whether a gene is associated with disease risk using rare-variant summary counts. It is designed for data where population structure has already been handled, for example by ancestry-matched case-control sampling or transmitted/untransmitted family counts.
+
+## Notation
+
+For gene `i` and variant `j`:
+
+- `X_ij`: allele count in cases.
+- `X0_ij`: allele count in controls.
+- `T_ij = X_ij + X0_ij`: total allele count.
+- `N1`: number of cases.
+- `N0`: number of controls.
+- `c_ij`: annotation category for the variant.
+- `delta`: prior probability that a gene is a risk gene.
+- `eta_c`: prior probability that a variant in category `c` is a risk variant, conditional on its gene being a risk gene.
+
+## Latent Variables
+
+The gene-level latent variable is:
+
+```text
+U_i = 1 if gene i is a risk gene, otherwise 0
+```
+
+The variant-level latent variable is:
+
+```text
+Z_ij = 1 if variant j in gene i is a risk variant, otherwise 0
+```
+
+The hierarchical prior is:
+
+```text
+U_i ~ Bernoulli(delta)
+
+If U_i = 0: Z_ij = 0 for all variants in gene i
+If U_i = 1: Z_ij ~ Bernoulli(eta_cij)
+```
+
+## Count Likelihood
+
+Under the non-risk model, the expected allele frequency is the same in cases and controls. Under the risk model, the case allele frequency is increased by a relative-risk multiplier. MIRAGE integrates over the relative-risk prior to obtain a variant-level Bayes factor:
+
+```text
+B_ij = P(X_ij | T_ij, Z_ij = 1) / P(X_ij | T_ij, Z_ij = 0)
+```
+
+The nuisance allele frequency is removed by conditioning on the total count `T_ij`, which yields a binomial likelihood.
+
+## Gene Bayes Factor
+
+Given category-specific `eta_c`, MIRAGE combines variant-level evidence into a gene-level Bayes factor:
+
+```text
+B_i = product_j [(1 - eta_cij) + eta_cij * B_ij]
+```
+
+This form allows a small number of high-evidence variants to drive the result while still allowing many modest signals to accumulate.
+
+## Posterior Probability
+
+The posterior probability that gene `i` is a risk gene is:
+
+```text
+PP_i = delta * B_i / (1 - delta + delta * B_i)
+```
+
+Unlike a p-value, `PP_i` has a direct probability interpretation under the fitted prior.
+
+## EM Algorithm
+
+MIRAGE estimates `delta` and `eta_c` with an empirical Bayes EM algorithm.
+
+1. Compute and store variant-level Bayes factors `B_ij`.
+2. Initialize `delta` and each `eta_c`.
+3. E step: compute posterior expectations for `U_i` and `U_i * Z_ij`.
+4. M step: update `delta` and `eta_c` using closed-form averages.
+5. Repeat until parameter changes are below the convergence tolerance.
+
+## Bayesian FDR
+
+After calculating posterior probabilities for all genes, genes can be ranked by `PP_i`. Bayesian FDR can be estimated from posterior error probabilities:
+
+```text
+posterior error probability = 1 - PP_i
+```
+
+For a selected gene set, the Bayesian FDR is the average posterior error probability across selected genes. This provides a natural multiple-testing control rule for posterior-probability thresholds.

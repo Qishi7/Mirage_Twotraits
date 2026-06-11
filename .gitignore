@@ -1,0 +1,26 @@
+Rlib/
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.log
+*.tmp
+*.bak
+
+# Keep protected or large study data out of the website repository.
+data/
+*.vcf
+*.vcf.gz
+*.bcf
+*.bam
+*.cram
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bed
+*.bim
+*.fam
+*.pgen
+*.pvar
+*.psam
