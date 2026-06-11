@@ -3,75 +3,131 @@ title: "Runtime And Optimization"
 output: workflowr::wflow_html
 ---
 
-## Runtime Bottlenecks
+## Purpose
 
-The main computational cost in MIRAGE is expected to come from variant-level Bayes factor calculation. In the R implementation, each variant calls a numerical integration routine to integrate over the relative-risk prior. For large rare-variant tables, this dominates runtime before the EM algorithm even begins.
+This page records practical ideas for improving MIRAGE runtime while preserving the statistical output. The goal is not to change the model first, but to make the existing likelihood and EM calculations faster, more stable, and easier to profile.
 
-The second cost is repeated R-level nested looping over genes and variants during gene BF calculation, posterior expectation updates, and category aggregation.
+## Bottleneck Table
 
-## Profiling Plan
+```{r, echo=FALSE}
+runtime_plan <- data.frame(
+  Bottleneck = c(
+    "Variant-level BF numerical integration",
+    "Repeated count patterns",
+    "Gene-level product computation",
+    "R-level nested loops",
+    "Repeated grouped operations",
+    "EM convergence checks",
+    "Parallelization across variants or genes",
+    "Compiled implementation using Rcpp or RcppParallel"
+  ),
+  Reason = c(
+    "Each variant can require an independent numerical integral over the relative-risk prior.",
+    "Ultra-rare variants often share identical case/control count patterns.",
+    "Direct products can overflow and are recomputed repeatedly.",
+    "Loops over genes and variants add interpreter overhead for large tables.",
+    "Category and gene summaries are recalculated in multiple places.",
+    "Stopping rules may ignore some moving parameters or run longer than necessary.",
+    "Many calculations are independent, especially initial variant BF evaluation.",
+    "The integration kernel and grouped aggregation are good candidates for compiled code."
+  ),
+  Proposed.improvement = c(
+    "Profile and optimize the integration routine; consider lookup tables or compiled quadrature.",
+    "Cache BF values keyed by counts, sample sizes, and hyperparameters.",
+    "Use log-scale sums with log1p rather than direct products.",
+    "Represent variants in a flat table and use vectorized operations.",
+    "Precompute integer gene/category IDs and reuse grouped indices.",
+    "Check both eta and delta changes; record iteration counts.",
+    "Use future.apply, parallel, or RcppParallel after reproducibility checks.",
+    "Move the hottest BF and aggregation code paths to compiled implementations."
+  ),
+  Expected.benefit = c(
+    "Potentially large speedup if integration dominates runtime.",
+    "Large speedup when many variants have repeated rare count patterns.",
+    "Improved numerical stability and faster aggregation.",
+    "Lower R interpreter overhead and clearer profiling.",
+    "Less repeated work inside each EM iteration.",
+    "Fewer unnecessary iterations and better diagnostics.",
+    "Wall-clock reduction on multicore machines.",
+    "Best long-term speedup for large production analyses."
+  ),
+  Validation.check = c(
+    "Compare variant BFs against baseline within numerical tolerance.",
+    "Confirm cached and uncached BF values are identical for sampled keys.",
+    "Compare gene BF and PP against direct-product baseline.",
+    "Compare eta, delta, BF, PP, and gene ranking.",
+    "Unit-test grouped summaries on toy data.",
+    "Confirm convergence decisions match or improve baseline diagnostics.",
+    "Run deterministic tests with fixed seeds and stable ordering.",
+    "Regression-test output against the R reference implementation."
+  ),
+  Priority = c("High", "High", "High", "High", "Medium", "Medium", "Medium", "Long term"),
+  check.names = FALSE
+)
 
-1. Time the variant BF calculation separately from the EM loop.
-2. Count duplicated `(case_count, control_count, category, gamma, sigma)` combinations.
-3. Profile with `Rprof()` or `profvis` on toy data first, then on sanitized summary-only benchmark data.
-4. Record wall time, memory use, number of variants, number of genes, number of categories, and EM iterations.
-5. Re-run the same benchmark after each optimization.
+knitr::kable(runtime_plan)
+```
+
+## Practical Profiling Plan
+
+1. Run `Rprof()` or `profvis` on a small, synthetic benchmark so no private data are touched.
+2. Time the variant BF step separately from the EM loop.
+3. Count duplicated count patterns such as `(No.case, No.contr, category, gamma, sigma)`.
+4. Compare three implementations: current baseline, cached BF version, and cached plus vectorized version.
+5. Validate gene BF, posterior probability, `eta` estimates, `delta` estimates, and gene ranking.
+6. Repeat on increasingly large synthetic inputs before testing any access-controlled summary statistics.
 
 ## Variant BF Caching
 
-Variant BF values depend only on counts, sample sizes, and category-specific hyperparameters. Many rare variants share the same count pattern, especially singletons. A cache keyed by:
+Variant BF values depend only on the allele counts, sample sizes, and hyperparameters. A cache key can be defined as:
 
-```text
-No.case, No.contr, n1, n2, gamma, sigma
-```
+\[
+\left(X_{ij}, X^{(0)}_{ij}, N_1, N_0, \bar{\gamma}_{c_{ij}}, \sigma_{c_{ij}}\right).
+\]
 
-can avoid repeated numerical integration.
+For rare variants, many rows may share the same key. Caching should be implemented before parallelization, because it can reduce the total number of expensive integration calls.
 
-## Log-Scale Computation
+## Log-Scale Gene Aggregation
 
-The gene BF is a product across variants:
+The model defines the gene BF as
 
-```text
-B_i = product_j [(1 - eta_cij) + eta_cij * B_ij]
-```
+\[
+B_i
+=
+\prod_j
+\left[
+(1-\eta_{c_{ij}}) + \eta_{c_{ij}}B_{ij}
+\right].
+\]
 
-For speed and numerical stability, compute:
+For computation, use
 
-```text
-log_B_i = sum_j log1p(eta_cij * (B_ij - 1))
-```
+\[
+\log B_i
+=
+\sum_j
+\log\left[
+(1-\eta_{c_{ij}}) + \eta_{c_{ij}}B_{ij}
+\right],
+\]
 
-Then exponentiate only when needed for reporting. This reduces overflow risk for genes with many variants or very large variant BFs.
+or equivalently
 
-## Vectorized Gene Aggregation
+\[
+\log B_i
+=
+\sum_j
+\log\left(1 + \eta_{c_{ij}}(B_{ij}-1)\right).
+\]
 
-Instead of looping over genes and then variants, store all variants in a flat table with integer gene and category IDs. Per-variant log contributions can be computed vector-wise and aggregated by gene with grouped sums.
+This avoids overflow and makes grouped summation by gene straightforward.
 
-Candidate tools:
+## Validation Principles
 
-- base R `rowsum()`
-- `data.table`
-- `dplyr`
-- `collapse`
-- Rcpp for compiled aggregation
+Speed changes should be treated as numerical refactors. They should not change conclusions except for negligible floating-point differences. Each optimized version should report:
 
-## Parallelization
-
-Variant BF calculations are independent, so the initial BF pass can be parallelized across CPU cores.
-
-Possible approaches:
-
-- `parallel::mclapply()` on Unix-like systems.
-- `parallel::parLapply()` on Windows.
-- `future.apply::future_lapply()` for cross-platform execution.
-- RcppParallel if the integration kernel is moved to compiled code.
-
-## Validation
-
-Every speed improvement should be checked against the baseline implementation:
-
-- Same top-ranked genes.
-- Similar Bayes factors within numerical tolerance.
-- Similar posterior probabilities.
-- Same or near-identical `eta` and `delta` estimates.
-- No changes in conclusions caused only by floating-point reordering.
+- Maximum absolute and relative difference in gene BF.
+- Maximum absolute difference in posterior probability.
+- Difference in final `eta` and `delta`.
+- Rank correlation of genes by posterior probability.
+- Any genes whose threshold status changes at planned reporting cutoffs.

@@ -6,19 +6,25 @@ output: workflowr::wflow_html
 
 ## Project Overview
 
-This website is a reproducible research workspace for studying MIRAGE, a Bayesian method for gene-level rare-variant association analysis. It records method notes, implementation questions, toy examples, and speed optimization ideas in a versioned workflowr site.
+This workflowr website organizes technical notes for the MIRAGE project: a Bayesian framework for gene-level rare-variant association analysis using variant-level summary counts and functional annotations.
 
-The site is intentionally limited to public notes and fake toy examples. It should not contain real WES, ASD, dbGaP, SPARK, protected, private, or large study data.
+The goal of the site is to keep the project reproducible as it develops. It records the statistical model, implementation questions, toy examples, runtime-improvement plans, and a lightweight project log. The site is built from R Markdown source files in `analysis/` and rendered into `docs/` for GitHub Pages.
 
-## Paper Summary
+## What MIRAGE Does
 
-MIRAGE, short for mixture-model-based rare-variant analysis on genes, analyzes variant-level summary counts from population-matched case-control studies or transmitted/untransmitted family data. Instead of collapsing every rare variant in a gene into a single burden, MIRAGE treats variants as a mixture of risk and non-risk variants.
+MIRAGE, short for mixture-model-based rare-variant analysis on genes, is designed for settings where rare-variant counts are available from ancestry-matched case-control studies or transmitted/untransmitted family data. At a high level, MIRAGE treats variants in a gene as a mixture of risk and non-risk variants rather than assuming every included rare variant contributes equally.
 
-The key idea is that true risk variants are sparse, even inside risk genes. Functional annotations, such as loss-of-function or predicted damaging missense categories, inform the prior probability that a variant is a risk variant. MIRAGE estimates these prior probabilities across all genes using empirical Bayes, then reports gene-level Bayes factors, posterior probabilities, and Bayesian FDR.
+Functional annotation categories, such as loss-of-function or predicted damaging missense groups, are used to define prior probabilities that a variant is a risk variant. These probabilities are estimated across genes with an empirical Bayes strategy. The resulting output includes gene-level Bayes factors, posterior probabilities, and Bayesian FDR summaries.
+
+The language on this website is intentionally cautious: MIRAGE can improve power in settings where sparse, heterogeneous rare-variant effects are plausible, but its validity still depends on study design, input quality, annotation choices, and careful control of population structure.
 
 ## Website Contents
 
-- [Method](method.html): model notation, latent variables, EM algorithm, Bayes factor, posterior probability, and Bayesian FDR.
-- [Speed](speed.html): bottlenecks, profiling plan, caching, log-scale computation, vectorization, and parallelization.
-- [Examples](examples.html): fake toy input and a small example workflow.
-- [Notes](notes.html): reading notes, open implementation questions, and reproducibility log.
+- [Method](method.html): notation, generative model, conditional likelihood, EM algorithm, gene-level Bayes factor, posterior probability, Bayesian FDR, and model limitations.
+- [Speed](speed.html): runtime bottlenecks, optimization priorities, profiling plan, caching strategy, log-scale computation, vectorized aggregation, and parallelization.
+- [Examples](examples.html): fake toy input table, optional local MIRAGE run, expected output objects, and interpretation notes.
+- [Notes](notes.html): project log, remaining implementation questions, profiling next steps, data-access-dependent example planning, and reproducibility checklist.
+
+## Data Privacy Statement
+
+This repository and website must not include real WES, ASD, dbGaP, SPARK, protected, private, or large data files. The example page uses toy data only. Real summary statistics, individual-level data, protected annotations, and large intermediate outputs should remain outside the GitHub repository unless data access, consent, and sharing rules explicitly allow public release.

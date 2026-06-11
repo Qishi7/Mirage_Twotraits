@@ -3,42 +3,88 @@ title: "Toy MIRAGE Examples"
 output: workflowr::wflow_html
 ---
 
-## Toy Input Format
+## Data Policy
 
-MIRAGE expects one row per rare variant. The table below uses fake toy data only.
+This page uses fake toy data only. It does not use real WES, ASD, dbGaP, SPARK, protected, private, or large data.
+
+## Expected Input Columns
+
+For gene-level MIRAGE analysis, a toy input table should contain one row per rare variant:
+
+- `ID`: variant identifier.
+- `Gene`: gene name or gene identifier.
+- `No.case`: allele count in cases.
+- `No.contr`: allele count in controls.
+- `category`: annotation group index.
 
 ```{r}
 toy_variants <- data.frame(
-  ID = paste0("var", 1:10),
-  Gene = c("GENE1", "GENE1", "GENE1", "GENE2", "GENE2",
-           "GENE3", "GENE3", "GENE4", "GENE4", "GENE4"),
-  No.case = c(3, 1, 0, 4, 2, 0, 1, 5, 1, 0),
-  No.contr = c(0, 1, 2, 1, 2, 1, 1, 0, 2, 1),
-  category = c(1, 2, 3, 1, 2, 3, 2, 1, 2, 3)
+  ID = paste0("toy_var_", seq_len(12)),
+  Gene = c("GENE1", "GENE1", "GENE1", "GENE2", "GENE2", "GENE2",
+           "GENE3", "GENE3", "GENE4", "GENE4", "GENE4", "GENE4"),
+  No.case = c(3, 1, 0, 4, 2, 0, 0, 1, 5, 1, 0, 2),
+  No.contr = c(0, 1, 2, 1, 2, 1, 1, 1, 0, 2, 1, 2),
+  category = c(1, 2, 3, 1, 2, 3, 3, 2, 1, 2, 3, 2)
 )
 
 toy_variants
 ```
 
-Example category labels:
-
 ```{r}
 category_key <- data.frame(
   category = 1:3,
-  label = c("LoF-like", "damaging-missense-like", "other-rare")
+  toy_label = c("LoF-like", "damaging-missense-like", "other-rare")
 )
 
 category_key
 ```
 
-## Example Workflow
+## Basic Input Checks
 
-The code below shows how a MIRAGE run would be structured. It is not evaluated here because this website should remain lightweight and independent of package installation state.
+```{r}
+required_columns <- c("ID", "Gene", "No.case", "No.contr", "category")
+
+stopifnot(all(required_columns %in% names(toy_variants)))
+stopifnot(all(toy_variants$No.case >= 0))
+stopifnot(all(toy_variants$No.contr >= 0))
+stopifnot(!anyDuplicated(toy_variants$ID))
+stopifnot(all(toy_variants$category %in% category_key$category))
+```
+
+## Optional MIRAGE Run
+
+If the `mirage` package is available in the local R library, this page runs a very small toy example. If it is not available, the page prints the command that would be used.
+
+```{r}
+mirage_available <- requireNamespace("mirage", quietly = TRUE)
+mirage_available
+```
+
+```{r}
+if (mirage_available) {
+  toy_result <- mirage::mirage(
+    toy_variants,
+    n1 = 500,
+    n2 = 500,
+    gamma = c(6, 3, 2),
+    sigma = 2,
+    eta.init = 0.1,
+    delta.init = 0.05,
+    max.iter = 100,
+    verbose = FALSE
+  )
+
+  head(toy_result$BF.PP.gene)
+  toy_result$eta.est
+} else {
+  message("The mirage package is not installed locally. See the non-evaluated example below.")
+}
+```
 
 ```{r, eval=FALSE}
 library(mirage)
 
-result <- mirage(
+toy_result <- mirage(
   toy_variants,
   n1 = 500,
   n2 = 500,
@@ -49,17 +95,24 @@ result <- mirage(
   verbose = FALSE
 )
 
-head(result$BF.PP.gene)
-result$eta.est
+head(toy_result$BF.PP.gene)
+toy_result$eta.est
+toy_result$delta.est
 ```
 
-## Minimal Sanity Checks
+## Expected Output Objects
 
-Before running MIRAGE on real summary statistics, use checks like these on the input table.
+The gene-level `mirage()` result is expected to include:
 
-```{r}
-stopifnot(all(c("ID", "Gene", "No.case", "No.contr", "category") %in% names(toy_variants)))
-stopifnot(all(toy_variants$No.case >= 0))
-stopifnot(all(toy_variants$No.contr >= 0))
-stopifnot(!anyDuplicated(toy_variants$ID))
-```
+- `BF.PP.gene`: gene-level Bayes factors and posterior probabilities.
+- `BF.all`: variant-level information and Bayes factors grouped by gene.
+- `eta.est`: estimated category-specific risk-variant proportions.
+- `delta.est`: estimated or fixed gene-level prior probability, depending on settings.
+
+## Interpretation Notes
+
+- A larger gene BF indicates stronger model-based evidence for the risk-gene model over the non-risk-gene model.
+- A larger posterior probability indicates higher fitted probability that the gene is a risk gene under the model.
+- Larger `eta` values suggest that variants in that annotation category are estimated to be more often risk variants.
+- Bayesian FDR can be summarized by averaging \(1 - \operatorname{PP}_i\) across a selected set of genes.
+- These quantities are model-based and should be interpreted alongside sensitivity analyses and data-quality checks.
