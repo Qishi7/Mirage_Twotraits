@@ -6,6 +6,9 @@ Rlib/
 *.log
 *.tmp
 *.bak
+mirage2026.pdf
+mirage_todo_summary.md
+workflowr_setup.R
 
 # Keep protected or large study data out of the website repository.
 data/
