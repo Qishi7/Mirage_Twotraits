@@ -553,15 +553,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreedc92a7c288c9f466a201987176bff50e6afa2919targetblankdc92a7ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage/tree/dc92a7c288c9f466a201987176bff50e6afa2919" target="_blank">dc92a7c</a>
+<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreedc92a7c288c9f466a201987176bff50e6afa2919targetblankdc92a7ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -571,7 +571,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage/tree/dc92a7c288c9f466a201987176bff50e6afa2919" target="_blank">dc92a7c</a>.
+<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -588,12 +588,13 @@ were generated:
 Ignored files:
     Ignored:    Rlib/
     Ignored:    data/
-    Ignored:    g2r_probe/
+    Ignored:    mirage2026.pdf
+    Ignored:    mirage_todo_summary.md
+    Ignored:    workflowr_setup.R
 
-Untracked files:
-    Untracked:  mirage2026.pdf
-    Untracked:  mirage_todo_summary.md
-    Untracked:  workflowr_setup.R
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   README.md
 
 </code></pre>
 <p>
@@ -643,6 +644,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/Qishi7/Mirage/blob/d12ee4720030d62e01b64f96ae71f8128c822c0c/analysis/examples.Rmd" target="_blank">d12ee47</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Polish MIRAGE workflowr site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage/0372fade03c32c4e7b5851abaf10cf75f268e4d0/docs/examples.html" target="_blank">0372fad</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/Qishi7/Mirage/blob/dc92a7c288c9f466a201987176bff50e6afa2919/analysis/examples.Rmd" target="_blank">dc92a7c</a>
 </td>
 <td>
@@ -662,51 +697,96 @@ Initialize workflowr site
 </div>
 </div>
 </div>
-<div id="toy-input-format" class="section level2">
-<h2>Toy Input Format</h2>
-<p>MIRAGE expects one row per rare variant. The table below uses fake
-toy data only.</p>
+<div id="data-policy" class="section level2">
+<h2>Data Policy</h2>
+<p>This page uses fake toy data only. It does not use real WES, ASD,
+dbGaP, SPARK, protected, private, or large data.</p>
+</div>
+<div id="expected-input-columns" class="section level2">
+<h2>Expected Input Columns</h2>
+<p>For gene-level MIRAGE analysis, a toy input table should contain one
+row per rare variant:</p>
+<ul>
+<li><code>ID</code>: variant identifier.</li>
+<li><code>Gene</code>: gene name or gene identifier.</li>
+<li><code>No.case</code>: allele count in cases.</li>
+<li><code>No.contr</code>: allele count in controls.</li>
+<li><code>category</code>: annotation group index.</li>
+</ul>
 <pre class="r"><code>toy_variants &lt;- data.frame(
-  ID = paste0(&quot;var&quot;, 1:10),
-  Gene = c(&quot;GENE1&quot;, &quot;GENE1&quot;, &quot;GENE1&quot;, &quot;GENE2&quot;, &quot;GENE2&quot;,
-           &quot;GENE3&quot;, &quot;GENE3&quot;, &quot;GENE4&quot;, &quot;GENE4&quot;, &quot;GENE4&quot;),
-  No.case = c(3, 1, 0, 4, 2, 0, 1, 5, 1, 0),
-  No.contr = c(0, 1, 2, 1, 2, 1, 1, 0, 2, 1),
-  category = c(1, 2, 3, 1, 2, 3, 2, 1, 2, 3)
+  ID = paste0(&quot;toy_var_&quot;, seq_len(12)),
+  Gene = c(&quot;GENE1&quot;, &quot;GENE1&quot;, &quot;GENE1&quot;, &quot;GENE2&quot;, &quot;GENE2&quot;, &quot;GENE2&quot;,
+           &quot;GENE3&quot;, &quot;GENE3&quot;, &quot;GENE4&quot;, &quot;GENE4&quot;, &quot;GENE4&quot;, &quot;GENE4&quot;),
+  No.case = c(3, 1, 0, 4, 2, 0, 0, 1, 5, 1, 0, 2),
+  No.contr = c(0, 1, 2, 1, 2, 1, 1, 1, 0, 2, 1, 2),
+  category = c(1, 2, 3, 1, 2, 3, 3, 2, 1, 2, 3, 2)
 )
 
 toy_variants</code></pre>
-<pre><code>      ID  Gene No.case No.contr category
-1   var1 GENE1       3        0        1
-2   var2 GENE1       1        1        2
-3   var3 GENE1       0        2        3
-4   var4 GENE2       4        1        1
-5   var5 GENE2       2        2        2
-6   var6 GENE3       0        1        3
-7   var7 GENE3       1        1        2
-8   var8 GENE4       5        0        1
-9   var9 GENE4       1        2        2
-10 var10 GENE4       0        1        3</code></pre>
-<p>Example category labels:</p>
+<pre><code>           ID  Gene No.case No.contr category
+1   toy_var_1 GENE1       3        0        1
+2   toy_var_2 GENE1       1        1        2
+3   toy_var_3 GENE1       0        2        3
+4   toy_var_4 GENE2       4        1        1
+5   toy_var_5 GENE2       2        2        2
+6   toy_var_6 GENE2       0        1        3
+7   toy_var_7 GENE3       0        1        3
+8   toy_var_8 GENE3       1        1        2
+9   toy_var_9 GENE4       5        0        1
+10 toy_var_10 GENE4       1        2        2
+11 toy_var_11 GENE4       0        1        3
+12 toy_var_12 GENE4       2        2        2</code></pre>
 <pre class="r"><code>category_key &lt;- data.frame(
   category = 1:3,
-  label = c(&quot;LoF-like&quot;, &quot;damaging-missense-like&quot;, &quot;other-rare&quot;)
+  toy_label = c(&quot;LoF-like&quot;, &quot;damaging-missense-like&quot;, &quot;other-rare&quot;)
 )
 
 category_key</code></pre>
-<pre><code>  category                  label
+<pre><code>  category              toy_label
 1        1               LoF-like
 2        2 damaging-missense-like
 3        3             other-rare</code></pre>
 </div>
-<div id="example-workflow" class="section level2">
-<h2>Example Workflow</h2>
-<p>The code below shows how a MIRAGE run would be structured. It is not
-evaluated here because this website should remain lightweight and
-independent of package installation state.</p>
+<div id="basic-input-checks" class="section level2">
+<h2>Basic Input Checks</h2>
+<pre class="r"><code>required_columns &lt;- c(&quot;ID&quot;, &quot;Gene&quot;, &quot;No.case&quot;, &quot;No.contr&quot;, &quot;category&quot;)
+
+stopifnot(all(required_columns %in% names(toy_variants)))
+stopifnot(all(toy_variants$No.case &gt;= 0))
+stopifnot(all(toy_variants$No.contr &gt;= 0))
+stopifnot(!anyDuplicated(toy_variants$ID))
+stopifnot(all(toy_variants$category %in% category_key$category))</code></pre>
+</div>
+<div id="optional-mirage-run" class="section level2">
+<h2>Optional MIRAGE Run</h2>
+<p>If the <code>mirage</code> package is available in the local R
+library, this page runs a very small toy example. If it is not
+available, the page prints the command that would be used.</p>
+<pre class="r"><code>mirage_available &lt;- requireNamespace(&quot;mirage&quot;, quietly = TRUE)
+mirage_available</code></pre>
+<pre><code>[1] FALSE</code></pre>
+<pre class="r"><code>if (mirage_available) {
+  toy_result &lt;- mirage::mirage(
+    toy_variants,
+    n1 = 500,
+    n2 = 500,
+    gamma = c(6, 3, 2),
+    sigma = 2,
+    eta.init = 0.1,
+    delta.init = 0.05,
+    max.iter = 100,
+    verbose = FALSE
+  )
+
+  head(toy_result$BF.PP.gene)
+  toy_result$eta.est
+} else {
+  message(&quot;The mirage package is not installed locally. See the non-evaluated example below.&quot;)
+}</code></pre>
+<pre><code>The mirage package is not installed locally. See the non-evaluated example below.</code></pre>
 <pre class="r"><code>library(mirage)
 
-result &lt;- mirage(
+toy_result &lt;- mirage(
   toy_variants,
   n1 = 500,
   n2 = 500,
@@ -717,17 +797,40 @@ result &lt;- mirage(
   verbose = FALSE
 )
 
-head(result$BF.PP.gene)
-result$eta.est</code></pre>
+head(toy_result$BF.PP.gene)
+toy_result$eta.est
+toy_result$delta.est</code></pre>
 </div>
-<div id="minimal-sanity-checks" class="section level2">
-<h2>Minimal Sanity Checks</h2>
-<p>Before running MIRAGE on real summary statistics, use checks like
-these on the input table.</p>
-<pre class="r"><code>stopifnot(all(c(&quot;ID&quot;, &quot;Gene&quot;, &quot;No.case&quot;, &quot;No.contr&quot;, &quot;category&quot;) %in% names(toy_variants)))
-stopifnot(all(toy_variants$No.case &gt;= 0))
-stopifnot(all(toy_variants$No.contr &gt;= 0))
-stopifnot(!anyDuplicated(toy_variants$ID))</code></pre>
+<div id="expected-output-objects" class="section level2">
+<h2>Expected Output Objects</h2>
+<p>The gene-level <code>mirage()</code> result is expected to
+include:</p>
+<ul>
+<li><code>BF.PP.gene</code>: gene-level Bayes factors and posterior
+probabilities.</li>
+<li><code>BF.all</code>: variant-level information and Bayes factors
+grouped by gene.</li>
+<li><code>eta.est</code>: estimated category-specific risk-variant
+proportions.</li>
+<li><code>delta.est</code>: estimated or fixed gene-level prior
+probability, depending on settings.</li>
+</ul>
+</div>
+<div id="interpretation-notes" class="section level2">
+<h2>Interpretation Notes</h2>
+<ul>
+<li>A larger gene BF indicates stronger model-based evidence for the
+risk-gene model over the non-risk-gene model.</li>
+<li>A larger posterior probability indicates higher fitted probability
+that the gene is a risk gene under the model.</li>
+<li>Larger <code>eta</code> values suggest that variants in that
+annotation category are estimated to be more often risk variants.</li>
+<li>Bayesian FDR can be summarized by averaging <span
+class="math inline">\(1 - \operatorname{PP}_i\)</span> across a selected
+set of genes.</li>
+<li>These quantities are model-based and should be interpreted alongside
+sensitivity analyses and data-quality checks.</li>
+</ul>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
