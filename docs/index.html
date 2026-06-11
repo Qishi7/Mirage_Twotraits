@@ -431,15 +431,15 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreedc92a7c288c9f466a201987176bff50e6afa2919targetblankdc92a7ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage/tree/dc92a7c288c9f466a201987176bff50e6afa2919" target="_blank">dc92a7c</a>
+<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreedc92a7c288c9f466a201987176bff50e6afa2919targetblankdc92a7ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -449,7 +449,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage/tree/dc92a7c288c9f466a201987176bff50e6afa2919" target="_blank">dc92a7c</a>.
+<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -466,12 +466,13 @@ were generated:
 Ignored files:
     Ignored:    Rlib/
     Ignored:    data/
-    Ignored:    g2r_probe/
+    Ignored:    mirage2026.pdf
+    Ignored:    mirage_todo_summary.md
+    Ignored:    workflowr_setup.R
 
-Untracked files:
-    Untracked:  mirage2026.pdf
-    Untracked:  mirage_todo_summary.md
-    Untracked:  workflowr_setup.R
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   README.md
 
 </code></pre>
 <p>
@@ -520,6 +521,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/Qishi7/Mirage/blob/d12ee4720030d62e01b64f96ae71f8128c822c0c/analysis/index.Rmd" target="_blank">d12ee47</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Polish MIRAGE workflowr site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage/0372fade03c32c4e7b5851abaf10cf75f268e4d0/docs/index.html" target="_blank">0372fad</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/Qishi7/Mirage/blob/dc92a7c288c9f466a201987176bff50e6afa2919/analysis/index.Rmd" target="_blank">dc92a7c</a>
 </td>
 <td>
@@ -541,42 +576,61 @@ Initialize workflowr site
 </div>
 <div id="project-overview" class="section level2">
 <h2>Project Overview</h2>
-<p>This website is a reproducible research workspace for studying
-MIRAGE, a Bayesian method for gene-level rare-variant association
-analysis. It records method notes, implementation questions, toy
-examples, and speed optimization ideas in a versioned workflowr
-site.</p>
-<p>The site is intentionally limited to public notes and fake toy
-examples. It should not contain real WES, ASD, dbGaP, SPARK, protected,
-private, or large study data.</p>
+<p>This workflowr website organizes technical notes for the MIRAGE
+project: a Bayesian framework for gene-level rare-variant association
+analysis using variant-level summary counts and functional
+annotations.</p>
+<p>The goal of the site is to keep the project reproducible as it
+develops. It records the statistical model, implementation questions,
+toy examples, runtime-improvement plans, and a lightweight project log.
+The site is built from R Markdown source files in <code>analysis/</code>
+and rendered into <code>docs/</code> for GitHub Pages.</p>
 </div>
-<div id="paper-summary" class="section level2">
-<h2>Paper Summary</h2>
+<div id="what-mirage-does" class="section level2">
+<h2>What MIRAGE Does</h2>
 <p>MIRAGE, short for mixture-model-based rare-variant analysis on genes,
-analyzes variant-level summary counts from population-matched
-case-control studies or transmitted/untransmitted family data. Instead
-of collapsing every rare variant in a gene into a single burden, MIRAGE
-treats variants as a mixture of risk and non-risk variants.</p>
-<p>The key idea is that true risk variants are sparse, even inside risk
-genes. Functional annotations, such as loss-of-function or predicted
-damaging missense categories, inform the prior probability that a
-variant is a risk variant. MIRAGE estimates these prior probabilities
-across all genes using empirical Bayes, then reports gene-level Bayes
-factors, posterior probabilities, and Bayesian FDR.</p>
+is designed for settings where rare-variant counts are available from
+ancestry-matched case-control studies or transmitted/untransmitted
+family data. At a high level, MIRAGE treats variants in a gene as a
+mixture of risk and non-risk variants rather than assuming every
+included rare variant contributes equally.</p>
+<p>Functional annotation categories, such as loss-of-function or
+predicted damaging missense groups, are used to define prior
+probabilities that a variant is a risk variant. These probabilities are
+estimated across genes with an empirical Bayes strategy. The resulting
+output includes gene-level Bayes factors, posterior probabilities, and
+Bayesian FDR summaries.</p>
+<p>The language on this website is intentionally cautious: MIRAGE can
+improve power in settings where sparse, heterogeneous rare-variant
+effects are plausible, but its validity still depends on study design,
+input quality, annotation choices, and careful control of population
+structure.</p>
 </div>
 <div id="website-contents" class="section level2">
 <h2>Website Contents</h2>
 <ul>
-<li><a href="method.html">Method</a>: model notation, latent variables,
-EM algorithm, Bayes factor, posterior probability, and Bayesian
-FDR.</li>
-<li><a href="speed.html">Speed</a>: bottlenecks, profiling plan,
-caching, log-scale computation, vectorization, and parallelization.</li>
-<li><a href="examples.html">Examples</a>: fake toy input and a small
-example workflow.</li>
-<li><a href="notes.html">Notes</a>: reading notes, open implementation
-questions, and reproducibility log.</li>
+<li><a href="method.html">Method</a>: notation, generative model,
+conditional likelihood, EM algorithm, gene-level Bayes factor, posterior
+probability, Bayesian FDR, and model limitations.</li>
+<li><a href="speed.html">Speed</a>: runtime bottlenecks, optimization
+priorities, profiling plan, caching strategy, log-scale computation,
+vectorized aggregation, and parallelization.</li>
+<li><a href="examples.html">Examples</a>: fake toy input table, optional
+local MIRAGE run, expected output objects, and interpretation
+notes.</li>
+<li><a href="notes.html">Notes</a>: project log, remaining
+implementation questions, profiling next steps, data-access-dependent
+example planning, and reproducibility checklist.</li>
 </ul>
+</div>
+<div id="data-privacy-statement" class="section level2">
+<h2>Data Privacy Statement</h2>
+<p>This repository and website must not include real WES, ASD, dbGaP,
+SPARK, protected, private, or large data files. The example page uses
+toy data only. Real summary statistics, individual-level data, protected
+annotations, and large intermediate outputs should remain outside the
+GitHub repository unless data access, consent, and sharing rules
+explicitly allow public release.</p>
 </div>
 </div>
 </div>

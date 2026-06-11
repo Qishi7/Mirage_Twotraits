@@ -11,7 +11,7 @@
 
 
 
-<title>Notes</title>
+<title>Project Notes</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -355,7 +355,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Notes</h1>
+<h1 class="title toc-ignore">Project Notes</h1>
 
 </div>
 
@@ -553,15 +553,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreedc92a7c288c9f466a201987176bff50e6afa2919targetblankdc92a7ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage/tree/dc92a7c288c9f466a201987176bff50e6afa2919" target="_blank">dc92a7c</a>
+<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreedc92a7c288c9f466a201987176bff50e6afa2919targetblankdc92a7ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -571,7 +571,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage/tree/dc92a7c288c9f466a201987176bff50e6afa2919" target="_blank">dc92a7c</a>.
+<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -588,12 +588,13 @@ were generated:
 Ignored files:
     Ignored:    Rlib/
     Ignored:    data/
-    Ignored:    g2r_probe/
+    Ignored:    mirage2026.pdf
+    Ignored:    mirage_todo_summary.md
+    Ignored:    workflowr_setup.R
 
-Untracked files:
-    Untracked:  mirage2026.pdf
-    Untracked:  mirage_todo_summary.md
-    Untracked:  workflowr_setup.R
+Unstaged changes:
+    Modified:   .gitignore
+    Modified:   README.md
 
 </code></pre>
 <p>
@@ -642,6 +643,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/Qishi7/Mirage/blob/d12ee4720030d62e01b64f96ae71f8128c822c0c/analysis/notes.Rmd" target="_blank">d12ee47</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Polish MIRAGE workflowr site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage/0372fade03c32c4e7b5851abaf10cf75f268e4d0/docs/notes.html" target="_blank">0372fad</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/Qishi7/Mirage/blob/dc92a7c288c9f466a201987176bff50e6afa2919/analysis/notes.Rmd" target="_blank">dc92a7c</a>
 </td>
 <td>
@@ -661,55 +696,94 @@ Initialize workflowr site
 </div>
 </div>
 </div>
-<div id="reading-notes" class="section level2">
-<h2>Reading Notes</h2>
+<div id="completed" class="section level2">
+<h2>Completed</h2>
 <ul>
-<li>MIRAGE is motivated by sparse rare-variant effects within
-genes.</li>
-<li>Burden tests can lose power when many included variants are
-neutral.</li>
-<li>Functional annotations are useful but imperfect, so MIRAGE uses them
-as priors rather than hard filters.</li>
-<li>Empirical Bayes estimation borrows information across all genes to
-estimate category-level risk-variant proportions.</li>
-<li>The method uses summary counts, which improves portability and
-avoids individual-level genotype sharing.</li>
+<li>Initialized a workflowr website for the MIRAGE repository.</li>
+<li>Configured the site to build into <code>docs/</code> for GitHub
+Pages.</li>
+<li>Added five pages: Home, Method, Speed, Examples, and Notes.</li>
+<li>Added toy-only example data for documentation.</li>
+<li>Added <code>.gitignore</code> rules to keep local package libraries,
+protected data, large genetic files, and local helper files out of
+version control.</li>
 </ul>
 </div>
-<div id="implementation-questions" class="section level2">
-<h2>Implementation Questions</h2>
+<div id="remaining-implementation-questions" class="section level2">
+<h2>Remaining Implementation Questions</h2>
 <ul>
-<li>How much runtime is spent in numerical integration for variant
-BFs?</li>
-<li>How many variant count patterns are duplicated in typical
-rare-variant input?</li>
-<li>Does fixing <code>delta</code> improve stability for weak-signal
-datasets?</li>
-<li>Which annotation grouping gives the most stable ranking across
-sensitivity analyses?</li>
-<li>How should LD pruning be documented and validated before running
-MIRAGE?</li>
+<li>How much runtime is spent in variant-level numerical integration
+compared with EM updates?</li>
+<li>How many duplicated count patterns occur in realistic rare-variant
+summary tables?</li>
+<li>Should <code>delta</code> be estimated, fixed, or explored over a
+sensitivity grid for weak-signal analyses?</li>
+<li>Which annotation grouping is most stable across sensitivity
+analyses?</li>
+<li>What LD pruning or LD-aware sensitivity checks should be performed
+before final reporting?</li>
 </ul>
 </div>
-<div id="reproducibility-log" class="section level2">
-<h2>Reproducibility Log</h2>
-<pre class="r"><code>log_entry &lt;- data.frame(
+<div id="next-steps-for-runtime-profiling" class="section level2">
+<h2>Next Steps For Runtime Profiling</h2>
+<ol style="list-style-type: decimal">
+<li>Create synthetic benchmark inputs with known sizes, such as 1,000,
+10,000, and 100,000 variants.</li>
+<li>Profile the baseline R implementation with <code>Rprof()</code> or
+<code>profvis</code>.</li>
+<li>Measure the variant BF step separately from the EM loop.</li>
+<li>Implement a count-pattern cache for variant BFs.</li>
+<li>Compare baseline, cached, and cached plus vectorized
+implementations.</li>
+<li>Validate gene BF, posterior probability, <code>eta</code>,
+<code>delta</code>, and gene ranking after every change.</li>
+</ol>
+</div>
+<div id="next-steps-for-a-real-example" class="section level2">
+<h2>Next Steps For A Real Example</h2>
+<p>Real examples should wait until data access and sharing rules are
+clarified. Once approved summary statistics are available, the example
+should:</p>
+<ul>
+<li>Use only data approved for the repository or keep data outside
+Git.</li>
+<li>Document preprocessing and filtering without exposing protected
+records.</li>
+<li>Report input dimensions and category definitions.</li>
+<li>Use reproducible scripts that can run without committing private
+data.</li>
+<li>Include synthetic or redacted outputs if public release of real
+outputs is not allowed.</li>
+</ul>
+</div>
+<div id="reproducibility-checklist" class="section level2">
+<h2>Reproducibility Checklist</h2>
+<ul>
+<li>The site builds from a clean R session.</li>
+<li>Source files live in <code>analysis/</code>.</li>
+<li>HTML output lives in <code>docs/</code>.</li>
+<li><code>workflowr::wflow_status()</code> reports pages as published
+and up to date.</li>
+<li>Examples use toy data only.</li>
+<li>No real WES, ASD, dbGaP, SPARK, protected, private, or large data
+files are committed.</li>
+<li>Runtime experiments record R version, package versions, input size,
+random seed, and wall time.</li>
+</ul>
+</div>
+<div id="current-log" class="section level2">
+<h2>Current Log</h2>
+<pre class="r"><code>data.frame(
   date = as.character(Sys.Date()),
-  item = &quot;Initialized workflowr website for MIRAGE project&quot;,
-  data_policy = &quot;Toy examples and public notes only&quot;
-)
-
-log_entry</code></pre>
-<pre><code>        date                                             item
-1 2026-06-11 Initialized workflowr website for MIRAGE project
-                         data_policy
-1 Toy examples and public notes only</code></pre>
-</div>
-<div id="data-policy" class="section level2">
-<h2>Data Policy</h2>
-<p>Do not commit real WES, ASD, dbGaP, SPARK, protected, private, or
-large data files. This repository should use toy examples, synthetic
-examples, public documentation, and summary notes only.</p>
+  status = &quot;Workflowr website polished with technical method notes, runtime plan, toy examples, and project log.&quot;,
+  data_policy = &quot;Toy examples and public notes only.&quot;
+)</code></pre>
+<pre><code>        date
+1 2026-06-11
+                                                                                                status
+1 Workflowr website polished with technical method notes, runtime plan, toy examples, and project log.
+                          data_policy
+1 Toy examples and public notes only.</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
