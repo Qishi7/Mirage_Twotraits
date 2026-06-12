@@ -1,7 +1,9 @@
-local_lib <- file.path(getwd(), "Rlib")
-if (dir.exists(local_lib)) {
-  .libPaths(c(local_lib, .libPaths()))
-}
+local({
+  local_lib <- file.path(getwd(), "Rlib")
+  if (dir.exists(local_lib)) {
+    .libPaths(c(local_lib, .libPaths()))
+  }
+})
 
 ## This makes sure that R loads the workflowr package
 ## automatically, everytime the project is loaded

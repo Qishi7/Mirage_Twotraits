@@ -31,9 +31,14 @@ No real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data
 
 ## Running Tests
 
-Use the explicit Rscript path:
+From the repository root, run:
 
 ```powershell
-$env:R_LIBS_USER='D:\Mirage_t\Rlib'
+Rscript --vanilla tests/testthat.R
+```
+
+On the development Windows machine used for the first build, the explicit local command was:
+
+```powershell
 & 'D:\software\R-4.4.2\bin\Rscript.exe' --vanilla tests/testthat.R
 ```
