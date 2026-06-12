@@ -363,7 +363,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -388,9 +388,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Mirage_t/</code> <span
@@ -431,55 +431,17 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongobjectspresent">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>Environment:</strong> objects present
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
 </p>
 </div>
-<div id="strongEnvironmentstrongobjectspresent"
-class="panel-collapse collapse">
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
 <div class="panel-body">
-<p>
-The global environment had objects present when the code in the R
-Markdown file was run. These objects can affect the analysis in your R
-Markdown file in unknown ways. For reproduciblity it’s best to always
-run the code in an empty environment. Use <code>wflow_publish</code> or
-<code>wflow_build</code> to ensure that the code is always run in an
-empty environment.
-</p>
-<p>
-The following objects were defined in the global environment when these
-results were created:
-</p>
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th style="text-align:left;">
-Name
-</th>
-<th style="text-align:left;">
-Class
-</th>
-<th style="text-align:left;">
-Size
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-local_lib
-</td>
-<td style="text-align:left;">
-character
-</td>
-<td style="text-align:left;">
-136 bytes
-</td>
-</tr>
-</tbody>
-</table>
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
 </div>
 </div>
 </div>
@@ -553,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree72dd4fa39e57cf4e952abaec4a38dc9050cf7cfatargetblank72dd4faa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree90b61414bb23993b47061528759bb99cf44cfacctargetblank90b6141a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/72dd4fa39e57cf4e952abaec4a38dc9050cf7cfa" target="_blank">72dd4fa</a>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/90b61414bb23993b47061528759bb99cf44cfacc" target="_blank">90b6141</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree72dd4fa39e57cf4e952abaec4a38dc9050cf7cfatargetblank72dd4faa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree90b61414bb23993b47061528759bb99cf44cfacctargetblank90b6141a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -571,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/72dd4fa39e57cf4e952abaec4a38dc9050cf7cfa" target="_blank">72dd4fa</a>.
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/90b61414bb23993b47061528759bb99cf44cfacc" target="_blank">90b6141</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -596,11 +558,6 @@ Ignored files:
     Ignored:    two_trait_mirage_technical_specification.tex
     Ignored:    vcf_exploration_report.md
     Ignored:    workflowr_setup.R
-
-Unstaged changes:
-    Modified:   .gitignore
-    Modified:   README.md
-    Modified:   analysis/_site.yml
 
 </code></pre>
 <p>
@@ -647,6 +604,40 @@ Message
 <tbody>
 <tr>
 <td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/90b61414bb23993b47061528759bb99cf44cfacc/analysis/simulation.Rmd" target="_blank">90b6141</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Clarify method and simulation smoke check
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/46eecbc2847b016901e5d7b113b6dd75a01c9d3d/docs/simulation.html" target="_blank">46eecbc</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
 <td>
@@ -688,9 +679,13 @@ Update website for two-trait MIRAGE extension
 </div>
 <div id="toy-simulation-only" class="section level2">
 <h2>Toy Simulation Only</h2>
-<p>This page runs a small synthetic smoke check using the current
-implementation. It does not use real ASD, schizophrenia, WES, dbGaP,
-SPARK, protected, private, or large data.</p>
+<p>This page runs a small synthetic software smoke check using the
+current implementation. It does not use real ASD, schizophrenia, WES,
+dbGaP, SPARK, protected, private, or large data.</p>
+<p>The goal is to verify that the code runs end-to-end, converges, and
+separates a strong synthetic pleiotropic signal from non-pleiotropic
+genes. This is not a formal parameter-recovery, power, or
+FDR-calibration study.</p>
 <pre class="r"><code>source(&quot;R/two_trait_mirage.R&quot;)
 source(&quot;R/simulate_two_trait_mirage.R&quot;)
 
@@ -735,6 +730,45 @@ fit &lt;- mirage_two_trait(
 <pre><code>         2          1 
 0.02712176 0.64063900 </code></pre>
 </div>
+<div id="true-versus-estimated-parameters" class="section level2">
+<h2>True Versus Estimated Parameters</h2>
+<pre class="r"><code>pi_comparison &lt;- data.frame(
+  parameter = names(sim$parameters$pi),
+  truth = as.numeric(sim$parameters$pi),
+  estimate = as.numeric(fit$parameters$pi[names(sim$parameters$pi)])
+)
+
+eta_comparison &lt;- rbind(
+  data.frame(
+    trait = &quot;trait1&quot;,
+    category = names(sim$parameters$eta_trait1),
+    truth = as.numeric(sim$parameters$eta_trait1),
+    estimate = as.numeric(fit$parameters$eta_trait1[names(sim$parameters$eta_trait1)])
+  ),
+  data.frame(
+    trait = &quot;trait2&quot;,
+    category = names(sim$parameters$eta_trait2),
+    truth = as.numeric(sim$parameters$eta_trait2),
+    estimate = as.numeric(fit$parameters$eta_trait2[names(sim$parameters$eta_trait2)])
+  )
+)
+
+pi_comparison</code></pre>
+<pre><code>  parameter truth   estimate
+1        00  0.70 0.80356296
+2        10  0.10 0.04841788
+3        01  0.08 0.03925002
+4        11  0.12 0.10876914</code></pre>
+<pre class="r"><code>eta_comparison</code></pre>
+<pre><code>   trait category truth   estimate
+1 trait1        1  0.45 0.79183975
+2 trait1        2  0.10 0.15195421
+3 trait2        1  0.45 0.64063900
+4 trait2        2  0.10 0.02712176</code></pre>
+<p>The estimates in this single toy run are expected to differ from the
+generating values. A replicated simulation grid is still needed before
+making claims about parameter recovery or Bayesian FDR calibration.</p>
+</div>
 <div id="diagnostics" class="section level2">
 <h2>Diagnostics</h2>
 <pre class="r"><code>data.frame(
@@ -775,7 +809,8 @@ GENE40   GENE40 pleiotropy             0.9415303 5.846970e-02 1.784742e-02    8
 GENE88   GENE88 pleiotropy             0.9319994 6.800063e-02 2.342000e-02    9
 GENE96   GENE96 pleiotropy             0.9178723 8.212773e-02 2.929077e-02   10</code></pre>
 <p>These numbers are generated from synthetic data and should be
-interpreted only as a software smoke check.</p>
+interpreted only as a software smoke check, not as evidence of final
+calibration.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
