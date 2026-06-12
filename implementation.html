@@ -363,7 +363,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -388,9 +388,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Mirage_t/</code> <span
@@ -431,55 +431,17 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongobjectspresent">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>Environment:</strong> objects present
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
 </p>
 </div>
-<div id="strongEnvironmentstrongobjectspresent"
-class="panel-collapse collapse">
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
 <div class="panel-body">
-<p>
-The global environment had objects present when the code in the R
-Markdown file was run. These objects can affect the analysis in your R
-Markdown file in unknown ways. For reproduciblity it’s best to always
-run the code in an empty environment. Use <code>wflow_publish</code> or
-<code>wflow_build</code> to ensure that the code is always run in an
-empty environment.
-</p>
-<p>
-The following objects were defined in the global environment when these
-results were created:
-</p>
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th style="text-align:left;">
-Name
-</th>
-<th style="text-align:left;">
-Class
-</th>
-<th style="text-align:left;">
-Size
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-local_lib
-</td>
-<td style="text-align:left;">
-character
-</td>
-<td style="text-align:left;">
-136 bytes
-</td>
-</tr>
-</tbody>
-</table>
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
 </div>
 </div>
 </div>
@@ -553,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree72dd4fa39e57cf4e952abaec4a38dc9050cf7cfatargetblank72dd4faa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstreef9351037735561abcd2869a9e867be954805ae4etargetblankf935103a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/72dd4fa39e57cf4e952abaec4a38dc9050cf7cfa" target="_blank">72dd4fa</a>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/f9351037735561abcd2869a9e867be954805ae4e" target="_blank">f935103</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree72dd4fa39e57cf4e952abaec4a38dc9050cf7cfatargetblank72dd4faa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstreef9351037735561abcd2869a9e867be954805ae4etargetblankf935103a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -571,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/72dd4fa39e57cf4e952abaec4a38dc9050cf7cfa" target="_blank">72dd4fa</a>.
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/f9351037735561abcd2869a9e867be954805ae4e" target="_blank">f935103</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -596,11 +558,6 @@ Ignored files:
     Ignored:    two_trait_mirage_technical_specification.tex
     Ignored:    vcf_exploration_report.md
     Ignored:    workflowr_setup.R
-
-Unstaged changes:
-    Modified:   .gitignore
-    Modified:   README.md
-    Modified:   analysis/_site.yml
 
 </code></pre>
 <p>
@@ -645,6 +602,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/46eecbc2847b016901e5d7b113b6dd75a01c9d3d/docs/implementation.html" target="_blank">46eecbc</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
