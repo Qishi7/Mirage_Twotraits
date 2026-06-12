@@ -431,15 +431,15 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree72dd4fa39e57cf4e952abaec4a38dc9050cf7cfatargetblank72dd4faa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree90b61414bb23993b47061528759bb99cf44cfacctargetblank90b6141a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/72dd4fa39e57cf4e952abaec4a38dc9050cf7cfa" target="_blank">72dd4fa</a>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/90b61414bb23993b47061528759bb99cf44cfacc" target="_blank">90b6141</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree72dd4fa39e57cf4e952abaec4a38dc9050cf7cfatargetblank72dd4faa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree90b61414bb23993b47061528759bb99cf44cfacctargetblank90b6141a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -449,7 +449,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/72dd4fa39e57cf4e952abaec4a38dc9050cf7cfa" target="_blank">72dd4fa</a>.
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/90b61414bb23993b47061528759bb99cf44cfacc" target="_blank">90b6141</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -474,11 +474,6 @@ Ignored files:
     Ignored:    two_trait_mirage_technical_specification.tex
     Ignored:    vcf_exploration_report.md
     Ignored:    workflowr_setup.R
-
-Unstaged changes:
-    Modified:   .gitignore
-    Modified:   README.md
-    Modified:   analysis/_site.yml
 
 </code></pre>
 <p>
@@ -522,6 +517,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/90b61414bb23993b47061528759bb99cf44cfacc/analysis/method.Rmd" target="_blank">90b6141</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Clarify method and simulation smoke check
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/46eecbc2847b016901e5d7b113b6dd75a01c9d3d/docs/method.html" target="_blank">46eecbc</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -668,6 +697,28 @@ X_{ijt} \mid T_{ijt}, Z_{ijt}=1, R_{ijt}=r
 \operatorname{Binomial}
 \left(T_{ijt}, \frac{rN_{1t}}{rN_{1t}+N_{0t}}\right).
 \]</span></p>
+<p>Following the original MIRAGE model, the relative-risk multiplier is
+integrated over a user-specified Gamma prior. If <span
+class="math inline">\(g_{tc}(r)\)</span> is the Gamma prior density for
+trait <span class="math inline">\(t\)</span> and annotation category
+<span class="math inline">\(c\)</span>, then</p>
+<p><span class="math display">\[
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=1)
+=
+\int_0^\infty
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=1, R_{ijt}=r)
+g_{t,c_{ijt}}(r)\,dr.
+\]</span></p>
+<p>The variant-level Bayes factor is therefore</p>
+<p><span class="math display">\[
+b_{ijt}
+=
+\frac{
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=1)
+}{
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=0)
+}.
+\]</span></p>
 <p>The implementation supports trait-specific relative-risk
 hyperparameters. The first version does not force these parameters to be
 shared across traits.</p>
@@ -799,6 +850,13 @@ not biological inference.</li>
 category-specific <span class="math inline">\(\eta\)</span> values
 difficult to identify.</li>
 </ul>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Han S, Sun X, Sloofman L, et al. MIRAGE: A Bayesian statistical
+method for gene-level rare-variant analysis incorporating functional
+annotations. <em>The American Journal of Human Genetics</em>.
+2026;113:168-183.</p>
 </div>
 </div>
 </div>
