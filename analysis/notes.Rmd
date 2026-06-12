@@ -1,59 +1,42 @@
 ---
-title: "Project Notes"
+title: "Notes"
 output: workflowr::wflow_html
 ---
 
-## Completed
+## Completed In This Version
 
-- Initialized a workflowr website for the MIRAGE repository.
-- Configured the site to build into `docs/` for GitHub Pages.
-- Added five pages: Home, Method, Speed, Examples, and Notes.
-- Added toy-only example data for documentation.
-- Added `.gitignore` rules to keep local package libraries, protected data, large genetic files, and local helper files out of version control.
+- Added a first gene-level four-state two-trait MIRAGE implementation.
+- Added trait-specific \(\eta\) parameters and trait-specific relative-risk hyperparameters.
+- Added log-scale state responsibility calculations.
+- Added posterior probabilities for trait 1, trait 2, and pleiotropy.
+- Added Bayesian FDR tables for all three targets.
+- Added convergence diagnostics and observed-data log-likelihood traces.
+- Added toy simulation helpers and testthat tests.
+- Reframed the workflowr website around the two-trait extension.
 
-## Remaining Implementation Questions
+## Current Validation Status
 
-- How much runtime is spent in variant-level numerical integration compared with EM updates?
-- How many duplicated count patterns occur in realistic rare-variant summary tables?
-- Should `delta` be estimated, fixed, or explored over a sensitivity grid for weak-signal analyses?
-- Which annotation grouping is most stable across sensitivity analyses?
-- What LD pruning or LD-aware sensitivity checks should be performed before final reporting?
+The current validation is software-focused. It uses synthetic data to check algebraic invariants, numerical stability, EM monotonicity, prior factorization behavior, trait swapping, and toy pleiotropy detection.
 
-## Next Steps For Runtime Profiling
+The simulation helper is not a replacement for a full method validation study. Larger simulation grids are still needed before real analysis.
 
-1. Create synthetic benchmark inputs with known sizes, such as 1,000, 10,000, and 100,000 variants.
-2. Profile the baseline R implementation with `Rprof()` or `profvis`.
-3. Measure the variant BF step separately from the EM loop.
-4. Implement a count-pattern cache for variant BFs.
-5. Compare baseline, cached, and cached plus vectorized implementations.
-6. Validate gene BF, posterior probability, `eta`, `delta`, and gene ranking after every change.
+## Remaining Limitations
 
-## Next Steps For A Real Example
+- The repository now contains a first implementation, but not yet a full R package structure.
+- The single-trait upstream implementation is not vendored into this repository.
+- The synthetic simulation uses precomputed log BF values and is mainly for software validation.
+- Calibration and parameter recovery need larger replicated simulation studies.
+- The product likelihood requires independent studies with no sample overlap.
+- No real ASD or schizophrenia data have been analyzed.
 
-Real examples should wait until data access and sharing rules are clarified. Once approved summary statistics are available, the example should:
+## Next Steps
 
-- Use only data approved for the repository or keep data outside Git.
-- Document preprocessing and filtering without exposing protected records.
-- Report input dimensions and category definitions.
-- Use reproducible scripts that can run without committing private data.
-- Include synthetic or redacted outputs if public release of real outputs is not allowed.
+1. Decide whether to convert this repository into an R package or keep it as a workflowr plus source-code repository.
+2. Add larger simulation grids for independent, pleiotropic-enriched, and one-trait-null scenarios.
+3. Compare the two-trait model against separate single-trait MIRAGE fits.
+4. Add optional multi-start fitting for weak pleiotropy settings.
+5. Add more explicit package documentation once the interface stabilizes.
 
-## Reproducibility Checklist
+## Data Policy
 
-- The site builds from a clean R session.
-- Source files live in `analysis/`.
-- HTML output lives in `docs/`.
-- `workflowr::wflow_status()` reports pages as published and up to date.
-- Examples use toy data only.
-- No real WES, ASD, dbGaP, SPARK, protected, private, or large data files are committed.
-- Runtime experiments record R version, package versions, input size, random seed, and wall time.
-
-## Current Log
-
-```{r}
-data.frame(
-  date = as.character(Sys.Date()),
-  status = "Workflowr website polished with technical method notes, runtime plan, toy examples, and project log.",
-  data_policy = "Toy examples and public notes only."
-)
-```
+Do not commit real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data files. Keep local reference documents out of commits unless the team explicitly decides they should be public.

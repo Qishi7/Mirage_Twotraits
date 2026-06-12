@@ -1,159 +1,168 @@
 ---
-title: "MIRAGE Method"
+title: "Method"
 output: workflowr::wflow_html
 ---
 
-## Background And Motivation
+## Four-State Gene Model
 
-Rare-variant association studies often aggregate variants within a gene to improve power. A burden test is a common aggregation strategy, but it implicitly treats selected variants as having similar directions and comparable relevance to disease risk. That assumption can be inefficient when only a small subset of rare variants in a gene are truly associated with the trait.
-
-MIRAGE addresses this issue with a hierarchical mixture model. It treats each gene as potentially risk-associated and, conditional on a risk gene, treats each variant as a mixture of risk and non-risk states. Functional annotation categories influence the prior probability that a variant is a risk variant. This is a more cautious use of annotation than hard filtering: annotations shift prior weights, but they do not by themselves determine whether a variant contributes evidence.
-
-## Notation
-
-For gene \(i = 1,\ldots,G\) and variant \(j = 1,\ldots,m_i\):
-
-- \(X_{ij}\): allele count in cases.
-- \(X^{(0)}_{ij}\): allele count in controls.
-- \(T_{ij} = X_{ij} + X^{(0)}_{ij}\): total allele count.
-- \(N_1\): number of cases.
-- \(N_0\): number of controls.
-- \(c_{ij}\): functional annotation category for variant \(j\) in gene \(i\).
-- \(\delta\): prior probability that a gene is a risk gene.
-- \(\eta_c\): prior probability that a variant in category \(c\) is a risk variant, conditional on its gene being a risk gene.
-- \(\gamma_{ij}\): relative-risk multiplier for a risk variant.
-
-## Generative Model
-
-The gene-level latent state is
+For gene \(i\), define the joint gene state
 
 \[
-U_i \sim \operatorname{Bernoulli}(\delta),
+S_i = (U_{i1}, U_{i2}) \in \{00, 10, 01, 11\}.
 \]
 
-where \(U_i = 1\) indicates that gene \(i\) is a risk gene.
-
-The variant-level latent state is constrained by the gene state:
+The four mixing proportions are
 
 \[
-Z_{ij} \mid U_i = 0 = 0,
+\pi_{00} + \pi_{10} + \pi_{01} + \pi_{11} = 1.
 \]
 
-and, if \(U_i = 1\),
+Trait 1 initially represents autism and trait 2 schizophrenia. The model assumes independent studies with no sample overlap. Conditional on \(S_i\), the two trait-specific likelihoods are independent.
+
+## Trait-Specific MIRAGE Likelihood
+
+For variant \(j\) in gene \(i\) and trait \(t\), MIRAGE conditions on total allele count \(T_{ijt}\). A non-risk variant follows
 
 \[
-Z_{ij} \mid U_i = 1, c_{ij} = c \sim \operatorname{Bernoulli}(\eta_c).
-\]
-
-Thus \(\eta_c\) is category-specific. A more deleterious annotation category may have a larger estimated \(\eta_c\), but the value is learned from the data rather than fixed solely by annotation.
-
-## Conditional Likelihood
-
-Before conditioning, the model assumes Poisson counts with a nuisance allele frequency \(q_{ij}\). MIRAGE conditions on the total allele count \(T_{ij}\), removing \(q_{ij}\) and yielding binomial likelihoods.
-
-For a non-risk variant,
-
-\[
-X_{ij} \mid T_{ij}, Z_{ij}=0
+X_{ijt} \mid T_{ijt}, Z_{ijt}=0
 \sim
 \operatorname{Binomial}
-\left(
-T_{ij},
-\frac{N_1}{N_1 + N_0}
-\right).
+\left(T_{ijt}, \frac{N_{1t}}{N_{1t}+N_{0t}}\right).
 \]
 
-For a risk variant with relative-risk multiplier \(\gamma_{ij}\),
+For a risk variant with relative-risk multiplier \(R_{ijt}\),
 
 \[
-X_{ij} \mid T_{ij}, Z_{ij}=1, \gamma_{ij}
+X_{ijt} \mid T_{ijt}, Z_{ijt}=1, R_{ijt}=r
 \sim
 \operatorname{Binomial}
-\left(
-T_{ij},
-\frac{\gamma_{ij}N_1}{\gamma_{ij}N_1 + N_0}
-\right).
+\left(T_{ijt}, \frac{rN_{1t}}{rN_{1t}+N_{0t}}\right).
 \]
 
-MIRAGE integrates over the prior distribution of \(\gamma_{ij}\) to compute the risk-variant marginal likelihood. The corresponding variant-level Bayes factor is
+The implementation supports trait-specific relative-risk hyperparameters. The first version does not force these parameters to be shared across traits.
+
+## Gene-Level Bayes Factors
+
+For trait \(t\), let \(b_{ijt}\) be the variant-level Bayes factor and let \(\eta_{tc}\) be the trait-specific probability that a variant in annotation category \(c\) is a risk variant, conditional on the gene being active for trait \(t\). Then
 
 \[
-B_{ij}
+B_{it}
 =
-\frac{
-P(X_{ij} \mid T_{ij}, Z_{ij}=1)
-}{
-P(X_{ij} \mid T_{ij}, Z_{ij}=0)
-}.
-\]
-
-## EM Algorithm
-
-The parameters \(\delta\) and \(\eta = (\eta_1,\ldots,\eta_K)\) are estimated with an empirical Bayes EM algorithm across all genes.
-
-1. Compute variant-level Bayes factors \(B_{ij}\).
-2. Initialize \(\delta\) and \(\eta_c\).
-3. E step: compute posterior expectations for \(U_i\) and \(U_i Z_{ij}\) under the current parameter values.
-4. M step: update \(\delta\) and each \(\eta_c\) using closed-form averages of these posterior expectations.
-5. Iterate until the parameter change is below the selected tolerance or until the maximum iteration count is reached.
-
-In weak-signal settings, the paper notes that \(\delta\) may be difficult to identify. A fixed, scientifically motivated value of \(\delta\) may therefore be useful in sensitivity analyses.
-
-## Gene-Level Bayes Factor
-
-Given fitted category probabilities \(\eta_c\), the gene-level Bayes factor is
-
-\[
-B_i
-=
-\prod_{j=1}^{m_i}
+\prod_j
 \left[
-(1 - \eta_{c_{ij}}) + \eta_{c_{ij}} B_{ij}
+(1-\eta_{t,c_{ijt}}) + \eta_{t,c_{ijt}} b_{ijt}
 \right].
 \]
 
-This product combines evidence across variants while allowing many variants to contribute little when their variant-level Bayes factors are close to one.
-
-## Posterior Probability
-
-The posterior probability that gene \(i\) is a risk gene is
+The implementation evaluates this in log space:
 
 \[
-\operatorname{PP}_i
+\log B_{it}
 =
-P(U_i = 1 \mid X,T,C)
-=
-\frac{\delta B_i}{1 - \delta + \delta B_i}.
+\sum_j
+\log
+\left[
+(1-\eta_{t,c_{ijt}}) + \eta_{t,c_{ijt}} b_{ijt}
+\right].
 \]
 
-This posterior probability is model-based and depends on the fitted prior probability \(\delta\), the estimated annotation effects \(\eta_c\), and the variant-level evidence.
+## Joint Likelihood
 
-## Bayesian FDR
-
-Genes can be ranked by \(\operatorname{PP}_i\). For a selected set of genes \(S\), a Bayesian false discovery rate estimate can be written as the average posterior error probability:
+Ignoring factors that do not depend on model parameters, the gene-level contribution is
 
 \[
-\operatorname{BFDR}(S)
-=
-\frac{1}{|S|}
-\sum_{i \in S}
-\left(1 - \operatorname{PP}_i\right).
+D_i =
+\pi_{00}
++ \pi_{10}B_{i1}
++ \pi_{01}B_{i2}
++ \pi_{11}B_{i1}B_{i2}.
 \]
 
-This gives a direct posterior-probability-based multiple-testing summary. It should be interpreted under the assumptions of the MIRAGE model and the chosen prior specification.
+The observed-data log likelihood is
 
-## Why MIRAGE Can Improve Over Burden Tests
+\[
+\ell(\pi,\eta_1,\eta_2) = \sum_i \log D_i.
+\]
 
-MIRAGE may improve over burden tests when risk effects are sparse and heterogeneous within a gene. A burden test can dilute signal by aggregating many neutral variants with a small number of risk variants. MIRAGE instead allows each variant to contribute according to its Bayes factor and annotation-dependent prior probability.
+## E Step
 
-The empirical Bayes structure can also learn that certain annotation categories tend to carry more evidence across the full gene set. This can make the model more adaptive than a fixed hard-filtering rule, although the benefit depends on annotation quality and the amount of signal in the data.
+The posterior responsibility for each state is
 
-## Main Limitations
+\[
+\tau_{i,00} = \frac{\pi_{00}}{D_i},
+\quad
+\tau_{i,10} = \frac{\pi_{10}B_{i1}}{D_i},
+\quad
+\tau_{i,01} = \frac{\pi_{01}B_{i2}}{D_i},
+\quad
+\tau_{i,11} = \frac{\pi_{11}B_{i1}B_{i2}}{D_i}.
+\]
 
-- The current model is designed for binary case-control or transmission-style count data, not quantitative traits.
-- The input data should already address population stratification through design or matching.
-- The model does not directly include sample-level covariates such as sex, age, batch, or ancestry PCs.
-- Annotation categories are treated as disjoint groups; overlapping, continuous, or high-dimensional annotations require extensions.
-- Variant independence is assumed in the gene-level product, so linkage disequilibrium should be considered during preprocessing or sensitivity analysis.
-- Weak signals can make \(\delta\) and some \(\eta_c\) values difficult to estimate precisely.
-- Results can depend on annotation definitions and relative-risk prior hyperparameters, so sensitivity analyses are important.
+The implementation computes these with log-sum-exp normalization.
+
+Marginal trait responsibilities are
+
+\[
+w_{i1} = \tau_{i,10} + \tau_{i,11},
+\qquad
+w_{i2} = \tau_{i,01} + \tau_{i,11}.
+\]
+
+The conditional posterior probability that a variant is a risk variant for its trait is
+
+\[
+\rho_{ijt}
+=
+\frac{\eta_{t,c_{ijt}} b_{ijt}}
+{(1-\eta_{t,c_{ijt}}) + \eta_{t,c_{ijt}} b_{ijt}}.
+\]
+
+This remains trait-specific. The model does not introduce a four-state variant-level latent variable.
+
+## M Step
+
+The four mixing proportions update as
+
+\[
+\pi_{ab}^{new} = \frac{1}{G}\sum_i \tau_{i,ab}.
+\]
+
+Trait-specific annotation parameters update as
+
+\[
+\eta_{tc}^{new}
+=
+\frac{
+\sum_i w_{it}\sum_{j:c_{ijt}=c}\rho_{ijt}
+}{
+\sum_i w_{it}m_{itc}
+},
+\]
+
+where \(m_{itc}\) is the number of variants in gene \(i\), trait \(t\), category \(c\). Thus \(\eta_1\) and \(\eta_2\) are not shared.
+
+## Posterior Targets
+
+The reported posterior probabilities are
+
+\[
+\operatorname{PP}_{trait1,i} = \tau_{i,10} + \tau_{i,11},
+\]
+
+\[
+\operatorname{PP}_{trait2,i} = \tau_{i,01} + \tau_{i,11},
+\]
+
+\[
+\operatorname{PP}_{pleiotropy,i} = \tau_{i,11}.
+\]
+
+Bayesian FDR tables are computed separately for trait 1, trait 2, and pleiotropy by sorting posterior probabilities and averaging local posterior error probabilities.
+
+## Limitations
+
+- The current model assumes independent studies and no sample overlap.
+- Pleiotropy is gene-level, not variant-level.
+- The same gene can be pleiotropic even if different variants drive the two traits.
+- The current synthetic simulation helper is for software validation, not biological inference.
+- Weak data can make \(\pi_{11}\) or category-specific \(\eta\) values difficult to identify.

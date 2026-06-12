@@ -1,0 +1,60 @@
+---
+title: "Implementation"
+output: workflowr::wflow_html
+---
+
+## Main Function
+
+The first implementation exposes:
+
+```{r, eval=FALSE}
+mirage_two_trait(
+  data_trait1,
+  data_trait2,
+  n1_trait1,
+  n0_trait1,
+  n1_trait2,
+  n0_trait2,
+  gamma_trait1 = 3,
+  sigma_trait1 = 2,
+  gamma_trait2 = 3,
+  sigma_trait2 = 2
+)
+```
+
+Inputs are one row per variant, with columns for gene, case count, control count, annotation category, and optionally a precomputed `log_bf` for testing or simulation.
+
+## Output Objects
+
+The returned object contains:
+
+- `posterior`: four state responsibilities and posterior probabilities for trait 1, trait 2, and pleiotropy.
+- `gene_bf`: trait-specific gene log Bayes factors and data availability indicators.
+- `parameters`: fitted \(\pi\), \(\eta_1\), and \(\eta_2\).
+- `bfdr`: Bayesian FDR tables for trait 1, trait 2, and pleiotropy.
+- `traces`: observed-data log likelihood and parameter traces.
+- `diagnostics`: convergence, monotonicity, boundary, and missing-data indicators.
+
+## Numerical Design
+
+The core calculations use log-scale gene Bayes factors and log-sum-exp state normalization. Direct products such as \(B_{i1}B_{i2}\) are avoided in the EM calculations.
+
+The implementation supports precomputed `log_bf` columns for fast tests and toy simulations. If `log_bf` is not supplied, variant-level Bayes factors are computed from the trait-specific case/control counts and relative-risk hyperparameters.
+
+## Tests
+
+The current test suite checks:
+
+- four responsibilities sum to one for each gene,
+- four mixing proportions sum to one,
+- EM observed-data log likelihood is nondecreasing,
+- independent four-state prior reproduces separate single-trait posterior probabilities when parameters are fixed,
+- an uninformative second trait does not change trait 1 inference under independent priors,
+- swapping traits swaps states `10` and `01`,
+- invalid inputs produce informative errors,
+- informative toy simulations rank pleiotropic genes higher,
+- parameter recovery and Bayesian FDR calibration smoke checks.
+
+## Restrictions
+
+The implementation and tests use toy or simulated data only. Local reference PDFs, LaTeX files, implementation plans, and real or protected data are excluded from version control.

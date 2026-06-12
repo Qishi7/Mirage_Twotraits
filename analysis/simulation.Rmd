@@ -1,0 +1,82 @@
+---
+title: "Simulation"
+output: workflowr::wflow_html
+---
+
+## Toy Simulation Only
+
+This page runs a small synthetic smoke check using the current implementation. It does not use real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data.
+
+```{r}
+source("R/two_trait_mirage.R")
+source("R/simulate_two_trait_mirage.R")
+
+set.seed(20260612)
+sim <- simulate_two_trait_mirage(
+  n_genes = 120,
+  variants_per_gene = 8,
+  pi = c("00" = 0.70, "10" = 0.10, "01" = 0.08, "11" = 0.12),
+  eta_trait1 = c("1" = 0.45, "2" = 0.10),
+  eta_trait2 = c("1" = 0.45, "2" = 0.10),
+  signal_mean_trait1 = 3.5,
+  signal_mean_trait2 = 3.5,
+  null_mean = -1.5,
+  seed = 20260612
+)
+
+fit <- mirage_two_trait(
+  sim$trait1,
+  sim$trait2,
+  n1_trait1 = 500,
+  n0_trait1 = 500,
+  n1_trait2 = 500,
+  n0_trait2 = 500,
+  log_bf_col_trait1 = "log_bf",
+  log_bf_col_trait2 = "log_bf",
+  eta_init_trait1 = c("1" = 0.20, "2" = 0.05),
+  eta_init_trait2 = c("1" = 0.20, "2" = 0.05),
+  pi_init = c("00" = 0.75, "10" = 0.08, "01" = 0.07, "11" = 0.10),
+  max_iter = 100,
+  verbose = FALSE
+)
+```
+
+## Fitted Parameters
+
+```{r}
+fit$parameters$pi
+fit$parameters$eta_trait1
+fit$parameters$eta_trait2
+```
+
+## Diagnostics
+
+```{r}
+data.frame(
+  converged = fit$diagnostics$converged,
+  iterations = fit$diagnostics$n_iter,
+  loglik_non_decreasing = fit$diagnostics$loglik_non_decreasing,
+  final_loglik = tail(fit$traces$loglik, 1)
+)
+```
+
+## Pleiotropy Posterior Check
+
+```{r}
+truth <- sim$truth[match(fit$posterior$Gene, sim$truth$Gene), ]
+data.frame(
+  group = c("true_pleiotropic", "not_true_pleiotropic"),
+  mean_PP_pleiotropy = c(
+    mean(fit$posterior$PP_pleiotropy[truth$state == "11"]),
+    mean(fit$posterior$PP_pleiotropy[truth$state != "11"])
+  )
+)
+```
+
+## Top Pleiotropy Candidates In Toy Data
+
+```{r}
+head(fit$bfdr$pleiotropy, 10)
+```
+
+These numbers are generated from synthetic data and should be interpreted only as a software smoke check.
