@@ -11,7 +11,7 @@
 
 
 
-<title>Two-Trait MIRAGE</title>
+<title>Simulation</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -355,7 +355,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Two-Trait MIRAGE</h1>
+<h1 class="title toc-ignore">Simulation</h1>
 
 </div>
 
@@ -363,7 +363,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -388,9 +388,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Mirage_t/</code> <span
@@ -425,6 +425,128 @@ class="panel-collapse collapse">
 <p>Great! Since the R Markdown file has been committed to the Git
 repository, you know the exact version of the code that produced these
 results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongobjectspresent">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>Environment:</strong> objects present
+</a>
+</p>
+</div>
+<div id="strongEnvironmentstrongobjectspresent"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+The global environment had objects present when the code in the R
+Markdown file was run. These objects can affect the analysis in your R
+Markdown file in unknown ways. For reproduciblity it’s best to always
+run the code in an empty environment. Use <code>wflow_publish</code> or
+<code>wflow_build</code> to ensure that the code is always run in an
+empty environment.
+</p>
+<p>
+The following objects were defined in the global environment when these
+results were created:
+</p>
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:left;">
+Class
+</th>
+<th style="text-align:left;">
+Size
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+local_lib
+</td>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+136 bytes
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260611code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260611)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260611code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260611)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
 </div>
 </div>
 </div>
@@ -499,10 +621,11 @@ have uncommitted changes.
 <div id="versions" class="tab-pane fade">
 <p>
 These are the previous versions of the repository in which changes were
-made to the R Markdown (<code>analysis/index.Rmd</code>) and HTML
-(<code>docs/index.html</code>) files. If you’ve configured a remote Git
-repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
-in the table below to view the files as they were in that past version.
+made to the R Markdown (<code>analysis/simulation.Rmd</code>) and HTML
+(<code>docs/simulation.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -531,7 +654,7 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/Qishi7/Mirage/blob/1d54a173ce8905f44a1f816e6857e88aeafbc5af/analysis/index.Rmd" target="_blank">1d54a17</a>
+<a href="https://github.com/Qishi7/Mirage/blob/1d54a173ce8905f44a1f816e6857e88aeafbc5af/analysis/simulation.Rmd" target="_blank">1d54a17</a>
 </td>
 <td>
 Qishi Zhan
@@ -543,74 +666,6 @@ Qishi Zhan
 Update website for two-trait MIRAGE extension
 </td>
 </tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/Qishi7/Mirage/567af30918fe7ffe35eada6a338efc8c01cc7413/docs/index.html" target="_blank">567af30</a>
-</td>
-<td>
-Qishi Zhan
-</td>
-<td>
-2026-06-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/Qishi7/Mirage/blob/d12ee4720030d62e01b64f96ae71f8128c822c0c/analysis/index.Rmd" target="_blank">d12ee47</a>
-</td>
-<td>
-Qishi Zhan
-</td>
-<td>
-2026-06-11
-</td>
-<td>
-Polish MIRAGE workflowr site
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/Qishi7/Mirage/0372fade03c32c4e7b5851abaf10cf75f268e4d0/docs/index.html" target="_blank">0372fad</a>
-</td>
-<td>
-Qishi Zhan
-</td>
-<td>
-2026-06-11
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/Qishi7/Mirage/blob/dc92a7c288c9f466a201987176bff50e6afa2919/analysis/index.Rmd" target="_blank">dc92a7c</a>
-</td>
-<td>
-Qishi Zhan
-</td>
-<td>
-2026-06-11
-</td>
-<td>
-Initialize workflowr site
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -618,62 +673,141 @@ Initialize workflowr site
 </div>
 </div>
 </div>
-<div id="overview" class="section level2">
-<h2>Overview</h2>
-<p>This repository now focuses on extending MIRAGE from one trait to two
-independent traits. The motivating first application is autism as trait
-1 and schizophrenia as trait 2, using rare-variant summary counts and
-gene-level probabilistic modeling.</p>
-<p>The first implementation is a gene-level four-state model:</p>
-<ul>
-<li><code>00</code>: neither trait</li>
-<li><code>10</code>: trait 1 only</li>
-<li><code>01</code>: trait 2 only</li>
-<li><code>11</code>: both traits</li>
-</ul>
-<p>State <code>11</code> represents gene-level pleiotropy. It does not
-require the same variants to affect both traits. Conditional on the gene
-state, the two trait-specific likelihoods are products of two
-single-trait MIRAGE likelihoods.</p>
+<div id="toy-simulation-only" class="section level2">
+<h2>Toy Simulation Only</h2>
+<p>This page runs a small synthetic smoke check using the current
+implementation. It does not use real ASD, schizophrenia, WES, dbGaP,
+SPARK, protected, private, or large data.</p>
+<pre class="r"><code>source(&quot;R/two_trait_mirage.R&quot;)
+source(&quot;R/simulate_two_trait_mirage.R&quot;)
+
+set.seed(20260612)
+sim &lt;- simulate_two_trait_mirage(
+  n_genes = 120,
+  variants_per_gene = 8,
+  pi = c(&quot;00&quot; = 0.70, &quot;10&quot; = 0.10, &quot;01&quot; = 0.08, &quot;11&quot; = 0.12),
+  eta_trait1 = c(&quot;1&quot; = 0.45, &quot;2&quot; = 0.10),
+  eta_trait2 = c(&quot;1&quot; = 0.45, &quot;2&quot; = 0.10),
+  signal_mean_trait1 = 3.5,
+  signal_mean_trait2 = 3.5,
+  null_mean = -1.5,
+  seed = 20260612
+)
+
+fit &lt;- mirage_two_trait(
+  sim$trait1,
+  sim$trait2,
+  n1_trait1 = 500,
+  n0_trait1 = 500,
+  n1_trait2 = 500,
+  n0_trait2 = 500,
+  log_bf_col_trait1 = &quot;log_bf&quot;,
+  log_bf_col_trait2 = &quot;log_bf&quot;,
+  eta_init_trait1 = c(&quot;1&quot; = 0.20, &quot;2&quot; = 0.05),
+  eta_init_trait2 = c(&quot;1&quot; = 0.20, &quot;2&quot; = 0.05),
+  pi_init = c(&quot;00&quot; = 0.75, &quot;10&quot; = 0.08, &quot;01&quot; = 0.07, &quot;11&quot; = 0.10),
+  max_iter = 100,
+  verbose = FALSE
+)</code></pre>
 </div>
-<div id="project-goals" class="section level2">
-<h2>Project Goals</h2>
-<p>The two-trait extension is designed to support:</p>
-<ul>
-<li>detection of pleiotropic genes,</li>
-<li>marginal gene discovery for each trait,</li>
-<li>cautious cross-trait information sharing when the fitted joint
-architecture supports positive pleiotropic enrichment,</li>
-<li>log-scale numerical calculations for stability,</li>
-<li>simulation-based validation before any real-data analysis.</li>
-</ul>
+<div id="fitted-parameters" class="section level2">
+<h2>Fitted Parameters</h2>
+<pre class="r"><code>fit$parameters$pi</code></pre>
+<pre><code>        00         10         01         11 
+0.80356296 0.04841788 0.03925002 0.10876914 </code></pre>
+<pre class="r"><code>fit$parameters$eta_trait1</code></pre>
+<pre><code>        2         1 
+0.1519542 0.7918398 </code></pre>
+<pre class="r"><code>fit$parameters$eta_trait2</code></pre>
+<pre><code>         2          1 
+0.02712176 0.64063900 </code></pre>
 </div>
-<div id="current-implementation" class="section level2">
-<h2>Current Implementation</h2>
-<p>The current code implements a first R version of the four-state EM
-model using toy or simulated inputs only. It supports trait-specific
-annotation parameters, trait-specific relative-risk hyperparameters,
-four-state posterior responsibilities, posterior probabilities for each
-target, Bayesian FDR tables, and convergence diagnostics.</p>
+<div id="diagnostics" class="section level2">
+<h2>Diagnostics</h2>
+<pre class="r"><code>data.frame(
+  converged = fit$diagnostics$converged,
+  iterations = fit$diagnostics$n_iter,
+  loglik_non_decreasing = fit$diagnostics$loglik_non_decreasing,
+  final_loglik = tail(fit$traces$loglik, 1)
+)</code></pre>
+<pre><code>  converged iterations loglik_non_decreasing final_loglik
+1      TRUE         31                  TRUE     137.4446</code></pre>
 </div>
-<div id="data-policy" class="section level2">
-<h2>Data Policy</h2>
-<p>This website and repository must not include real ASD, schizophrenia,
-WES, dbGaP, SPARK, protected, private, or large data files. All examples
-and tests use toy or simulated data only.</p>
+<div id="pleiotropy-posterior-check" class="section level2">
+<h2>Pleiotropy Posterior Check</h2>
+<pre class="r"><code>truth &lt;- sim$truth[match(fit$posterior$Gene, sim$truth$Gene), ]
+data.frame(
+  group = c(&quot;true_pleiotropic&quot;, &quot;not_true_pleiotropic&quot;),
+  mean_PP_pleiotropy = c(
+    mean(fit$posterior$PP_pleiotropy[truth$state == &quot;11&quot;]),
+    mean(fit$posterior$PP_pleiotropy[truth$state != &quot;11&quot;])
+  )
+)</code></pre>
+<pre><code>                 group mean_PP_pleiotropy
+1     true_pleiotropic        0.873247939
+2 not_true_pleiotropic        0.007800164</code></pre>
 </div>
-<div id="pages" class="section level2">
-<h2>Pages</h2>
-<ul>
-<li><a href="method.html">Method</a>: model definition, likelihood, EM
-updates, posterior probabilities, BFDR, and limitations.</li>
-<li><a href="simulation.html">Simulation</a>: toy simulation checks
-actually generated by the current implementation.</li>
-<li><a href="implementation.html">Implementation</a>: function
-interface, output objects, tests, and development notes.</li>
-<li><a href="notes.html">Notes</a>: project log, validation checklist,
-and remaining limitations.</li>
-</ul>
+<div id="top-pleiotropy-candidates-in-toy-data" class="section level2">
+<h2>Top Pleiotropy Candidates In Toy Data</h2>
+<pre class="r"><code>head(fit$bfdr$pleiotropy, 10)</code></pre>
+<pre><code>           Gene     target posterior_probability    local_fdr bayesian_fdr rank
+GENE91   GENE91 pleiotropy             0.9999388 6.115987e-05 6.115987e-05    1
+GENE82   GENE82 pleiotropy             0.9973724 2.627637e-03 1.344398e-03    2
+GENE17   GENE17 pleiotropy             0.9969062 3.093843e-03 1.927547e-03    3
+GENE13   GENE13 pleiotropy             0.9959484 4.051591e-03 2.458558e-03    4
+GENE119 GENE119 pleiotropy             0.9946912 5.308752e-03 3.028596e-03    5
+GENE32   GENE32 pleiotropy             0.9766788 2.332121e-02 6.410699e-03    6
+GENE94   GENE94 pleiotropy             0.9541545 4.584548e-02 1.204424e-02    7
+GENE40   GENE40 pleiotropy             0.9415303 5.846970e-02 1.784742e-02    8
+GENE88   GENE88 pleiotropy             0.9319994 6.800063e-02 2.342000e-02    9
+GENE96   GENE96 pleiotropy             0.9178723 8.212773e-02 2.929077e-02   10</code></pre>
+<p>These numbers are generated from synthetic data and should be
+interpreted only as a software smoke check.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.2 (2024-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=Chinese (Simplified)_China.utf8 
+[2] LC_CTYPE=Chinese (Simplified)_China.utf8   
+[3] LC_MONETARY=Chinese (Simplified)_China.utf8
+[4] LC_NUMERIC=C                               
+[5] LC_TIME=Chinese (Simplified)_China.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.6.5       httr_1.4.7        cli_3.6.6         knitr_1.50       
+ [5] rlang_1.2.0       xfun_0.54         stringi_1.8.4     processx_3.8.6   
+ [9] promises_1.3.2    jsonlite_2.0.0    glue_1.8.0        rprojroot_2.1.1  
+[13] git2r_0.36.2      htmltools_0.5.8.1 httpuv_1.6.15     ps_1.9.1         
+[17] sass_0.4.10       rmarkdown_2.30    jquerylib_0.1.4   tibble_3.2.1     
+[21] evaluate_1.0.5    fastmap_1.2.0     yaml_2.3.10       lifecycle_1.0.4  
+[25] whisker_0.4.1     stringr_1.6.0     compiler_4.4.2    fs_1.6.6         
+[29] pkgconfig_2.0.3   Rcpp_1.0.14       rstudioapi_0.17.1 later_1.4.1      
+[33] digest_0.6.37     R6_2.6.1          pillar_1.11.1     callr_3.7.6      
+[37] magrittr_2.0.3    bslib_0.9.0       tools_4.4.2       cachem_1.1.0     
+[41] getPass_0.2-4    </code></pre>
+</div>
 </div>
 </div>
 </div>
