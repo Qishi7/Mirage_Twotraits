@@ -1,7 +1,7 @@
-name: "Mirage"
+name: "MIRAGE Two Trait Extension"
 output_dir: ../docs
 navbar:
-  title: "Mirage"
+  title: "MIRAGE Two Trait Extension"
   left:
   - text: Overview
     href: index.html

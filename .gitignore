@@ -13,6 +13,7 @@ two_trait_mirage_codex_todo.md
 two_trait_mirage_technical_specification.pdf
 two_trait_mirage_technical_specification.tex
 design/two_trait_mirage_implementation_plan.md
+vcf_exploration_report.md
 
 # Keep protected or large study data out of the website repository.
 data/

@@ -1,8 +1,10 @@
-# Two-Trait MIRAGE
+# Mirage_Twotraits
 
-This repository is now focused on a two-trait extension of MIRAGE for joint gene-level rare-variant analysis. The motivating first use case is autism as trait 1 and schizophrenia as trait 2.
+This repository hosts the MIRAGE Two Trait Extension: a two-trait extension of MIRAGE for joint gene-level rare-variant analysis. The motivating first use case is autism as trait 1 and schizophrenia as trait 2.
 
-Website: https://qishi7.github.io/Mirage/
+Website: https://qishi7.github.io/Mirage_Twotraits/
+
+Repository: https://github.com/Qishi7/Mirage_Twotraits
 
 ## Model Direction
 
@@ -21,10 +23,11 @@ State `11` represents gene-level pleiotropy. It does not require the same varian
 - `tests/testthat/`: unit tests and synthetic simulation smoke checks.
 - `analysis/`: workflowr source pages.
 - `docs/`: rendered GitHub Pages website.
+- `Mirage_Twotraits.Rproj`: RStudio project file.
 
 ## Data Privacy
 
-No real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data files should be committed. Tests and examples use toy or simulated data only. Local reference documents such as papers, technical specifications, TODO files, and implementation plans are excluded from version control.
+No real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data files should be committed. Tests and examples use toy or simulated data only. Local reference documents such as papers, technical specifications, TODO files, VCF exploration reports, and implementation plans are excluded from version control.
 
 ## Running Tests
 
