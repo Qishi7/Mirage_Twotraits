@@ -1,12 +1,17 @@
 ---
-title: "Two-Trait MIRAGE"
+title: "MIRAGE Two Trait Extension"
 site: workflowr::wflow_site
 output: workflowr::wflow_html
 ---
 
 ## Overview
 
-This repository now focuses on extending MIRAGE from one trait to two independent traits. The motivating first application is autism as trait 1 and schizophrenia as trait 2, using rare-variant summary counts and gene-level probabilistic modeling.
+`Mirage_Twotraits` is the project repository for the MIRAGE Two Trait Extension. It extends MIRAGE from one trait to two independent traits, with autism as trait 1 and schizophrenia as trait 2 in the motivating first application.
+
+Project links:
+
+- Repository: <https://github.com/Qishi7/Mirage_Twotraits>
+- Website: <https://qishi7.github.io/Mirage_Twotraits/>
 
 The first implementation is a gene-level four-state model:
 
