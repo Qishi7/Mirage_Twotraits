@@ -3,14 +3,14 @@ output_dir: ../docs
 navbar:
   title: "Mirage"
   left:
-  - text: Home
+  - text: Overview
     href: index.html
   - text: Method
     href: method.html
-  - text: Speed
-    href: speed.html
-  - text: Examples
-    href: examples.html
+  - text: Simulation
+    href: simulation.html
+  - text: Implementation
+    href: implementation.html
   - text: Notes
     href: notes.html
 output:

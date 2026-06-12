@@ -9,6 +9,10 @@ Rlib/
 mirage2026.pdf
 mirage_todo_summary.md
 workflowr_setup.R
+two_trait_mirage_codex_todo.md
+two_trait_mirage_technical_specification.pdf
+two_trait_mirage_technical_specification.tex
+design/two_trait_mirage_implementation_plan.md
 
 # Keep protected or large study data out of the website repository.
 data/
