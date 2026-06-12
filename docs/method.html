@@ -11,7 +11,7 @@
 
 
 
-<title>MIRAGE Method</title>
+<title>Method</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -329,16 +329,16 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
+  <a href="index.html">Overview</a>
 </li>
 <li>
   <a href="method.html">Method</a>
 </li>
 <li>
-  <a href="speed.html">Speed</a>
+  <a href="simulation.html">Simulation</a>
 </li>
 <li>
-  <a href="examples.html">Examples</a>
+  <a href="implementation.html">Implementation</a>
 </li>
 <li>
   <a href="notes.html">Notes</a>
@@ -355,7 +355,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">MIRAGE Method</h1>
+<h1 class="title toc-ignore">Method</h1>
 
 </div>
 
@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-06-11
+<strong>Last updated:</strong> 2026-06-12
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -431,15 +431,15 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetree1d54a173ce8905f44a1f816e6857e88aeafbc5aftargetblank1d54a17a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>
+<a href="https://github.com/Qishi7/Mirage/tree/1d54a173ce8905f44a1f816e6857e88aeafbc5af" target="_blank">1d54a17</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetree1d54a173ce8905f44a1f816e6857e88aeafbc5aftargetblank1d54a17a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -449,7 +449,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>.
+<a href="https://github.com/Qishi7/Mirage/tree/1d54a173ce8905f44a1f816e6857e88aeafbc5af" target="_blank">1d54a17</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -466,13 +466,23 @@ were generated:
 Ignored files:
     Ignored:    Rlib/
     Ignored:    data/
+    Ignored:    design/
     Ignored:    mirage2026.pdf
     Ignored:    mirage_todo_summary.md
+    Ignored:    two_trait_mirage_codex_todo.md
+    Ignored:    two_trait_mirage_technical_specification.pdf
+    Ignored:    two_trait_mirage_technical_specification.tex
     Ignored:    workflowr_setup.R
+
+Untracked files:
+    Untracked:  R/
+    Untracked:  tests/
 
 Unstaged changes:
     Modified:   .gitignore
-    Modified:   README.md
+    Modified:   analysis/_site.yml
+    Deleted:    analysis/examples.Rmd
+    Deleted:    analysis/speed.Rmd
 
 </code></pre>
 <p>
@@ -516,6 +526,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage/blob/1d54a173ce8905f44a1f816e6857e88aeafbc5af/analysis/method.Rmd" target="_blank">1d54a17</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Update website for two-trait MIRAGE extension
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage/567af30918fe7ffe35eada6a338efc8c01cc7413/docs/method.html" target="_blank">567af30</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -574,221 +618,173 @@ Initialize workflowr site
 </div>
 </div>
 </div>
-<div id="background-and-motivation" class="section level2">
-<h2>Background And Motivation</h2>
-<p>Rare-variant association studies often aggregate variants within a
-gene to improve power. A burden test is a common aggregation strategy,
-but it implicitly treats selected variants as having similar directions
-and comparable relevance to disease risk. That assumption can be
-inefficient when only a small subset of rare variants in a gene are
-truly associated with the trait.</p>
-<p>MIRAGE addresses this issue with a hierarchical mixture model. It
-treats each gene as potentially risk-associated and, conditional on a
-risk gene, treats each variant as a mixture of risk and non-risk states.
-Functional annotation categories influence the prior probability that a
-variant is a risk variant. This is a more cautious use of annotation
-than hard filtering: annotations shift prior weights, but they do not by
-themselves determine whether a variant contributes evidence.</p>
-</div>
-<div id="notation" class="section level2">
-<h2>Notation</h2>
-<p>For gene <span class="math inline">\(i = 1,\ldots,G\)</span> and
-variant <span class="math inline">\(j = 1,\ldots,m_i\)</span>:</p>
-<ul>
-<li><span class="math inline">\(X_{ij}\)</span>: allele count in
-cases.</li>
-<li><span class="math inline">\(X^{(0)}_{ij}\)</span>: allele count in
-controls.</li>
-<li><span class="math inline">\(T_{ij} = X_{ij} + X^{(0)}_{ij}\)</span>:
-total allele count.</li>
-<li><span class="math inline">\(N_1\)</span>: number of cases.</li>
-<li><span class="math inline">\(N_0\)</span>: number of controls.</li>
-<li><span class="math inline">\(c_{ij}\)</span>: functional annotation
-category for variant <span class="math inline">\(j\)</span> in gene
-<span class="math inline">\(i\)</span>.</li>
-<li><span class="math inline">\(\delta\)</span>: prior probability that
-a gene is a risk gene.</li>
-<li><span class="math inline">\(\eta_c\)</span>: prior probability that
-a variant in category <span class="math inline">\(c\)</span> is a risk
-variant, conditional on its gene being a risk gene.</li>
-<li><span class="math inline">\(\gamma_{ij}\)</span>: relative-risk
-multiplier for a risk variant.</li>
-</ul>
-</div>
-<div id="generative-model" class="section level2">
-<h2>Generative Model</h2>
-<p>The gene-level latent state is</p>
+<div id="four-state-gene-model" class="section level2">
+<h2>Four-State Gene Model</h2>
+<p>For gene <span class="math inline">\(i\)</span>, define the joint
+gene state</p>
 <p><span class="math display">\[
-U_i \sim \operatorname{Bernoulli}(\delta),
+S_i = (U_{i1}, U_{i2}) \in \{00, 10, 01, 11\}.
 \]</span></p>
-<p>where <span class="math inline">\(U_i = 1\)</span> indicates that
-gene <span class="math inline">\(i\)</span> is a risk gene.</p>
-<p>The variant-level latent state is constrained by the gene state:</p>
+<p>The four mixing proportions are</p>
 <p><span class="math display">\[
-Z_{ij} \mid U_i = 0 = 0,
+\pi_{00} + \pi_{10} + \pi_{01} + \pi_{11} = 1.
 \]</span></p>
-<p>and, if <span class="math inline">\(U_i = 1\)</span>,</p>
-<p><span class="math display">\[
-Z_{ij} \mid U_i = 1, c_{ij} = c \sim \operatorname{Bernoulli}(\eta_c).
-\]</span></p>
-<p>Thus <span class="math inline">\(\eta_c\)</span> is
-category-specific. A more deleterious annotation category may have a
-larger estimated <span class="math inline">\(\eta_c\)</span>, but the
-value is learned from the data rather than fixed solely by
-annotation.</p>
+<p>Trait 1 initially represents autism and trait 2 schizophrenia. The
+model assumes independent studies with no sample overlap. Conditional on
+<span class="math inline">\(S_i\)</span>, the two trait-specific
+likelihoods are independent.</p>
 </div>
-<div id="conditional-likelihood" class="section level2">
-<h2>Conditional Likelihood</h2>
-<p>Before conditioning, the model assumes Poisson counts with a nuisance
-allele frequency <span class="math inline">\(q_{ij}\)</span>. MIRAGE
-conditions on the total allele count <span
-class="math inline">\(T_{ij}\)</span>, removing <span
-class="math inline">\(q_{ij}\)</span> and yielding binomial
-likelihoods.</p>
-<p>For a non-risk variant,</p>
+<div id="trait-specific-mirage-likelihood" class="section level2">
+<h2>Trait-Specific MIRAGE Likelihood</h2>
+<p>For variant <span class="math inline">\(j\)</span> in gene <span
+class="math inline">\(i\)</span> and trait <span
+class="math inline">\(t\)</span>, MIRAGE conditions on total allele
+count <span class="math inline">\(T_{ijt}\)</span>. A non-risk variant
+follows</p>
 <p><span class="math display">\[
-X_{ij} \mid T_{ij}, Z_{ij}=0
+X_{ijt} \mid T_{ijt}, Z_{ijt}=0
 \sim
 \operatorname{Binomial}
-\left(
-T_{ij},
-\frac{N_1}{N_1 + N_0}
-\right).
+\left(T_{ijt}, \frac{N_{1t}}{N_{1t}+N_{0t}}\right).
 \]</span></p>
 <p>For a risk variant with relative-risk multiplier <span
-class="math inline">\(\gamma_{ij}\)</span>,</p>
+class="math inline">\(R_{ijt}\)</span>,</p>
 <p><span class="math display">\[
-X_{ij} \mid T_{ij}, Z_{ij}=1, \gamma_{ij}
+X_{ijt} \mid T_{ijt}, Z_{ijt}=1, R_{ijt}=r
 \sim
 \operatorname{Binomial}
-\left(
-T_{ij},
-\frac{\gamma_{ij}N_1}{\gamma_{ij}N_1 + N_0}
-\right).
+\left(T_{ijt}, \frac{rN_{1t}}{rN_{1t}+N_{0t}}\right).
 \]</span></p>
-<p>MIRAGE integrates over the prior distribution of <span
-class="math inline">\(\gamma_{ij}\)</span> to compute the risk-variant
-marginal likelihood. The corresponding variant-level Bayes factor is</p>
-<p><span class="math display">\[
-B_{ij}
-=
-\frac{
-P(X_{ij} \mid T_{ij}, Z_{ij}=1)
-}{
-P(X_{ij} \mid T_{ij}, Z_{ij}=0)
-}.
-\]</span></p>
+<p>The implementation supports trait-specific relative-risk
+hyperparameters. The first version does not force these parameters to be
+shared across traits.</p>
 </div>
-<div id="em-algorithm" class="section level2">
-<h2>EM Algorithm</h2>
-<p>The parameters <span class="math inline">\(\delta\)</span> and <span
-class="math inline">\(\eta = (\eta_1,\ldots,\eta_K)\)</span> are
-estimated with an empirical Bayes EM algorithm across all genes.</p>
-<ol style="list-style-type: decimal">
-<li>Compute variant-level Bayes factors <span
-class="math inline">\(B_{ij}\)</span>.</li>
-<li>Initialize <span class="math inline">\(\delta\)</span> and <span
-class="math inline">\(\eta_c\)</span>.</li>
-<li>E step: compute posterior expectations for <span
-class="math inline">\(U_i\)</span> and <span class="math inline">\(U_i
-Z_{ij}\)</span> under the current parameter values.</li>
-<li>M step: update <span class="math inline">\(\delta\)</span> and each
-<span class="math inline">\(\eta_c\)</span> using closed-form averages
-of these posterior expectations.</li>
-<li>Iterate until the parameter change is below the selected tolerance
-or until the maximum iteration count is reached.</li>
-</ol>
-<p>In weak-signal settings, the paper notes that <span
-class="math inline">\(\delta\)</span> may be difficult to identify. A
-fixed, scientifically motivated value of <span
-class="math inline">\(\delta\)</span> may therefore be useful in
-sensitivity analyses.</p>
-</div>
-<div id="gene-level-bayes-factor" class="section level2">
-<h2>Gene-Level Bayes Factor</h2>
-<p>Given fitted category probabilities <span
-class="math inline">\(\eta_c\)</span>, the gene-level Bayes factor
-is</p>
+<div id="gene-level-bayes-factors" class="section level2">
+<h2>Gene-Level Bayes Factors</h2>
+<p>For trait <span class="math inline">\(t\)</span>, let <span
+class="math inline">\(b_{ijt}\)</span> be the variant-level Bayes factor
+and let <span class="math inline">\(\eta_{tc}\)</span> be the
+trait-specific probability that a variant in annotation category <span
+class="math inline">\(c\)</span> is a risk variant, conditional on the
+gene being active for trait <span class="math inline">\(t\)</span>.
+Then</p>
 <p><span class="math display">\[
-B_i
+B_{it}
 =
-\prod_{j=1}^{m_i}
+\prod_j
 \left[
-(1 - \eta_{c_{ij}}) + \eta_{c_{ij}} B_{ij}
+(1-\eta_{t,c_{ijt}}) + \eta_{t,c_{ijt}} b_{ijt}
 \right].
 \]</span></p>
-<p>This product combines evidence across variants while allowing many
-variants to contribute little when their variant-level Bayes factors are
-close to one.</p>
-</div>
-<div id="posterior-probability" class="section level2">
-<h2>Posterior Probability</h2>
-<p>The posterior probability that gene <span
-class="math inline">\(i\)</span> is a risk gene is</p>
+<p>The implementation evaluates this in log space:</p>
 <p><span class="math display">\[
-\operatorname{PP}_i
+\log B_{it}
 =
-P(U_i = 1 \mid X,T,C)
-=
-\frac{\delta B_i}{1 - \delta + \delta B_i}.
+\sum_j
+\log
+\left[
+(1-\eta_{t,c_{ijt}}) + \eta_{t,c_{ijt}} b_{ijt}
+\right].
 \]</span></p>
-<p>This posterior probability is model-based and depends on the fitted
-prior probability <span class="math inline">\(\delta\)</span>, the
-estimated annotation effects <span
-class="math inline">\(\eta_c\)</span>, and the variant-level
-evidence.</p>
 </div>
-<div id="bayesian-fdr" class="section level2">
-<h2>Bayesian FDR</h2>
-<p>Genes can be ranked by <span
-class="math inline">\(\operatorname{PP}_i\)</span>. For a selected set
-of genes <span class="math inline">\(S\)</span>, a Bayesian false
-discovery rate estimate can be written as the average posterior error
-probability:</p>
+<div id="joint-likelihood" class="section level2">
+<h2>Joint Likelihood</h2>
+<p>Ignoring factors that do not depend on model parameters, the
+gene-level contribution is</p>
 <p><span class="math display">\[
-\operatorname{BFDR}(S)
-=
-\frac{1}{|S|}
-\sum_{i \in S}
-\left(1 - \operatorname{PP}_i\right).
+D_i =
+\pi_{00}
++ \pi_{10}B_{i1}
++ \pi_{01}B_{i2}
++ \pi_{11}B_{i1}B_{i2}.
 \]</span></p>
-<p>This gives a direct posterior-probability-based multiple-testing
-summary. It should be interpreted under the assumptions of the MIRAGE
-model and the chosen prior specification.</p>
+<p>The observed-data log likelihood is</p>
+<p><span class="math display">\[
+\ell(\pi,\eta_1,\eta_2) = \sum_i \log D_i.
+\]</span></p>
 </div>
-<div id="why-mirage-can-improve-over-burden-tests"
-class="section level2">
-<h2>Why MIRAGE Can Improve Over Burden Tests</h2>
-<p>MIRAGE may improve over burden tests when risk effects are sparse and
-heterogeneous within a gene. A burden test can dilute signal by
-aggregating many neutral variants with a small number of risk variants.
-MIRAGE instead allows each variant to contribute according to its Bayes
-factor and annotation-dependent prior probability.</p>
-<p>The empirical Bayes structure can also learn that certain annotation
-categories tend to carry more evidence across the full gene set. This
-can make the model more adaptive than a fixed hard-filtering rule,
-although the benefit depends on annotation quality and the amount of
-signal in the data.</p>
+<div id="e-step" class="section level2">
+<h2>E Step</h2>
+<p>The posterior responsibility for each state is</p>
+<p><span class="math display">\[
+\tau_{i,00} = \frac{\pi_{00}}{D_i},
+\quad
+\tau_{i,10} = \frac{\pi_{10}B_{i1}}{D_i},
+\quad
+\tau_{i,01} = \frac{\pi_{01}B_{i2}}{D_i},
+\quad
+\tau_{i,11} = \frac{\pi_{11}B_{i1}B_{i2}}{D_i}.
+\]</span></p>
+<p>The implementation computes these with log-sum-exp normalization.</p>
+<p>Marginal trait responsibilities are</p>
+<p><span class="math display">\[
+w_{i1} = \tau_{i,10} + \tau_{i,11},
+\qquad
+w_{i2} = \tau_{i,01} + \tau_{i,11}.
+\]</span></p>
+<p>The conditional posterior probability that a variant is a risk
+variant for its trait is</p>
+<p><span class="math display">\[
+\rho_{ijt}
+=
+\frac{\eta_{t,c_{ijt}} b_{ijt}}
+{(1-\eta_{t,c_{ijt}}) + \eta_{t,c_{ijt}} b_{ijt}}.
+\]</span></p>
+<p>This remains trait-specific. The model does not introduce a
+four-state variant-level latent variable.</p>
 </div>
-<div id="main-limitations" class="section level2">
-<h2>Main Limitations</h2>
+<div id="m-step" class="section level2">
+<h2>M Step</h2>
+<p>The four mixing proportions update as</p>
+<p><span class="math display">\[
+\pi_{ab}^{new} = \frac{1}{G}\sum_i \tau_{i,ab}.
+\]</span></p>
+<p>Trait-specific annotation parameters update as</p>
+<p><span class="math display">\[
+\eta_{tc}^{new}
+=
+\frac{
+\sum_i w_{it}\sum_{j:c_{ijt}=c}\rho_{ijt}
+}{
+\sum_i w_{it}m_{itc}
+},
+\]</span></p>
+<p>where <span class="math inline">\(m_{itc}\)</span> is the number of
+variants in gene <span class="math inline">\(i\)</span>, trait <span
+class="math inline">\(t\)</span>, category <span
+class="math inline">\(c\)</span>. Thus <span
+class="math inline">\(\eta_1\)</span> and <span
+class="math inline">\(\eta_2\)</span> are not shared.</p>
+</div>
+<div id="posterior-targets" class="section level2">
+<h2>Posterior Targets</h2>
+<p>The reported posterior probabilities are</p>
+<p><span class="math display">\[
+\operatorname{PP}_{trait1,i} = \tau_{i,10} + \tau_{i,11},
+\]</span></p>
+<p><span class="math display">\[
+\operatorname{PP}_{trait2,i} = \tau_{i,01} + \tau_{i,11},
+\]</span></p>
+<p><span class="math display">\[
+\operatorname{PP}_{pleiotropy,i} = \tau_{i,11}.
+\]</span></p>
+<p>Bayesian FDR tables are computed separately for trait 1, trait 2, and
+pleiotropy by sorting posterior probabilities and averaging local
+posterior error probabilities.</p>
+</div>
+<div id="limitations" class="section level2">
+<h2>Limitations</h2>
 <ul>
-<li>The current model is designed for binary case-control or
-transmission-style count data, not quantitative traits.</li>
-<li>The input data should already address population stratification
-through design or matching.</li>
-<li>The model does not directly include sample-level covariates such as
-sex, age, batch, or ancestry PCs.</li>
-<li>Annotation categories are treated as disjoint groups; overlapping,
-continuous, or high-dimensional annotations require extensions.</li>
-<li>Variant independence is assumed in the gene-level product, so
-linkage disequilibrium should be considered during preprocessing or
-sensitivity analysis.</li>
-<li>Weak signals can make <span class="math inline">\(\delta\)</span>
-and some <span class="math inline">\(\eta_c\)</span> values difficult to
-estimate precisely.</li>
-<li>Results can depend on annotation definitions and relative-risk prior
-hyperparameters, so sensitivity analyses are important.</li>
+<li>The current model assumes independent studies and no sample
+overlap.</li>
+<li>Pleiotropy is gene-level, not variant-level.</li>
+<li>The same gene can be pleiotropic even if different variants drive
+the two traits.</li>
+<li>The current synthetic simulation helper is for software validation,
+not biological inference.</li>
+<li>Weak data can make <span class="math inline">\(\pi_{11}\)</span> or
+category-specific <span class="math inline">\(\eta\)</span> values
+difficult to identify.</li>
 </ul>
 </div>
 </div>

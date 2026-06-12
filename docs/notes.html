@@ -11,7 +11,7 @@
 
 
 
-<title>Project Notes</title>
+<title>Notes</title>
 
 <script src="site_libs/header-attrs-2.30/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -329,16 +329,16 @@ div.tocify {
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="index.html">Home</a>
+  <a href="index.html">Overview</a>
 </li>
 <li>
   <a href="method.html">Method</a>
 </li>
 <li>
-  <a href="speed.html">Speed</a>
+  <a href="simulation.html">Simulation</a>
 </li>
 <li>
-  <a href="examples.html">Examples</a>
+  <a href="implementation.html">Implementation</a>
 </li>
 <li>
   <a href="notes.html">Notes</a>
@@ -355,7 +355,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Project Notes</h1>
+<h1 class="title toc-ignore">Notes</h1>
 
 </div>
 
@@ -363,7 +363,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -384,13 +384,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-06-11
+<strong>Last updated:</strong> 2026-06-12
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Mirage_t/</code> <span
@@ -431,137 +431,15 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongobjectspresent">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>Environment:</strong> objects present
-</a>
-</p>
-</div>
-<div id="strongEnvironmentstrongobjectspresent"
-class="panel-collapse collapse">
-<div class="panel-body">
-<p>
-The global environment had objects present when the code in the R
-Markdown file was run. These objects can affect the analysis in your R
-Markdown file in unknown ways. For reproduciblity it’s best to always
-run the code in an empty environment. Use <code>wflow_publish</code> or
-<code>wflow_build</code> to ensure that the code is always run in an
-empty environment.
-</p>
-<p>
-The following objects were defined in the global environment when these
-results were created:
-</p>
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th style="text-align:left;">
-Name
-</th>
-<th style="text-align:left;">
-Class
-</th>
-<th style="text-align:left;">
-Size
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-local_lib
-</td>
-<td style="text-align:left;">
-character
-</td>
-<td style="text-align:left;">
-136 bytes
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260611code">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Seed:</strong>
-<code>set.seed(20260611)</code> </a>
-</p>
-</div>
-<div id="strongSeedstrongcodesetseed20260611code"
-class="panel-collapse collapse">
-<div class="panel-body">
-<p>The command <code>set.seed(20260611)</code> was run prior to running
-the code in the R Markdown file. Setting a seed ensures that any results
-that rely on randomness, e.g. subsampling or permutations, are
-reproducible.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Session information:</strong>
-recorded </a>
-</p>
-</div>
-<div id="strongSessioninformationstrongrecorded"
-class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! Recording the operating system, R version, and package
-versions is critical for reproducibility.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Cache:</strong> none </a>
-</p>
-</div>
-<div id="strongCachestrongnone" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Nice! There were no cached chunks for this analysis, so you can be
-confident that you successfully produced the results during this
-run.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
-</p>
-</div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr
-project makes it easier to run your code on other machines.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetree1d54a173ce8905f44a1f816e6857e88aeafbc5aftargetblank1d54a17a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>
+<a href="https://github.com/Qishi7/Mirage/tree/1d54a173ce8905f44a1f816e6857e88aeafbc5af" target="_blank">1d54a17</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetreed12ee4720030d62e01b64f96ae71f8128c822c0ctargetblankd12ee47a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7Miragetree1d54a173ce8905f44a1f816e6857e88aeafbc5aftargetblank1d54a17a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -571,7 +449,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage/tree/d12ee4720030d62e01b64f96ae71f8128c822c0c" target="_blank">d12ee47</a>.
+<a href="https://github.com/Qishi7/Mirage/tree/1d54a173ce8905f44a1f816e6857e88aeafbc5af" target="_blank">1d54a17</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -588,13 +466,23 @@ were generated:
 Ignored files:
     Ignored:    Rlib/
     Ignored:    data/
+    Ignored:    design/
     Ignored:    mirage2026.pdf
     Ignored:    mirage_todo_summary.md
+    Ignored:    two_trait_mirage_codex_todo.md
+    Ignored:    two_trait_mirage_technical_specification.pdf
+    Ignored:    two_trait_mirage_technical_specification.tex
     Ignored:    workflowr_setup.R
+
+Untracked files:
+    Untracked:  R/
+    Untracked:  tests/
 
 Unstaged changes:
     Modified:   .gitignore
-    Modified:   README.md
+    Modified:   analysis/_site.yml
+    Deleted:    analysis/examples.Rmd
+    Deleted:    analysis/speed.Rmd
 
 </code></pre>
 <p>
@@ -638,6 +526,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage/blob/1d54a173ce8905f44a1f816e6857e88aeafbc5af/analysis/notes.Rmd" target="_blank">1d54a17</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Update website for two-trait MIRAGE extension
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage/567af30918fe7ffe35eada6a338efc8c01cc7413/docs/notes.html" target="_blank">567af30</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-11
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -696,139 +618,68 @@ Initialize workflowr site
 </div>
 </div>
 </div>
-<div id="completed" class="section level2">
-<h2>Completed</h2>
+<div id="completed-in-this-version" class="section level2">
+<h2>Completed In This Version</h2>
 <ul>
-<li>Initialized a workflowr website for the MIRAGE repository.</li>
-<li>Configured the site to build into <code>docs/</code> for GitHub
-Pages.</li>
-<li>Added five pages: Home, Method, Speed, Examples, and Notes.</li>
-<li>Added toy-only example data for documentation.</li>
-<li>Added <code>.gitignore</code> rules to keep local package libraries,
-protected data, large genetic files, and local helper files out of
-version control.</li>
+<li>Added a first gene-level four-state two-trait MIRAGE
+implementation.</li>
+<li>Added trait-specific <span class="math inline">\(\eta\)</span>
+parameters and trait-specific relative-risk hyperparameters.</li>
+<li>Added log-scale state responsibility calculations.</li>
+<li>Added posterior probabilities for trait 1, trait 2, and
+pleiotropy.</li>
+<li>Added Bayesian FDR tables for all three targets.</li>
+<li>Added convergence diagnostics and observed-data log-likelihood
+traces.</li>
+<li>Added toy simulation helpers and testthat tests.</li>
+<li>Reframed the workflowr website around the two-trait extension.</li>
 </ul>
 </div>
-<div id="remaining-implementation-questions" class="section level2">
-<h2>Remaining Implementation Questions</h2>
+<div id="current-validation-status" class="section level2">
+<h2>Current Validation Status</h2>
+<p>The current validation is software-focused. It uses synthetic data to
+check algebraic invariants, numerical stability, EM monotonicity, prior
+factorization behavior, trait swapping, and toy pleiotropy
+detection.</p>
+<p>The simulation helper is not a replacement for a full method
+validation study. Larger simulation grids are still needed before real
+analysis.</p>
+</div>
+<div id="remaining-limitations" class="section level2">
+<h2>Remaining Limitations</h2>
 <ul>
-<li>How much runtime is spent in variant-level numerical integration
-compared with EM updates?</li>
-<li>How many duplicated count patterns occur in realistic rare-variant
-summary tables?</li>
-<li>Should <code>delta</code> be estimated, fixed, or explored over a
-sensitivity grid for weak-signal analyses?</li>
-<li>Which annotation grouping is most stable across sensitivity
-analyses?</li>
-<li>What LD pruning or LD-aware sensitivity checks should be performed
-before final reporting?</li>
+<li>The repository now contains a first implementation, but not yet a
+full R package structure.</li>
+<li>The single-trait upstream implementation is not vendored into this
+repository.</li>
+<li>The synthetic simulation uses precomputed log BF values and is
+mainly for software validation.</li>
+<li>Calibration and parameter recovery need larger replicated simulation
+studies.</li>
+<li>The product likelihood requires independent studies with no sample
+overlap.</li>
+<li>No real ASD or schizophrenia data have been analyzed.</li>
 </ul>
 </div>
-<div id="next-steps-for-runtime-profiling" class="section level2">
-<h2>Next Steps For Runtime Profiling</h2>
+<div id="next-steps" class="section level2">
+<h2>Next Steps</h2>
 <ol style="list-style-type: decimal">
-<li>Create synthetic benchmark inputs with known sizes, such as 1,000,
-10,000, and 100,000 variants.</li>
-<li>Profile the baseline R implementation with <code>Rprof()</code> or
-<code>profvis</code>.</li>
-<li>Measure the variant BF step separately from the EM loop.</li>
-<li>Implement a count-pattern cache for variant BFs.</li>
-<li>Compare baseline, cached, and cached plus vectorized
-implementations.</li>
-<li>Validate gene BF, posterior probability, <code>eta</code>,
-<code>delta</code>, and gene ranking after every change.</li>
+<li>Decide whether to convert this repository into an R package or keep
+it as a workflowr plus source-code repository.</li>
+<li>Add larger simulation grids for independent, pleiotropic-enriched,
+and one-trait-null scenarios.</li>
+<li>Compare the two-trait model against separate single-trait MIRAGE
+fits.</li>
+<li>Add optional multi-start fitting for weak pleiotropy settings.</li>
+<li>Add more explicit package documentation once the interface
+stabilizes.</li>
 </ol>
 </div>
-<div id="next-steps-for-a-real-example" class="section level2">
-<h2>Next Steps For A Real Example</h2>
-<p>Real examples should wait until data access and sharing rules are
-clarified. Once approved summary statistics are available, the example
-should:</p>
-<ul>
-<li>Use only data approved for the repository or keep data outside
-Git.</li>
-<li>Document preprocessing and filtering without exposing protected
-records.</li>
-<li>Report input dimensions and category definitions.</li>
-<li>Use reproducible scripts that can run without committing private
-data.</li>
-<li>Include synthetic or redacted outputs if public release of real
-outputs is not allowed.</li>
-</ul>
-</div>
-<div id="reproducibility-checklist" class="section level2">
-<h2>Reproducibility Checklist</h2>
-<ul>
-<li>The site builds from a clean R session.</li>
-<li>Source files live in <code>analysis/</code>.</li>
-<li>HTML output lives in <code>docs/</code>.</li>
-<li><code>workflowr::wflow_status()</code> reports pages as published
-and up to date.</li>
-<li>Examples use toy data only.</li>
-<li>No real WES, ASD, dbGaP, SPARK, protected, private, or large data
-files are committed.</li>
-<li>Runtime experiments record R version, package versions, input size,
-random seed, and wall time.</li>
-</ul>
-</div>
-<div id="current-log" class="section level2">
-<h2>Current Log</h2>
-<pre class="r"><code>data.frame(
-  date = as.character(Sys.Date()),
-  status = &quot;Workflowr website polished with technical method notes, runtime plan, toy examples, and project log.&quot;,
-  data_policy = &quot;Toy examples and public notes only.&quot;
-)</code></pre>
-<pre><code>        date
-1 2026-06-11
-                                                                                                status
-1 Workflowr website polished with technical method notes, runtime plan, toy examples, and project log.
-                          data_policy
-1 Toy examples and public notes only.</code></pre>
-<br>
-<p>
-<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
-<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-Session information
-</button>
-</p>
-<div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.4.2 (2024-10-31 ucrt)
-Platform: x86_64-w64-mingw32/x64
-Running under: Windows 11 x64 (build 26200)
-
-Matrix products: default
-
-
-locale:
-[1] LC_COLLATE=Chinese (Simplified)_China.utf8 
-[2] LC_CTYPE=Chinese (Simplified)_China.utf8   
-[3] LC_MONETARY=Chinese (Simplified)_China.utf8
-[4] LC_NUMERIC=C                               
-[5] LC_TIME=Chinese (Simplified)_China.utf8    
-
-time zone: America/Chicago
-tzcode source: internal
-
-attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
-
-other attached packages:
-[1] workflowr_1.7.2
-
-loaded via a namespace (and not attached):
- [1] vctrs_0.6.5       httr_1.4.7        cli_3.6.3         knitr_1.50       
- [5] rlang_1.1.5       xfun_0.54         stringi_1.8.4     processx_3.8.6   
- [9] promises_1.3.2    jsonlite_1.9.1    glue_1.8.0        rprojroot_2.1.1  
-[13] git2r_0.36.2      htmltools_0.5.8.1 httpuv_1.6.15     ps_1.9.1         
-[17] sass_0.4.10       rmarkdown_2.30    jquerylib_0.1.4   tibble_3.2.1     
-[21] evaluate_1.0.5    fastmap_1.2.0     yaml_2.3.10       lifecycle_1.0.4  
-[25] whisker_0.4.1     stringr_1.6.0     compiler_4.4.2    fs_1.6.6         
-[29] pkgconfig_2.0.3   Rcpp_1.0.14       rstudioapi_0.17.1 later_1.4.1      
-[33] digest_0.6.37     R6_2.6.1          pillar_1.11.1     callr_3.7.6      
-[37] magrittr_2.0.3    bslib_0.9.0       tools_4.4.2       cachem_1.1.0     
-[41] getPass_0.2-4    </code></pre>
-</div>
+<div id="data-policy" class="section level2">
+<h2>Data Policy</h2>
+<p>Do not commit real ASD, schizophrenia, WES, dbGaP, SPARK, protected,
+private, or large data files. Keep local reference documents out of
+commits unless the team explicitly decides they should be public.</p>
 </div>
 </div>
 </div>
