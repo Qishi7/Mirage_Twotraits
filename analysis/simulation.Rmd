@@ -5,7 +5,9 @@ output: workflowr::wflow_html
 
 ## Toy Simulation Only
 
-This page runs a small synthetic smoke check using the current implementation. It does not use real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data.
+This page runs a small synthetic software smoke check using the current implementation. It does not use real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data.
+
+The goal is to verify that the code runs end-to-end, converges, and separates a strong synthetic pleiotropic signal from non-pleiotropic genes. This is not a formal parameter-recovery, power, or FDR-calibration study.
 
 ```{r}
 source("R/two_trait_mirage.R")
@@ -49,6 +51,36 @@ fit$parameters$eta_trait1
 fit$parameters$eta_trait2
 ```
 
+## True Versus Estimated Parameters
+
+```{r}
+pi_comparison <- data.frame(
+  parameter = names(sim$parameters$pi),
+  truth = as.numeric(sim$parameters$pi),
+  estimate = as.numeric(fit$parameters$pi[names(sim$parameters$pi)])
+)
+
+eta_comparison <- rbind(
+  data.frame(
+    trait = "trait1",
+    category = names(sim$parameters$eta_trait1),
+    truth = as.numeric(sim$parameters$eta_trait1),
+    estimate = as.numeric(fit$parameters$eta_trait1[names(sim$parameters$eta_trait1)])
+  ),
+  data.frame(
+    trait = "trait2",
+    category = names(sim$parameters$eta_trait2),
+    truth = as.numeric(sim$parameters$eta_trait2),
+    estimate = as.numeric(fit$parameters$eta_trait2[names(sim$parameters$eta_trait2)])
+  )
+)
+
+pi_comparison
+eta_comparison
+```
+
+The estimates in this single toy run are expected to differ from the generating values. A replicated simulation grid is still needed before making claims about parameter recovery or Bayesian FDR calibration.
+
 ## Diagnostics
 
 ```{r}
@@ -79,4 +111,4 @@ data.frame(
 head(fit$bfdr$pleiotropy, 10)
 ```
 
-These numbers are generated from synthetic data and should be interpreted only as a software smoke check.
+These numbers are generated from synthetic data and should be interpreted only as a software smoke check, not as evidence of final calibration.

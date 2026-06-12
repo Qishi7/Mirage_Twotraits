@@ -39,6 +39,28 @@ X_{ijt} \mid T_{ijt}, Z_{ijt}=1, R_{ijt}=r
 \left(T_{ijt}, \frac{rN_{1t}}{rN_{1t}+N_{0t}}\right).
 \]
 
+Following the original MIRAGE model, the relative-risk multiplier is integrated over a user-specified Gamma prior. If \(g_{tc}(r)\) is the Gamma prior density for trait \(t\) and annotation category \(c\), then
+
+\[
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=1)
+=
+\int_0^\infty
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=1, R_{ijt}=r)
+g_{t,c_{ijt}}(r)\,dr.
+\]
+
+The variant-level Bayes factor is therefore
+
+\[
+b_{ijt}
+=
+\frac{
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=1)
+}{
+P(X_{ijt}\mid T_{ijt}, Z_{ijt}=0)
+}.
+\]
+
 The implementation supports trait-specific relative-risk hyperparameters. The first version does not force these parameters to be shared across traits.
 
 ## Gene-Level Bayes Factors
@@ -166,3 +188,7 @@ Bayesian FDR tables are computed separately for trait 1, trait 2, and pleiotropy
 - The same gene can be pleiotropic even if different variants drive the two traits.
 - The current synthetic simulation helper is for software validation, not biological inference.
 - Weak data can make \(\pi_{11}\) or category-specific \(\eta\) values difficult to identify.
+
+## References
+
+Han S, Sun X, Sloofman L, et al. MIRAGE: A Bayesian statistical method for gene-level rare-variant analysis incorporating functional annotations. *The American Journal of Human Genetics*. 2026;113:168-183.
