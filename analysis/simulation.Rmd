@@ -112,3 +112,131 @@ head(fit$bfdr$pleiotropy, 10)
 ```
 
 These numbers are generated from synthetic data and should be interpreted only as a software smoke check, not as evidence of final calibration.
+
+## mTADA-Style Benchmark
+
+Nguyen et al. (2020) evaluated mTADA by assigning each gene to one of four
+two-trait states and simulating de novo mutation counts from Poisson models.
+Their main design used 19,538 genes, two mutation categories, single-trait risk
+proportions of 0.05 and 0.03, a grid of pleiotropic proportions from zero to
+0.03, multiple sample-size and mean-relative-risk settings, and 100 replicates
+per setting.
+
+The repository now includes `R/mtada_style_simulation.R`, which reproduces this
+data-generating structure using synthetic mutation rates. For each
+gene-category-trait combination it:
+
+1. samples a four-state gene label;
+2. samples a relative risk from the trait- and category-specific Gamma prior
+   for active traits;
+3. samples a de novo count from the corresponding Poisson distribution; and
+4. computes the analytic TADA de novo log Bayes factor.
+
+The de novo log Bayes factors are passed to the existing two-trait MIRAGE
+four-state engine. `eta` is fixed to one in this benchmark, so each simulated
+gene-category Bayes factor enters directly. This isolates the joint gene-state
+inference and avoids claiming that mTADA gene-level counts are variant-level
+case-control observations.
+
+```{r mtada-style-example}
+source("R/mtada_style_simulation.R")
+
+mtada_sim <- simulate_mtada_style(
+  n_genes = 500,
+  pi_trait1 = 0.05,
+  pi_trait2 = 0.03,
+  pi_pleiotropic = 0.015,
+  n_trios_trait1 = 5122,
+  n_trios_trait2 = 1077,
+  seed = 20260619
+)
+
+mtada_result <- fit_mtada_style_mirage(mtada_sim)
+mtada_result$metrics$auc
+mtada_result$metrics$pp_threshold
+mtada_result$metrics$bfdr
+mtada_result$metrics$pi
+```
+
+The benchmark reports joint and separate-trait AUC, discoveries and empirical
+FDP at posterior probability 0.8, pleiotropic classification, and recovery of
+the four mixing proportions. A configurable replicated grid is available
+through `run_mtada_style_grid()`. These outputs follow the main comparison
+strategy in the mTADA paper, but remain a synthetic method-development
+benchmark rather than a reproduction of the paper's real mutation-rate data.
+
+## Paper-Profile Pilot Result
+
+The script `code/run_mtada_style_benchmark.R` was run once with 19,538 genes,
+two categories, 5,122 trait-1 trios, 1,077 trait-2 trios, and
+\((\pi_1^S,\pi_2^S,\pi_3)=(0.05,0.03,0.015)\). The seed was 20260619.
+
+```{r mtada-paper-profile-result}
+data.frame(
+  target = c("trait1", "trait1", "trait2", "trait2", "pleiotropy"),
+  method = c("joint", "separate", "joint", "separate", "joint"),
+  AUC = c(0.9968, 0.9968, 0.8323, 0.7024, 0.9838)
+)
+
+data.frame(
+  state = c("00", "10", "01", "11"),
+  truth = c(0.935, 0.035, 0.015, 0.015),
+  estimate = c(0.9336, 0.0380, 0.0144, 0.0140)
+)
+```
+
+At posterior probability 0.8, the joint analysis found 47 trait-2 genes
+compared with 26 from the separate analysis; their observed FDPs were 0.021
+and 0, respectively. The joint trait-2 power was 0.082 versus 0.046 for the
+separate analysis. Trait 1 was already highly informative and changed little.
+The pleiotropy analysis selected 32 genes, with power 0.109 and observed FDP
+0.031.
+
+This is one favorable replicate, not a power or calibration conclusion. The
+next formal analysis should run the full grid over pleiotropic proportion,
+sample size, mean relative risk, and repeated seeds, then summarize the
+distribution of AUC, power, observed FDP, and parameter error.
+
+## Full Paper Grid
+
+The full grid has now been encoded in `mtada_paper_grid()`:
+
+| Dimension | Values |
+|---|---|
+| Shared-risk proportion | \(\pi_{11}=0, 0.02\) |
+| Trait 1 mRR | \((105,29)\) or \((24,6)\) |
+| Trait 2 mRR | \((12,2)\) or \((87,23)\) |
+| Trio counts | All pairs from 1,000, 2,000, and 5,000 |
+| Repeated seeds | 100 per setting |
+
+This produces \(2\times4\times9\times100=7{,}200\) independently generated
+datasets. The generator uses the 19,358 gene-category mutation rates distributed
+with the public mTADA repository when that external reference directory is
+provided. The mutation-rate file remains untracked and is not copied into this
+repository.
+
+Each dataset is evaluated with:
+
+1. the joint four-state MIRAGE likelihood;
+2. separate single-trait posterior analyses; and
+3. the original mTADA `DN2traits` Stan model, using its public posterior
+   calculation code.
+
+Recorded metrics are AUC, power and empirical FDP at PP at least 0.8, observed
+FDP versus estimated Bayesian FDR at targets 0.01, 0.05, 0.10, and 0.20,
+\(\pi_{11}\) recovery, and elapsed runtime. The runner writes one checkpoint per
+task and supports non-overlapping task ranges for parallel or resumed runs.
+
+The original mTADA implementation was verified under R 4.4.2 with rstan 2.32.7
+and locfit 1.5-9.12. Compilation took about 85 seconds. A full 19,358-gene,
+5,000-iteration VB fit took about 209 seconds in a reliability check, compared
+with about 6 seconds for the joint MIRAGE fit in that same run. Consequently,
+the complete original-mTADA grid is a multi-day computation even with several
+workers. No full-grid performance claim should be made until all 7,200
+checkpoints have completed and been aggregated.
+
+### Reference
+
+Nguyen TH, Dobbyn A, Brown RC, et al. mTADA is a framework for identifying risk
+genes from de novo mutations in multiple traits. *Nature Communications*.
+2020;11:2929. doi:10.1038/s41467-020-16487-z.

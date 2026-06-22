@@ -1,6 +1,8 @@
 repo_root <- normalizePath(file.path(getwd(), "..", ".."), winslash = "/", mustWork = TRUE)
 source(file.path(repo_root, "R", "two_trait_mirage.R"))
 source(file.path(repo_root, "R", "simulate_two_trait_mirage.R"))
+source(file.path(repo_root, "R", "mtada_style_simulation.R"))
+source(file.path(repo_root, "R", "mtada_full_grid.R"))
 
 toy_fit <- function(...) {
   sim <- simulate_two_trait_mirage(
