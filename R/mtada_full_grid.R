@@ -309,10 +309,28 @@ fit_original_mtada <- function(sim, compiled, vb_iterations = 5000L,
     seed = as.integer(seed),
     refresh = 0
   )
-  estimates <- env$estimatePars(
-    pars = c("p12", "gammaMeanDN1[1]"), mcmcResult = vb_fit
+  estimator <- "mTADA_locfit_mode"
+  estimates <- tryCatch(
+    env$estimatePars(
+      pars = c("p12", "gammaMeanDN1[1]"), mcmcResult = vb_fit
+    ),
+    error = function(e) e
   )
-  pi11 <- as.numeric(estimates["p12", "Mode"])
+  if (inherits(estimates, "error")) {
+    draws <- as.data.frame(vb_fit)[["p12"]]
+    density_fit <- density(
+      draws,
+      from = 0,
+      to = min(p1, p2),
+      cut = 0
+    )
+    pi11 <- density_fit$x[which.max(density_fit$y)]
+    estimator <- paste0(
+      "bounded_density_mode_fallback: ", conditionMessage(estimates)
+    )
+  } else {
+    pi11 <- as.numeric(estimates["p12", "Mode"])
+  }
   if (pi11 < 1e-4) pi11 <- 0
   priors <- c(
     1 - p1 - p2 + pi11,
@@ -345,7 +363,7 @@ fit_original_mtada <- function(sim, compiled, vb_iterations = 5000L,
     stringsAsFactors = FALSE,
     check.names = FALSE
   ) |>
-    structure(pi11_estimate = pi11)
+    structure(pi11_estimate = pi11, pi11_estimator = estimator)
 }
 
 run_mtada_grid_task <- function(task, mutation_rates,
@@ -382,6 +400,7 @@ run_mtada_grid_task <- function(task, mutation_rates,
   ))
 
   errors <- character()
+  original_estimator <- NA_character_
   if (run_original_mtada && !is.null(original_mtada)) {
     original <- tryCatch(
       time_call(fit_original_mtada(
@@ -396,6 +415,7 @@ run_mtada_grid_task <- function(task, mutation_rates,
         "mtada_original", original$value, truth, original$seconds,
         attr(original$value, "pi11_estimate")
       ))
+      original_estimator <- attr(original$value, "pi11_estimator")
     }
   }
   meta <- task[, setdiff(names(task),
@@ -408,6 +428,7 @@ run_mtada_grid_task <- function(task, mutation_rates,
     diff(joint_diagnostics$trace_loglik) >= -1e-8
   )
   meta$original_mtada_error <- paste(errors, collapse = " | ")
+  meta$original_mtada_pi11_estimator <- original_estimator
   list(meta = meta, metrics = metrics)
 }
 
