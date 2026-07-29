@@ -384,7 +384,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-06-22
+<strong>Last updated:</strong> 2026-07-29
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -515,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree9ea6ab93e1e07f803e008e3c99b0e032cfcef718targetblank9ea6ab9a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstreedd309fd8338d9edbdde27b3f9e8e41321c210668targetblankdd309fda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/9ea6ab93e1e07f803e008e3c99b0e032cfcef718" target="_blank">9ea6ab9</a>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/dd309fd8338d9edbdde27b3f9e8e41321c210668" target="_blank">dd309fd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree9ea6ab93e1e07f803e008e3c99b0e032cfcef718targetblank9ea6ab9a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstreedd309fd8338d9edbdde27b3f9e8e41321c210668targetblankdd309fda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/9ea6ab93e1e07f803e008e3c99b0e032cfcef718" target="_blank">9ea6ab9</a>.
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/dd309fd8338d9edbdde27b3f9e8e41321c210668" target="_blank">dd309fd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -608,6 +608,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/dd309fd8338d9edbdde27b3f9e8e41321c210668/analysis/simulation.Rmd" target="_blank">dd309fd</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-07-29
+</td>
+<td>
+Add weak-signal simulation metrics
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/01033c1d1659c2243fa289a19bfc5df86263f189/docs/simulation.html" target="_blank">01033c1</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-22
+</td>
+<td>
+Publish clarified simulation study
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1029,8 +1063,136 @@ result. Calibration requires averaging empirical FDP across many
 replicates at each simulation setting.</p>
 </div>
 </div>
-<div id="full-mtada-paper-grid" class="section level2">
-<h2>Full mTADA Paper Grid</h2>
+<div id="weak-signal-sensitivity-run-mrr-5-3-and-4-2"
+class="section level2">
+<h2>Weak-Signal Sensitivity Run: mRR (5, 3) and (4, 2)</h2>
+<p>This additional run uses the same mTADA data-generating mechanism,
+public gene-level mutation rates, four-state proportions, sample sizes,
+and random seed as the representative analysis above. It does not
+replace that analysis. Only the mean relative risks were reduced to
+create a deliberately weak-signal setting:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Genes</td>
+<td>19,358</td>
+</tr>
+<tr class="even">
+<td>Trait 1 mean RRs (MiD, LoF)</td>
+<td>(5, 3)</td>
+</tr>
+<tr class="odd">
+<td>Trait 2 mean RRs (MiD, LoF)</td>
+<td>(4, 2)</td>
+</tr>
+<tr class="even">
+<td>True pleiotropic proportion</td>
+<td>0.02</td>
+</tr>
+<tr class="odd">
+<td>Trait 1 and Trait 2 trios</td>
+<td>2,000 each</td>
+</tr>
+<tr class="even">
+<td>Simulation seed</td>
+<td>20200648</td>
+</tr>
+<tr class="odd">
+<td>Joint MIRAGE maximum EM iterations</td>
+<td>2,000</td>
+</tr>
+<tr class="even">
+<td>EM tolerance</td>
+<td>1e-6</td>
+</tr>
+</tbody>
+</table>
+<p>No model parameter was altered to force discoveries. Joint MIRAGE
+converged naturally after 1,891 iterations. The observed-data
+log-likelihood was non-decreasing, the final log-likelihood was
+2.006309, and the final maximum parameter change was 9.9973e-7. The
+estimated pleiotropic proportion was 0.003695 compared with the
+generating value of 0.02.</p>
+<div id="weak-signal-auc" class="section level3">
+<h3>Weak-Signal AUC</h3>
+<pre><code>          method     target    AUC
+1   Joint MIRAGE    Trait 1 0.5570
+2       Separate    Trait 1 0.5547
+3 Original mTADA    Trait 1 0.5571
+4   Joint MIRAGE    Trait 2 0.5697
+5       Separate    Trait 2 0.5410
+6 Original mTADA    Trait 2 0.5667
+7   Joint MIRAGE Pleiotropy 0.5846
+8       Separate Pleiotropy 0.5846
+9 Original mTADA Pleiotropy 0.5846</code></pre>
+<p>The joint analysis modestly improved Trait 2 ranking relative to the
+separate analysis in this replicate. The three methods had nearly
+identical pleiotropic ranking AUC. These are single-replicate
+observations rather than estimates of average performance.</p>
+</div>
+<div id="posterior-probability-and-bfdr-thresholds"
+class="section level3">
+<h3>Posterior-Probability and BFDR Thresholds</h3>
+<pre><code>          method     target discoveries_at_PP_0.5 discoveries_at_PP_0.7
+1   Joint MIRAGE    Trait 1                     0                     0
+2   Joint MIRAGE    Trait 2                     0                     0
+3   Joint MIRAGE Pleiotropy                     0                     0
+4       Separate    Trait 1                     2                     0
+5       Separate    Trait 2                     0                     0
+6       Separate Pleiotropy                     0                     0
+7 Original mTADA    Trait 1                     2                     0
+8 Original mTADA    Trait 2                     0                     0
+9 Original mTADA Pleiotropy                     0                     0
+  discoveries_at_PP_0.8
+1                     0
+2                     0
+3                     0
+4                     0
+5                     0
+6                     0
+7                     0
+8                     0
+9                     0</code></pre>
+<p>At Bayesian FDR at most 0.05, all three methods also selected zero
+genes for all three targets. Consequently, TPR and FPR are both zero at
+those fixed thresholds. This does not indicate perfect classification:
+it indicates that no posterior probability was high enough to form a
+discovery set under this weak-signal configuration.</p>
+</div>
+<div id="joint-mirage-top-k-ranking" class="section level3">
+<h3>Joint MIRAGE Top-K Ranking</h3>
+<p>When no genes cross a reporting threshold, top-K metrics still
+describe how well true risk genes are enriched near the top of the
+ranking. <a href="mailto:TP@K" class="email">TP@K</a> and <a
+href="mailto:FP@K" class="email">FP@K</a> are counts among the K highest
+posterior probabilities; <a href="mailto:TPR@K" class="email">TPR@K</a>
+uses all true risk genes as the denominator, while <a
+href="mailto:FPR@K" class="email">FPR@K</a> uses all non-risk genes.</p>
+<pre><code>      target   K TP  FP precision    TPR     FPR
+1    Trait 1  50 10  40     0.200 0.0101 0.00218
+2    Trait 1 100 20  80     0.200 0.0202 0.00436
+3    Trait 1 200 33 167     0.165 0.0333 0.00909
+4    Trait 2  50  7  43     0.140 0.0116 0.00229
+5    Trait 2 100 12  88     0.120 0.0200 0.00469
+6    Trait 2 200 21 179     0.105 0.0349 0.00954
+7 Pleiotropy  50  9  41     0.180 0.0217 0.00216
+8 Pleiotropy 100 12  88     0.120 0.0289 0.00465
+9 Pleiotropy 200 18 182     0.090 0.0434 0.00961</code></pre>
+<p>For example, 9 of the top 50 pleiotropy-ranked genes were truly
+pleiotropic, giving <a href="mailto:precision@50"
+class="email">precision@50</a> of 0.18. These ranking results show weak
+enrichment, but they do not turn the top-K lists into
+posterior-probability discoveries.</p>
+<p>The simulation summary pipeline now records PP thresholds 0.5, 0.7,
+and 0.8; BFDR diagnostics; and TP, FP, precision, TPR, and FPR at K =
+50, 100, and 200 for every target and method. The prior result files
+remain unchanged. ## Full mTADA Paper Grid</p>
 <p>The implemented full grid follows the parameter combinations shown in
 the mTADA paper:</p>
 <table>
@@ -1072,9 +1234,11 @@ class="math inline">\((87,23)\)</span></td>
 <p>simulated datasets. For every dataset the pipeline records:</p>
 <ul>
 <li>AUC for Trait 1, Trait 2, and pleiotropy;</li>
-<li>power and empirical FDP at PP at least 0.8;</li>
+<li>power, TPR, FPR, precision, and empirical FDP at PP at least 0.5,
+0.7, and 0.8;</li>
 <li>estimated BFDR and empirical FDP at targets 0.01, 0.05, 0.10, and
 0.20;</li>
+<li>TP, FP, precision, TPR, and FPR at K = 50, 100, and 200;</li>
 <li>recovery of <span class="math inline">\(\pi_{11}\)</span>;</li>
 <li>runtime and fitting errors.</li>
 </ul>
@@ -1084,6 +1248,7 @@ non-overlapping task ranges for parallel execution. The full
 Therefore, the representative result above demonstrates that the data
 generation and all three analysis paths work; it is not a final method
 comparison or calibration claim.</p>
+</div>
 </div>
 <div id="reproducible-commands" class="section level2">
 <h2>Reproducible Commands</h2>
