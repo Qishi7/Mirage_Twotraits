@@ -59,3 +59,30 @@ test_that("mTADA-style data run through the four-state MIRAGE engine", {
   expect_true(all(result$metrics$bfdr$observed_fdp <= 1))
   expect_true(result$fit$diagnostics$loglik_non_decreasing)
 })
+
+test_that("threshold metrics include confusion-matrix rates", {
+  x <- selection_metrics(
+    score = c(0.9, 0.8, 0.7, 0.1),
+    truth = c(TRUE, FALSE, TRUE, FALSE),
+    threshold = 0.8
+  )
+  expect_equal(x$true_positives, 1)
+  expect_equal(x$false_positives, 1)
+  expect_equal(x$true_negatives, 1)
+  expect_equal(x$false_negatives, 1)
+  expect_equal(x$tpr, 0.5)
+  expect_equal(x$fpr, 0.5)
+})
+
+test_that("top-K metrics use ground truth at the requested rank", {
+  x <- top_k_metrics(
+    score = c(0.9, 0.8, 0.7, 0.1),
+    truth = c(TRUE, FALSE, TRUE, FALSE),
+    k = 2
+  )
+  expect_equal(x$true_positives, 1)
+  expect_equal(x$false_positives, 1)
+  expect_equal(x$precision, 0.5)
+  expect_equal(x$tpr, 0.5)
+  expect_equal(x$fpr, 0.5)
+})

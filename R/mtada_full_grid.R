@@ -96,12 +96,14 @@ fit_four_state_log_bf <- function(log_bf_trait1, log_bf_trait2,
   }
   pi <- normalize_pi(pi_init)
   trace <- numeric(max_iter)
+  trace_change <- numeric(max_iter)
   converged <- FALSE
   for (iter in seq_len(max_iter)) {
     quantities <- fast_quantities(pi)
     pi_new <- normalize_pi(colMeans(quantities$tau))
     trace[iter] <- quantities$loglik
-    if (max(abs(pi_new - pi)) < tolerance) {
+    trace_change[iter] <- max(abs(pi_new - pi))
+    if (trace_change[iter] < tolerance) {
       pi <- pi_new
       converged <- TRUE
       break
@@ -115,16 +117,19 @@ fit_four_state_log_bf <- function(log_bf_trait1, log_bf_trait2,
     loglik = quantities$loglik,
     converged = converged,
     n_iter = iter,
-    trace_loglik = trace[seq_len(iter)]
+    trace_loglik = trace[seq_len(iter)],
+    trace_parameter_change = trace_change[seq_len(iter)],
+    max_parameter_change = trace_change[iter]
   )
 }
 
-fit_joint_mtada_style <- function(sim) {
+fit_joint_mtada_style <- function(sim, max_iter = 500L, tolerance = 1e-6) {
   genes <- sim$truth$Gene
   log_bf1 <- tapply(sim$trait1$log_bf, sim$trait1$Gene, sum)
   log_bf2 <- tapply(sim$trait2$log_bf, sim$trait2$Gene, sum)
   fit <- fit_four_state_log_bf(
-    unname(log_bf1[genes]), unname(log_bf2[genes])
+    unname(log_bf1[genes]), unname(log_bf2[genes]),
+    max_iter = max_iter, tolerance = tolerance
   )
   posterior <- data.frame(
     Gene = genes,
@@ -135,7 +140,10 @@ fit_joint_mtada_style <- function(sim) {
   )
   attr(posterior, "pi") <- fit$pi
   attr(posterior, "diagnostics") <- fit[
-    c("converged", "n_iter", "loglik", "trace_loglik")
+    c(
+      "converged", "n_iter", "loglik", "trace_loglik",
+      "trace_parameter_change", "max_parameter_change"
+    )
   ]
   posterior
 }
@@ -143,8 +151,9 @@ fit_joint_mtada_style <- function(sim) {
 evaluate_posterior_method <- function(method, posterior, truth,
                                       runtime_seconds,
                                       pi11_estimate = NA_real_,
-                                      pp_threshold = 0.8,
-                                      bfdr_targets = c(0.01, 0.05, 0.10, 0.20)) {
+                                      pp_thresholds = c(0.5, 0.7, 0.8),
+                                      bfdr_targets = c(0.01, 0.05, 0.10, 0.20),
+                                      top_k = c(50L, 100L, 200L)) {
   targets <- list(
     trait1 = list(score = posterior$PP_trait1, truth = truth$trait1_risk),
     trait2 = list(score = posterior$PP_trait2, truth = truth$trait2_risk),
@@ -154,50 +163,64 @@ evaluate_posterior_method <- function(method, posterior, truth,
   )
   auc <- do.call(rbind, lapply(names(targets), function(target) {
     data.frame(
-      method = method,
-      target = target,
-      metric = "auc",
+      method = method, target = target, metric = "auc",
       threshold = NA_real_,
-      value = binary_auc(
-        targets[[target]]$score, targets[[target]]$truth
-      ),
+      value = binary_auc(targets[[target]]$score, targets[[target]]$truth),
       stringsAsFactors = FALSE
     )
   }))
   pp <- do.call(rbind, lapply(names(targets), function(target) {
-    x <- selection_metrics(
-      targets[[target]]$score,
-      targets[[target]]$truth,
-      pp_threshold
-    )
-    rbind(
-      data.frame(method = method, target = target, metric = "pp08_power",
-                 threshold = pp_threshold, value = x$power),
-      data.frame(method = method, target = target, metric = "pp08_fdp",
-                 threshold = pp_threshold, value = x$fdp),
-      data.frame(method = method, target = target,
-                 metric = "pp08_discoveries",
-                 threshold = pp_threshold, value = x$discoveries)
-    )
+    do.call(rbind, lapply(pp_thresholds, function(threshold) {
+      x <- selection_metrics(
+        targets[[target]]$score, targets[[target]]$truth, threshold
+      )
+      prefix <- sprintf("pp%02d_", round(10 * threshold))
+      values <- c(
+        power = x$power, tpr = x$tpr, fpr = x$fpr,
+        specificity = x$specificity, precision = x$precision, fdp = x$fdp,
+        tp = x$true_positives, fp = x$false_positives,
+        tn = x$true_negatives, fn = x$false_negatives,
+        discoveries = x$discoveries
+      )
+      data.frame(
+        method = method, target = target,
+        metric = paste0(prefix, names(values)),
+        threshold = threshold, value = unname(values),
+        stringsAsFactors = FALSE
+      )
+    }))
+  }))
+  ranking <- do.call(rbind, lapply(names(targets), function(target) {
+    do.call(rbind, lapply(top_k, function(k) {
+      x <- top_k_metrics(targets[[target]]$score, targets[[target]]$truth, k)
+      values <- c(
+        tp = x$true_positives, fp = x$false_positives,
+        precision = x$precision, tpr = x$tpr, fpr = x$fpr
+      )
+      data.frame(
+        method = method, target = target,
+        metric = paste0("top", x$k, "_", names(values)),
+        threshold = x$k, value = unname(values),
+        stringsAsFactors = FALSE
+      )
+    }))
   }))
   calibration <- do.call(rbind, lapply(names(targets), function(target) {
     do.call(rbind, lapply(bfdr_targets, function(alpha) {
-      x <- bfdr_metrics(
-        targets[[target]]$score, targets[[target]]$truth, alpha
+      x <- bfdr_metrics(targets[[target]]$score, targets[[target]]$truth, alpha)
+      values <- c(
+        observed_fdp = x$observed_fdp, estimate = x$estimated_bfdr,
+        power = x$power, tpr = x$tpr, fpr = x$fpr,
+        specificity = x$specificity, precision = x$precision,
+        tp = x$true_positives, fp = x$false_positives,
+        tn = x$true_negatives, fn = x$false_negatives,
+        discoveries = x$discoveries
       )
-      rbind(
-        data.frame(method = method, target = target,
-                   metric = "bfdr_observed_fdp",
-                   threshold = alpha, value = x$observed_fdp),
-        data.frame(method = method, target = target,
-                   metric = "bfdr_estimate",
-                   threshold = alpha, value = x$estimated_bfdr),
-        data.frame(method = method, target = target,
-                   metric = "bfdr_power",
-                   threshold = alpha, value = x$power),
-        data.frame(method = method, target = target,
-                   metric = "bfdr_discoveries",
-                   threshold = alpha, value = x$discoveries)
+      data.frame(
+        method = method, target = target,
+        metric = paste0("bfdr_", names(values)),
+        threshold = alpha, value = unname(values),
+        stringsAsFactors = FALSE
       )
     }))
   }))
@@ -208,9 +231,8 @@ evaluate_posterior_method <- function(method, posterior, truth,
                metric = "pi11_estimate",
                threshold = NA_real_, value = pi11_estimate)
   )
-  rbind(auc, pp, calibration, extra)
+  rbind(auc, pp, ranking, calibration, extra)
 }
-
 fit_separate_mtada_style <- function(sim) {
   log_bf1 <- tapply(sim$trait1$log_bf, sim$trait1$Gene, sum)
   log_bf2 <- tapply(sim$trait2$log_bf, sim$trait2$Gene, sum)
@@ -369,7 +391,9 @@ fit_original_mtada <- function(sim, compiled, vb_iterations = 5000L,
 run_mtada_grid_task <- function(task, mutation_rates,
                                 original_mtada = NULL,
                                 run_original_mtada = TRUE,
-                                vb_iterations = 5000L) {
+                                vb_iterations = 5000L,
+                                joint_max_iter = 500L,
+                                joint_tolerance = 1e-6) {
   sim <- simulate_mtada_style(
     n_genes = nrow(mutation_rates),
     mutation_rates = mutation_rates,
@@ -386,7 +410,9 @@ run_mtada_grid_task <- function(task, mutation_rates,
   )
   truth <- sim$truth
 
-  joint <- time_call(fit_joint_mtada_style(sim))
+  joint <- time_call(fit_joint_mtada_style(
+    sim, max_iter = joint_max_iter, tolerance = joint_tolerance
+  ))
   joint_pi <- attr(joint$value, "pi")
   joint_diagnostics <- attr(joint$value, "diagnostics")
   metrics <- evaluate_posterior_method(
@@ -424,6 +450,8 @@ run_mtada_grid_task <- function(task, mutation_rates,
   meta$pi11_truth <- task$pi_pleiotropic
   meta$joint_converged <- joint_diagnostics$converged
   meta$joint_n_iter <- joint_diagnostics$n_iter
+  meta$joint_final_loglik <- joint_diagnostics$loglik
+  meta$joint_max_parameter_change <- joint_diagnostics$max_parameter_change
   meta$joint_loglik_monotone <- all(
     diff(joint_diagnostics$trace_loglik) >= -1e-8
   )

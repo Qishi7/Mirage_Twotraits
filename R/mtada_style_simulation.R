@@ -176,30 +176,80 @@ binary_auc <- function(score, truth) {
 }
 
 selection_metrics <- function(score, truth, threshold = 0.8) {
+  truth <- as.logical(truth)
   selected <- score >= threshold
   positives <- sum(truth)
+  negatives <- sum(!truth)
   discoveries <- sum(selected)
+  true_positives <- sum(selected & truth)
+  false_positives <- sum(selected & !truth)
+  true_negatives <- sum(!selected & !truth)
+  false_negatives <- sum(!selected & truth)
   data.frame(
     threshold = threshold,
     discoveries = discoveries,
-    true_positives = sum(selected & truth),
-    power = if (positives > 0) sum(selected & truth) / positives else NA_real_,
-    fdp = if (discoveries > 0) sum(selected & !truth) / discoveries else 0,
+    true_positives = true_positives,
+    false_positives = false_positives,
+    true_negatives = true_negatives,
+    false_negatives = false_negatives,
+    power = if (positives > 0) true_positives / positives else NA_real_,
+    tpr = if (positives > 0) true_positives / positives else NA_real_,
+    fpr = if (negatives > 0) false_positives / negatives else NA_real_,
+    specificity = if (negatives > 0) true_negatives / negatives else NA_real_,
+    fnr = if (positives > 0) false_negatives / positives else NA_real_,
+    precision = if (discoveries > 0) true_positives / discoveries else NA_real_,
+    fdp = if (discoveries > 0) false_positives / discoveries else 0,
+    stringsAsFactors = FALSE
+  )
+}
+top_k_metrics <- function(score, truth, k) {
+  truth <- as.logical(truth)
+  k <- min(as.integer(k), length(score))
+  if (k < 1L) stop("k must be positive.", call. = FALSE)
+  selected <- order(score, decreasing = TRUE)[seq_len(k)]
+  selected_flag <- seq_along(score) %in% selected
+  positives <- sum(truth)
+  negatives <- sum(!truth)
+  true_positives <- sum(selected_flag & truth)
+  false_positives <- sum(selected_flag & !truth)
+  data.frame(
+    k = k,
+    true_positives = true_positives,
+    false_positives = false_positives,
+    precision = true_positives / k,
+    tpr = if (positives > 0) true_positives / positives else NA_real_,
+    fpr = if (negatives > 0) false_positives / negatives else NA_real_,
     stringsAsFactors = FALSE
   )
 }
 
 bfdr_metrics <- function(score, truth, target = 0.05) {
+  truth <- as.logical(truth)
   ord <- order(score, decreasing = TRUE)
   estimated <- cumsum(1 - score[ord]) / seq_along(score)
   keep <- which(estimated <= target)
   selected <- if (length(keep)) ord[seq_len(max(keep))] else integer()
+  selected_flag <- seq_along(score) %in% selected
+  positives <- sum(truth)
+  negatives <- sum(!truth)
+  true_positives <- sum(selected_flag & truth)
+  false_positives <- sum(selected_flag & !truth)
+  true_negatives <- sum(!selected_flag & !truth)
+  false_negatives <- sum(!selected_flag & truth)
   data.frame(
     bfdr_target = target,
     discoveries = length(selected),
-    true_positives = sum(truth[selected]),
-    power = if (sum(truth) > 0) sum(truth[selected]) / sum(truth) else NA_real_,
-    observed_fdp = if (length(selected)) mean(!truth[selected]) else 0,
+    true_positives = true_positives,
+    false_positives = false_positives,
+    true_negatives = true_negatives,
+    false_negatives = false_negatives,
+    power = if (positives > 0) true_positives / positives else NA_real_,
+    tpr = if (positives > 0) true_positives / positives else NA_real_,
+    fpr = if (negatives > 0) false_positives / negatives else NA_real_,
+    specificity = if (negatives > 0) true_negatives / negatives else NA_real_,
+    fnr = if (positives > 0) false_negatives / positives else NA_real_,
+    precision = if (length(selected)) true_positives / length(selected) else NA_real_,
+    observed_fdp = if (length(selected)) false_positives / length(selected) else 0,
     estimated_bfdr = if (length(selected)) estimated[length(selected)] else 0,
     stringsAsFactors = FALSE
   )

@@ -240,6 +240,101 @@ This table is a diagnostic for one dataset, not an FDR-calibration result.
 Calibration requires averaging empirical FDP across many replicates at each
 simulation setting.
 
+## Weak-Signal Sensitivity Run: mRR (5, 3) and (4, 2)
+
+This additional run uses the same mTADA data-generating mechanism, public
+gene-level mutation rates, four-state proportions, sample sizes, and random
+seed as the representative analysis above. It does not replace that analysis.
+Only the mean relative risks were reduced to create a deliberately weak-signal
+setting:
+
+| Parameter | Value |
+|---|---|
+| Genes | 19,358 |
+| Trait 1 mean RRs (MiD, LoF) | (5, 3) |
+| Trait 2 mean RRs (MiD, LoF) | (4, 2) |
+| True pleiotropic proportion | 0.02 |
+| Trait 1 and Trait 2 trios | 2,000 each |
+| Simulation seed | 20200648 |
+| Joint MIRAGE maximum EM iterations | 2,000 |
+| EM tolerance | 1e-6 |
+
+No model parameter was altered to force discoveries. Joint MIRAGE converged
+naturally after 1,891 iterations. The observed-data log-likelihood was
+non-decreasing, the final log-likelihood was 2.006309, and the final maximum
+parameter change was 9.9973e-7. The estimated pleiotropic proportion was
+0.003695 compared with the generating value of 0.02.
+
+### Weak-Signal AUC
+
+```{r weak-signal-auc, echo=FALSE}
+data.frame(
+  method = rep(c("Joint MIRAGE", "Separate", "Original mTADA"), 3),
+  target = rep(c("Trait 1", "Trait 2", "Pleiotropy"), each = 3),
+  AUC = c(
+    0.5570, 0.5547, 0.5571,
+    0.5697, 0.5410, 0.5667,
+    0.5846, 0.5846, 0.5846
+  )
+)
+```
+
+The joint analysis modestly improved Trait 2 ranking relative to the separate
+analysis in this replicate. The three methods had nearly identical
+pleiotropic ranking AUC. These are single-replicate observations rather than
+estimates of average performance.
+
+### Posterior-Probability and BFDR Thresholds
+
+```{r weak-signal-thresholds, echo=FALSE}
+data.frame(
+  method = c(
+    "Joint MIRAGE", "Joint MIRAGE", "Joint MIRAGE",
+    "Separate", "Separate", "Separate",
+    "Original mTADA", "Original mTADA", "Original mTADA"
+  ),
+  target = rep(c("Trait 1", "Trait 2", "Pleiotropy"), 3),
+  discoveries_at_PP_0.5 = c(0, 0, 0, 2, 0, 0, 2, 0, 0),
+  discoveries_at_PP_0.7 = 0,
+  discoveries_at_PP_0.8 = 0
+)
+```
+
+At Bayesian FDR at most 0.05, all three methods also selected zero genes for
+all three targets. Consequently, TPR and FPR are both zero at those fixed
+thresholds. This does not indicate perfect classification: it indicates that
+no posterior probability was high enough to form a discovery set under this
+weak-signal configuration.
+
+### Joint MIRAGE Top-K Ranking
+
+When no genes cross a reporting threshold, top-K metrics still describe how
+well true risk genes are enriched near the top of the ranking. TP@K and FP@K
+are counts among the K highest posterior probabilities; TPR@K uses all true
+risk genes as the denominator, while FPR@K uses all non-risk genes.
+
+```{r weak-signal-top-k, echo=FALSE}
+data.frame(
+  target = rep(c("Trait 1", "Trait 2", "Pleiotropy"), each = 3),
+  K = rep(c(50, 100, 200), 3),
+  TP = c(10, 20, 33, 7, 12, 21, 9, 12, 18),
+  FP = c(40, 80, 167, 43, 88, 179, 41, 88, 182),
+  precision = c(0.200, 0.200, 0.165, 0.140, 0.120, 0.105,
+                0.180, 0.120, 0.090),
+  TPR = c(0.0101, 0.0202, 0.0333, 0.0116, 0.0200, 0.0349,
+          0.0217, 0.0289, 0.0434),
+  FPR = c(0.00218, 0.00436, 0.00909, 0.00229, 0.00469, 0.00954,
+          0.00216, 0.00465, 0.00961)
+)
+```
+
+For example, 9 of the top 50 pleiotropy-ranked genes were truly pleiotropic,
+giving precision@50 of 0.18. These ranking results show weak enrichment, but
+they do not turn the top-K lists into posterior-probability discoveries.
+
+The simulation summary pipeline now records PP thresholds 0.5, 0.7, and 0.8;
+BFDR diagnostics; and TP, FP, precision, TPR, and FPR at K = 50, 100, and 200
+for every target and method. The prior result files remain unchanged.
 ## Full mTADA Paper Grid
 
 The implemented full grid follows the parameter combinations shown in the
@@ -262,8 +357,9 @@ The full design contains:
 simulated datasets. For every dataset the pipeline records:
 
 - AUC for Trait 1, Trait 2, and pleiotropy;
-- power and empirical FDP at PP at least 0.8;
+- power, TPR, FPR, precision, and empirical FDP at PP at least 0.5, 0.7, and 0.8;
 - estimated BFDR and empirical FDP at targets 0.01, 0.05, 0.10, and 0.20;
+- TP, FP, precision, TPR, and FPR at K = 50, 100, and 200;
 - recovery of \(\pi_{11}\);
 - runtime and fitting errors.
 

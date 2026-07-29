@@ -27,8 +27,13 @@ test_that("full-grid task evaluates joint and separate methods", {
                     unique(result$metrics$method)))
   expect_true(all(c(
     "auc", "pp08_power", "pp08_fdp", "bfdr_observed_fdp",
-    "bfdr_estimate", "pi11_estimate", "runtime_seconds"
+    "bfdr_estimate", "pp08_tpr", "pp08_fpr", "bfdr_tpr", "bfdr_fpr",
+    "pp05_tpr", "pp07_tpr", "top50_tp", "top100_precision", "top200_fpr",
+    "pi11_estimate", "runtime_seconds"
   ) %in% unique(result$metrics$metric)))
+  expect_true(all(c(
+    "joint_final_loglik", "joint_max_parameter_change"
+  ) %in% names(result$meta)))
 })
 
 test_that("specialized joint fit matches the four-state likelihood", {
@@ -39,4 +44,5 @@ test_that("specialized joint fit matches the four-state likelihood", {
   expect_equal(fit$tau, expected$tau, tolerance = 1e-12)
   expect_equal(sum(fit$pi), 1, tolerance = 1e-12)
   expect_true(all(diff(fit$trace_loglik) >= -1e-8))
+  expect_equal(fit$max_parameter_change, tail(fit$trace_parameter_change, 1))
 })
