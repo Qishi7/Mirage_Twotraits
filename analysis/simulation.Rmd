@@ -369,6 +369,169 @@ implemented but has not yet completed. Therefore, the representative result
 above demonstrates that the data generation and all three analysis paths work;
 it is not a final method comparison or calibration claim.
 
+## Variant-Level MIRAGE-Style Exploration
+
+After the mTADA-style gene-category simulation above, we also explored two
+variant-level case-control simulations. These are closer to the original
+single-trait MIRAGE simulation structure because the raw data contain one row
+per variant rather than one row per gene-category count.
+
+Both explorations used the same gene-level four-state truth:
+
+| Quantity | Value |
+|---|---:|
+| Replicates | 30 |
+| Genes per replicate | 500 |
+| Variants per gene per trait | 15 |
+| Variant rows per trait per replicate | 7,500 |
+| Variant rows across two traits per replicate | 15,000 |
+| Variant rows across 30 replicates | 450,000 |
+| Exact gene-state counts per replicate | 470 `00`, 20 `10`, 5 `01`, 5 `11` |
+| Trait 1 risk genes | 25 |
+| Trait 2 risk genes | 10 |
+| Pleiotropic genes | 5 |
+| Cases and controls per trait | 3,000 cases and 3,000 controls |
+| Annotation categories | `C1`, `C2`, `C3` |
+| Category probabilities | 0.60, 0.30, 0.10 |
+| Trait 1 eta values | 0.05, 0.20, 0.50 |
+| Trait 2 eta values | 0.03, 0.15, 0.40 |
+| Mean relative risks | 3, 3, 5 |
+| Gamma dispersion | 1 for each category |
+
+The methods compared were:
+
+1. **Joint MIRAGE:** the two-trait MIRAGE model with \(\pi\) and \(\eta\)
+   estimated.
+2. **Separate MIRAGE:** two single-trait MIRAGE-style analyses with an
+   independent four-state prior.
+3. **Aggregated mTADA:** the original mTADA implementation applied after
+   aggregating variant-level case counts and baseline rates to gene-category
+   counts.
+
+The aggregated mTADA analysis is included as a stress-test comparator. It is not
+the native data format for this variant-level case-control design because it
+does not use the control counts.
+
+### Paper-Like Variant-Level Design
+
+The first variant-level design follows the earlier MIRAGE-style setup:
+
+- baseline allele rates were generated for each variant;
+- active genes contained risk variants according to the category-specific
+  \(\eta\) values;
+- risk variants increased case counts through their relative risks;
+- controls were generated from the same baseline rate without disease
+  enrichment;
+- there were no deliberately inflated noncausal background variants.
+
+Mean AUC over 30 replicates:
+
+```{r variant-paper-like-auc, echo=FALSE}
+data.frame(
+  method = c(
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA",
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA",
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA"
+  ),
+  target = rep(c("Trait 1", "Trait 2", "Pleiotropy"), each = 3),
+  mean_AUC = c(
+    0.712, 0.704, 0.736,
+    0.671, 0.629, 0.720,
+    0.749, 0.732, 0.791
+  )
+)
+```
+
+Selected parameter learning:
+
+```{r variant-paper-like-pi, echo=FALSE}
+data.frame(
+  method = c("Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA"),
+  true_pi11 = c(0.010, 0.010, 0.010),
+  mean_estimated_pi11 = c(0.048, 0.001, 0.011)
+)
+```
+
+In this paper-like variant-level design, aggregated mTADA still had the highest
+mean AUC. This is expected because after aggregation the main signal is still a
+gene-category burden signal, which is favorable to mTADA.
+
+### Control-Informative Variant-Level Design
+
+The second variant-level design was constructed to represent a setting where
+the control counts carry information that should not be discarded:
+
+- the same 500 genes, 15 variants per gene, 30 replicates, and four-state truth
+  were used;
+- 18% of variants were assigned to a high-background noncausal group;
+- those background variants had their case and control count-generating rate
+  multiplied by 8;
+- the mTADA aggregation still used the baseline variant rate, not the inflated
+  count-generating rate;
+- true disease variants increased case counts, while high-background variants
+  increased both case and control counts.
+
+This design creates variants that look large in case-count burden but are not
+case-enriched relative to controls. MIRAGE can use the control counts to
+down-weight them; aggregated mTADA cannot.
+
+Mean AUC over 30 replicates:
+
+```{r variant-control-informative-auc, echo=FALSE}
+data.frame(
+  method = c(
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA",
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA",
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA"
+  ),
+  target = rep(c("Trait 1", "Trait 2", "Pleiotropy"), each = 3),
+  mean_AUC = c(
+    0.747, 0.741, 0.605,
+    0.688, 0.666, 0.580,
+    0.790, 0.778, 0.593
+  )
+)
+```
+
+At posterior probability at least 0.8:
+
+```{r variant-control-informative-pp08, echo=FALSE}
+data.frame(
+  method = c(
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA",
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA",
+    "Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA"
+  ),
+  target = rep(c("Trait 1", "Trait 2", "Pleiotropy"), each = 3),
+  mean_discoveries = c(
+    5.07, 4.50, 270.50,
+    1.80, 1.23, 251.27,
+    0.63, 0.03, 152.30
+  ),
+  empirical_FDP = c(
+    0.084, 0.047, 0.939,
+    0.128, 0.033, 0.976,
+    0.106, 0.000, 0.988
+  )
+)
+```
+
+Selected parameter learning:
+
+```{r variant-control-informative-pi, echo=FALSE}
+data.frame(
+  method = c("Joint MIRAGE", "Separate MIRAGE", "Aggregated mTADA"),
+  true_pi11 = c(0.010, 0.010, 0.010),
+  mean_estimated_pi11 = c(0.023, 0.001, 0.009)
+)
+```
+
+Under this control-informative design, joint MIRAGE clearly outperformed the
+aggregated mTADA comparator in ranking for both marginal trait discovery and
+pleiotropy. Aggregated mTADA also produced many high-posterior discoveries with
+very high empirical FDP because the high-background noncausal variants were
+interpreted as disease burden after aggregation.
+
 ## Reproducible Commands
 
 The full runner is `code/run_mtada_full_grid.R`. For example:
