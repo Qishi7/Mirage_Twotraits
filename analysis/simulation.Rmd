@@ -559,6 +559,15 @@ used only to verify EM convergence, posterior normalization, and end-to-end
 execution. That internal test remains in the automated test suite, but it is
 not the scientific simulation study reported on this page.
 
+## Simulation Design Summary
+
+| No. | Simulation | Data size | Core design | Main result | Interpretation |
+|---:|---|---|---|---|---|
+| 1 | mTADA-style gene-count | 19,358 genes, 2 categories | mTADA DNM Poisson/Gamma gene-category counts | Joint MIRAGE \(\approx\) mTADA \(>\) Separate | The joint layer is correct, but this design does not test MIRAGE's variant-level advantage. |
+| 2 | Weak-signal mTADA-style | 19,358 genes, 100 reps | Mean RRs reduced to Trait 1 \((5,3)\), Trait 2 \((4,2)\) | All methods had low AUC and almost no discoveries | This is a difficult weak-signal setting rather than a MIRAGE-favorable setting. |
+| 3 | Paper-like variant-level | 500 genes, 15 variants/gene/trait, 30 reps | Variant-level case/control data with ordinary burden-like signal | mTADA \(>\) Joint MIRAGE \(>\) Separate | Aggregation preserves most of the signal, so mTADA remains strong. |
+| 4 | Control-informative variant-level | 500 genes, 15 variants/gene/trait, 30 reps | 18% high-background noncausal variants added | Joint MIRAGE \(\gg\) mTADA | Control counts become informative; MIRAGE can down-weight background variants and gains a clear advantage. |
+
 ## Reference
 
 Nguyen TH, Dobbyn A, Brown RC, et al. mTADA is a framework for identifying risk
