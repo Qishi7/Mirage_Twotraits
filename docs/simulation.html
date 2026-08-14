@@ -515,15 +515,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree5739dfe475e20248acb0194134254ca8825b4c1ctargetblank5739dfea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree42200d71dc36b4394a4bea24b393f9dd4e9915f1targetblank42200d7a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/5739dfe475e20248acb0194134254ca8825b4c1c" target="_blank">5739dfe</a>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/42200d71dc36b4394a4bea24b393f9dd4e9915f1" target="_blank">42200d7</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree5739dfe475e20248acb0194134254ca8825b4c1ctargetblank5739dfea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree42200d71dc36b4394a4bea24b393f9dd4e9915f1targetblank42200d7a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -533,7 +533,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/5739dfe475e20248acb0194134254ca8825b4c1c" target="_blank">5739dfe</a>.
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/42200d71dc36b4394a4bea24b393f9dd4e9915f1" target="_blank">42200d7</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -592,6 +592,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/42200d71dc36b4394a4bea24b393f9dd4e9915f1/analysis/simulation.Rmd" target="_blank">42200d7</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-14
+</td>
+<td>
+Add simulation design summary table
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/d05840521d53c25371721c375d8607fb5b0b8d44/docs/simulation.html" target="_blank">d058405</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-14
+</td>
+<td>
+Publish variant-level MIRAGE exploration
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1486,6 +1520,72 @@ synthetic test was used only to verify EM convergence, posterior
 normalization, and end-to-end execution. That internal test remains in
 the automated test suite, but it is not the scientific simulation study
 reported on this page.</p>
+</div>
+<div id="simulation-design-summary" class="section level2">
+<h2>Simulation Design Summary</h2>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">No.</th>
+<th>Simulation</th>
+<th>Data size</th>
+<th>Core design</th>
+<th>Main result</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td>mTADA-style gene-count</td>
+<td>19,358 genes, 2 categories</td>
+<td>mTADA DNM Poisson/Gamma gene-category counts</td>
+<td>Joint MIRAGE <span class="math inline">\(\approx\)</span> mTADA
+<span class="math inline">\(&gt;\)</span> Separate</td>
+<td>The joint layer is correct, but this design does not test MIRAGE’s
+variant-level advantage.</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td>Weak-signal mTADA-style</td>
+<td>19,358 genes, 100 reps</td>
+<td>Mean RRs reduced to Trait 1 <span
+class="math inline">\((5,3)\)</span>, Trait 2 <span
+class="math inline">\((4,2)\)</span></td>
+<td>All methods had low AUC and almost no discoveries</td>
+<td>This is a difficult weak-signal setting rather than a
+MIRAGE-favorable setting.</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td>Paper-like variant-level</td>
+<td>500 genes, 15 variants/gene/trait, 30 reps</td>
+<td>Variant-level case/control data with ordinary burden-like
+signal</td>
+<td>mTADA <span class="math inline">\(&gt;\)</span> Joint MIRAGE <span
+class="math inline">\(&gt;\)</span> Separate</td>
+<td>Aggregation preserves most of the signal, so mTADA remains
+strong.</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td>Control-informative variant-level</td>
+<td>500 genes, 15 variants/gene/trait, 30 reps</td>
+<td>18% high-background noncausal variants added</td>
+<td>Joint MIRAGE <span class="math inline">\(\gg\)</span> mTADA</td>
+<td>Control counts become informative; MIRAGE can down-weight background
+variants and gains a clear advantage.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="reference" class="section level2">
 <h2>Reference</h2>
