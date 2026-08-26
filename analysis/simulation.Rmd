@@ -603,26 +603,58 @@ the lowest tested value where joint MIRAGE was better than aggregated mTADA
 across Trait 1, Trait 2, and pleiotropy while keeping the mean high-background
 variant allele frequency below 0.1%.
 
-The following table gives the replicate-level data size and high-background
-variant counts for the selected 5% / 5x setting:
+The 30 replicates used the same data-generating setup. The table below shows
+one concrete replicate, so the data size and high-background construction are
+explicit without listing all 30 random repeats:
 
-```{r rare-background-replicate-table, echo=FALSE}
+```{r rare-background-single-rep-design, echo=FALSE}
 rep_bg <- read.csv(
   "explorations/mirage_single_style_vs_mtada/sensitivity_background_multiplier/prob_050_m05/background_counts_by_replicate.csv"
 )
+rep_one <- rep_bg[rep_bg$rep == 1, ]
 data.frame(
-  replicate = rep_bg$rep,
-  genes = 500,
-  variant_rows_two_traits = 15000,
-  high_background_variants = rep_bg$bg_variants,
-  causal_variants = rep_bg$causal_variants,
-  high_background_causal_variants = rep_bg$bg_causal_variants,
-  high_background_case_count = rep_bg$case_bg,
-  high_background_control_count = rep_bg$control_bg,
-  case_count_per_high_background_variant = round(rep_bg$case_per_bg, 2),
-  control_count_per_high_background_variant = round(rep_bg$control_per_bg, 2),
-  case_AF_percent = round(100 * rep_bg$case_af, 3),
-  control_AF_percent = round(100 * rep_bg$control_af, 3)
+  quantity = c(
+    "Replicate shown",
+    "Genes",
+    "Traits",
+    "Variants per gene per trait",
+    "Variant rows per trait",
+    "Variant rows across two traits",
+    "Cases per trait",
+    "Controls per trait",
+    "High-background variant probability",
+    "High-background rate multiplier",
+    "Observed high-background variants",
+    "Observed causal variants",
+    "Observed high-background causal variants",
+    "Observed high-background case count",
+    "Observed high-background control count",
+    "Case count per high-background variant",
+    "Control count per high-background variant",
+    "Case allele frequency among high-background variants",
+    "Control allele frequency among high-background variants"
+  ),
+  value = c(
+    rep_one$rep,
+    500,
+    2,
+    15,
+    7500,
+    15000,
+    3000,
+    3000,
+    "5%",
+    "5x",
+    rep_one$bg_variants,
+    rep_one$causal_variants,
+    rep_one$bg_causal_variants,
+    rep_one$case_bg,
+    rep_one$control_bg,
+    round(rep_one$case_per_bg, 2),
+    round(rep_one$control_per_bg, 2),
+    paste0(round(100 * rep_one$case_af, 3), "%"),
+    paste0(round(100 * rep_one$control_af, 3), "%")
+  )
 )
 ```
 
