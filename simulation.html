@@ -363,7 +363,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -374,8 +374,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -388,9 +388,9 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong>
@@ -414,18 +414,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -516,15 +519,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree4b5474e43b9e14906ae6ae7e58106b4c47df5bfbtargetblank4b5474ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree24bcfe929436eb28a22742ed7765479c36dbdd90targetblank24bcfe9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/4b5474e43b9e14906ae6ae7e58106b4c47df5bfb" target="_blank">4b5474e</a>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/24bcfe929436eb28a22742ed7765479c36dbdd90" target="_blank">24bcfe9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree4b5474e43b9e14906ae6ae7e58106b4c47df5bfbtargetblank4b5474ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstree24bcfe929436eb28a22742ed7765479c36dbdd90targetblank24bcfe9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -534,7 +537,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/4b5474e43b9e14906ae6ae7e58106b4c47df5bfb" target="_blank">4b5474e</a>.
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/24bcfe929436eb28a22742ed7765479c36dbdd90" target="_blank">24bcfe9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -548,7 +551,9 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-working directory clean
+Unstaged changes:
+    Modified:   analysis/simulation.Rmd
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -593,6 +598,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/24bcfe929436eb28a22742ed7765479c36dbdd90/docs/simulation.html" target="_blank">24bcfe9</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-26
+</td>
+<td>
+Publish rare-background sensitivity page
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1624,132 +1646,29 @@ whereas multiplier 5 was the lowest tested value where joint MIRAGE was
 better than aggregated mTADA across Trait 1, Trait 2, and pleiotropy
 while keeping the mean high-background variant allele frequency below
 0.1%.</p>
-<p>The following table gives the replicate-level data size and
-high-background variant counts for the selected 5% / 5x setting:</p>
-<pre><code>   replicate genes variant_rows_two_traits high_background_variants
-1          1   500                   15000                      737
-2          2   500                   15000                      758
-3          3   500                   15000                      731
-4          4   500                   15000                      740
-5          5   500                   15000                      744
-6          6   500                   15000                      792
-7          7   500                   15000                      799
-8          8   500                   15000                      749
-9          9   500                   15000                      732
-10        10   500                   15000                      749
-11        11   500                   15000                      746
-12        12   500                   15000                      714
-13        13   500                   15000                      738
-14        14   500                   15000                      777
-15        15   500                   15000                      704
-16        16   500                   15000                      692
-17        17   500                   15000                      747
-18        18   500                   15000                      784
-19        19   500                   15000                      748
-20        20   500                   15000                      744
-21        21   500                   15000                      757
-22        22   500                   15000                      779
-23        23   500                   15000                      745
-24        24   500                   15000                      702
-25        25   500                   15000                      775
-26        26   500                   15000                      788
-27        27   500                   15000                      758
-28        28   500                   15000                      765
-29        29   500                   15000                      729
-30        30   500                   15000                      763
-   causal_variants high_background_causal_variants high_background_case_count
-1               67                               4                       4103
-2               64                               5                       4002
-3               59                               0                       3397
-4               72                               3                       4472
-5               79                               3                       3676
-6               64                               1                       4170
-7               71                               2                       3885
-8               65                               5                       3801
-9               70                               6                       3243
-10              69                               1                       3782
-11              68                               4                       4152
-12              77                               6                       3830
-13              55                               2                       3944
-14              67                               2                       4224
-15              66                               3                       3955
-16              72                               4                       3397
-17              72                               1                       4094
-18              74                               1                       4068
-19              70                               3                       3830
-20              71                               6                       4043
-21              66                               3                       4258
-22              71                               4                       3802
-23              70                               2                       4008
-24              61                               3                       3570
-25              64                               3                       3557
-26              64                               4                       4131
-27              57                               2                       3986
-28              65                               1                       4355
-29              54                               5                       3724
-30              57                               2                       4292
-   high_background_control_count case_count_per_high_background_variant
-1                           4011                                   5.57
-2                           4036                                   5.28
-3                           3406                                   4.65
-4                           4531                                   6.04
-5                           3563                                   4.94
-6                           4225                                   5.27
-7                           3866                                   4.86
-8                           3862                                   5.07
-9                           3338                                   4.43
-10                          3685                                   5.05
-11                          4234                                   5.57
-12                          3763                                   5.36
-13                          3875                                   5.34
-14                          4361                                   5.44
-15                          3810                                   5.62
-16                          3480                                   4.91
-17                          3844                                   5.48
-18                          4091                                   5.19
-19                          3887                                   5.12
-20                          3844                                   5.43
-21                          3854                                   5.62
-22                          3871                                   4.88
-23                          3865                                   5.38
-24                          3533                                   5.09
-25                          3616                                   4.59
-26                          4164                                   5.24
-27                          3755                                   5.26
-28                          4458                                   5.69
-29                          3645                                   5.11
-30                          4314                                   5.63
-   control_count_per_high_background_variant case_AF_percent control_AF_percent
-1                                       5.44           0.093              0.091
-2                                       5.32           0.088              0.089
-3                                       4.66           0.077              0.078
-4                                       6.12           0.101              0.102
-5                                       4.79           0.082              0.080
-6                                       5.33           0.088              0.089
-7                                       4.84           0.081              0.081
-8                                       5.16           0.085              0.086
-9                                       4.56           0.074              0.076
-10                                      4.92           0.084              0.082
-11                                      5.68           0.093              0.095
-12                                      5.27           0.089              0.088
-13                                      5.25           0.089              0.088
-14                                      5.61           0.091              0.094
-15                                      5.41           0.094              0.090
-16                                      5.03           0.082              0.084
-17                                      5.15           0.091              0.086
-18                                      5.22           0.086              0.087
-19                                      5.20           0.085              0.087
-20                                      5.17           0.091              0.086
-21                                      5.09           0.094              0.085
-22                                      4.97           0.081              0.083
-23                                      5.19           0.090              0.086
-24                                      5.03           0.085              0.084
-25                                      4.67           0.076              0.078
-26                                      5.28           0.087              0.088
-27                                      4.95           0.088              0.083
-28                                      5.83           0.095              0.097
-29                                      5.00           0.085              0.083
-30                                      5.65           0.094              0.094</code></pre>
+<p>The 30 replicates used the same data-generating setup. The table
+below shows one concrete replicate, so the data size and high-background
+construction are explicit without listing all 30 random repeats:</p>
+<pre><code>                                                  quantity  value
+1                                          Replicate shown      1
+2                                                    Genes    500
+3                                                   Traits      2
+4                              Variants per gene per trait     15
+5                                   Variant rows per trait   7500
+6                           Variant rows across two traits  15000
+7                                          Cases per trait   3000
+8                                       Controls per trait   3000
+9                      High-background variant probability     5%
+10                         High-background rate multiplier     5x
+11                       Observed high-background variants    737
+12                                Observed causal variants     67
+13                Observed high-background causal variants      4
+14                     Observed high-background case count   4103
+15                  Observed high-background control count   4011
+16                  Case count per high-background variant   5.57
+17               Control count per high-background variant   5.44
+18    Case allele frequency among high-background variants 0.093%
+19 Control allele frequency among high-background variants 0.091%</code></pre>
 </div>
 </div>
 <div id="reproducible-commands" class="section level2">
