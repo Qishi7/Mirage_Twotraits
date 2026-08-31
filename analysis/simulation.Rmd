@@ -544,7 +544,7 @@ The selected conservative setting was:
 
 | Parameter | Value |
 |---|---:|
-| Replicates | 30 |
+| Replicates | 100 |
 | Genes per replicate | 500 |
 | Traits | 2 |
 | Variants per gene per trait | 15 |
@@ -557,7 +557,7 @@ The selected conservative setting was:
 Under this setting, high-background variants remain rare on average: the mean
 case allele frequency among high-background variants is approximately 0.087%.
 
-Mean AUC over 30 replicates for the selected 5% / 5x setting:
+Mean AUC over 100 replicates for the selected 5% / 5x setting:
 
 ```{r rare-background-auc, echo=FALSE}
 auc_5x <- read.csv(
@@ -581,6 +581,12 @@ data.frame(
 )
 ```
 
+The corresponding replicate-level AUC distributions are shown below:
+
+<img src="figure/rare_background_auc_boxplot_100rep.png" alt="AUC distribution over 100 replicates for the selected 5% high-background variant probability and 5x background-rate multiplier setting." style="width:100%; max-width:100%;" />
+
+<p class="caption">AUC distribution over 100 replicates for the selected 5% high-background variant probability and 5x background-rate multiplier setting.</p>
+
 The multiplier sensitivity fixed the high-background variant probability at 5%
 and varied the background-rate multiplier:
 
@@ -598,14 +604,15 @@ data.frame(
 ```
 
 The boundary occurs around multiplier 4--5. Multiplier 4 was approximately tied
-with aggregated mTADA in the 10-replicate coarse run, whereas multiplier 5 was
-the lowest tested value where joint MIRAGE was better than aggregated mTADA
-across Trait 1, Trait 2, and pleiotropy while keeping the mean high-background
-variant allele frequency below 0.1%.
+with aggregated mTADA in the 10-replicate coarse run. Multiplier 5 was expanded
+to 100 replicates: joint MIRAGE remained slightly better on average across the
+three AUC targets, with higher AUC for Trait 2 and pleiotropy and a near tie for
+Trait 1, while keeping the mean high-background variant allele frequency below
+0.1%.
 
-The 30 replicates used the same data-generating setup. The table below shows
+The 100 replicates used the same data-generating setup. The table below shows
 one concrete replicate, so the data size and high-background construction are
-explicit without listing all 30 random repeats:
+explicit without listing all 100 random repeats:
 
 ```{r rare-background-single-rep-design, echo=FALSE}
 rep_bg <- read.csv(
