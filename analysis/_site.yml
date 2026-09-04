@@ -9,6 +9,8 @@ navbar:
     href: method.html
   - text: Simulation
     href: simulation.html
+  - text: Real Data
+    href: real_data.html
   - text: Implementation
     href: implementation.html
   - text: Notes

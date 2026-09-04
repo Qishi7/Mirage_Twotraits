@@ -1,0 +1,251 @@
+---
+title: "Real Data Exploration"
+output: workflowr::wflow_html
+---
+
+## Objective
+
+This page summarizes a preliminary real-data exploration of the two-trait
+MIRAGE extension using autism as trait 1 and schizophrenia as trait 2.
+
+The goal is not to present a finalized association analysis. Instead, the goal
+is to test whether the two public summary VCFs can be converted into a common
+variant-level input matrix, whether joint MIRAGE can run on the resulting data,
+and whether the top-ranked genes agree with external knowledge.
+
+## Data Sources
+
+Trait 1 uses the Autism Sequencing Consortium (ASC) summary VCF. Trait 2 uses
+the SCHEMA schizophrenia summary VCF.
+
+The analysis uses summary allele counts only:
+
+| Trait | Case count field | Control count field | Notes |
+|---|---|---|---|
+| ASC autism | `ac_case` | `ac_ctrl` | Array-valued fields were summed over entries with `in_analysis=1`. |
+| SCHEMA schizophrenia | `ac_case` | `ac_ctrl` | Only variants with `in_analysis=1` were used. |
+
+De novo counts were not used. For SCHEMA, the `n_de_novo` field was ignored.
+
+## Variant Groups
+
+Both traits were mapped to the same six annotation groups used in the original
+MIRAGE ASD analysis:
+
+| Group | Definition |
+|---|---|
+| LoF, low LOEUF | Loss-of-function variant in a gene with LOEUF decile 1 |
+| LoF, medium LOEUF | Loss-of-function variant in a gene with LOEUF decile 2-3 |
+| LoF, high LOEUF | Loss-of-function variant in a gene with LOEUF decile 4-10 |
+| Missense, high MPC | Missense variant with `MPC >= 2` |
+| Missense, medium MPC | Missense variant with `1 <= MPC < 2` |
+| Missense, low MPC | Missense variant with `MPC < 1` |
+
+LOEUF deciles were assigned from the gnomAD v2.1.1 gene constraint table. The
+ASC and SCHEMA VCFs contain `consequence` and `mpc`, but not a direct gnomAD
+allele-frequency field. The working rare-variant filter therefore used the
+within-cohort pooled allele frequency, `AF <= 0.1%`.
+
+## Variant Overlap
+
+The correct joint input uses the union of variant indices, not only shared
+variants. A variant index is defined as:
+
+```text
+chromosome + position + reference allele + alternate allele
+```
+
+If a variant appears only in ASC, its SCHEMA case/control counts are set to
+zero. If a variant appears only in SCHEMA, its ASC case/control counts are set
+to zero.
+
+Using only the exact variant intersection would discard nearly all rare
+variants.
+
+| Quantity | Count |
+|---|---:|
+| ASC variants after filtering | 406,842 |
+| SCHEMA variants after filtering | 686,383 |
+| Union variant indices | 1,093,122 |
+| Exact shared variant indices | 103 |
+| ASC genes | 17,581 |
+| SCHEMA genes | 18,009 |
+| Shared genes | 16,560 |
+
+| Denominator | Exact variant overlap |
+|---|---:|
+| Shared variants / ASC variants | 0.025% |
+| Shared variants / SCHEMA variants | 0.015% |
+
+This is expected for rare variants: two studies may implicate the same gene
+while observing different rare variants within that gene.
+
+## Initial Joint MIRAGE Run
+
+The first joint run used all six annotation groups and estimated the four
+gene-state proportions freely.
+
+| State | Estimate | Interpretation |
+|---|---:|---|
+| `pi00` | 0.358 | Neither trait |
+| `pi10` | 0.003 | Autism only |
+| `pi01` | 0.408 | Schizophrenia only |
+| `pi11` | 0.231 | Shared autism-schizophrenia risk |
+
+This run recovered highly plausible autism genes, but the schizophrenia signal
+was too broad.
+
+| Criterion | Number of genes |
+|---|---:|
+| Autism posterior probability > 0.8 | 25 |
+| SCHEMA posterior probability > 0.8 | 3,379 |
+| Shared posterior probability > 0.8 | 25 |
+
+The top autism genes were strongly concordant with known autism-risk genes.
+Among the top 25 autism genes, 22 were SFARI score-1 genes.
+
+| Rank | Gene | Autism PP | SCHEMA PP | Shared PP | SFARI score |
+|---:|---|---:|---:|---:|---:|
+| 1 | SCN2A | 0.999 | 1.000 | 0.999 | 1 |
+| 2 | POGZ | 0.997 | 0.998 | 0.995 | 1 |
+| 3 | ADNP | 0.996 | 1.000 | 0.996 | 1 |
+| 4 | CHD8 | 0.985 | 0.970 | 0.963 | 1 |
+| 5 | SYNGAP1 | 0.983 | 0.991 | 0.978 | 1 |
+| 6 | DYNC1H1 | 0.982 | 1.000 | 0.982 | 1 |
+| 7 | GRIN2B | 0.973 | 0.981 | 0.964 | 1 |
+| 8 | DYRK1A | 0.963 | 0.963 | 0.945 | 1 |
+| 9 | SHANK3 | 0.952 | 1.000 | 0.952 | 1 |
+| 10 | ANKRD11 | 0.952 | 0.999 | 0.951 | 1 |
+
+The SCHEMA ranking also contained several known schizophrenia exome genes, but
+the number of high-posterior SCHEMA genes was too large for a credible final
+gene-discovery claim.
+
+## Separate MIRAGE Diagnostic
+
+To determine whether the broad SCHEMA signal came from the joint layer or from
+the single-trait SCHEMA likelihood, separate MIRAGE fits were run for each
+trait.
+
+| Trait | Estimated risk-gene proportion | Genes with PP > 0.8 |
+|---|---:|---:|
+| ASC autism | 0.225 | 16 |
+| SCHEMA schizophrenia | 0.639 | 3,375 |
+
+This shows that the broad SCHEMA signal is already present in the separate
+single-trait analysis. It is not created mainly by the joint shared state.
+
+The likely explanation is calibration: SCHEMA has many more observed variants
+and much larger allele numbers than ASC, and the six broad annotation groups
+allow background burden to be interpreted as widespread risk-gene signal.
+
+## Calibration Exploration
+
+Two simple calibration strategies were explored.
+
+First, the SCHEMA single-trait risk-gene proportion was fixed to sparse values
+instead of being freely estimated. Second, the variant set was restricted to the
+three strongest annotation groups:
+
+```text
+LoF, LOEUF decile 1
+LoF, LOEUF decile 2-3
+Missense, MPC >= 2
+```
+
+### SCHEMA Separate Fits
+
+| Setting | SCHEMA variants | Risk-gene proportion | Genes with PP > 0.8 | Known SCZ genes in top 25 |
+|---|---:|---:|---:|---:|
+| Six groups, free delta | 686,383 | 0.639 | 3,375 | 5 |
+| Six groups, fixed delta 0.01 | 686,383 | 0.010 | 163 | 7 |
+| Six groups, fixed delta 0.03 | 686,383 | 0.030 | 278 | 7 |
+| Six groups, fixed delta 0.05 | 686,383 | 0.050 | 367 | 7 |
+| Six groups, fixed delta 0.10 | 686,383 | 0.100 | 540 | 7 |
+| Strict three groups, free delta | 210,250 | 0.468 | 800 | 6 |
+| Strict three groups, fixed delta 0.01 | 210,250 | 0.010 | 98 | 8 |
+| Strict three groups, fixed delta 0.03 | 210,250 | 0.030 | 136 | 7 |
+| Strict three groups, fixed delta 0.05 | 210,250 | 0.050 | 176 | 7 |
+| Strict three groups, fixed delta 0.10 | 210,250 | 0.100 | 259 | 7 |
+
+### Joint Fits
+
+The sparse fixed prior used:
+
+```text
+pi00 = 0.94
+pi10 = 0.02
+pi01 = 0.03
+pi11 = 0.01
+```
+
+This prior is sparse at the gene-state level. It means that most genes are
+assumed a priori to be null, with smaller prior mass assigned to autism-only,
+schizophrenia-only, and shared-risk states.
+
+| Joint setting | ASC variants | SCHEMA variants | `pi00` | `pi10` | `pi01` | `pi11` | Autism PP > 0.8 | SCHEMA PP > 0.8 | Shared PP > 0.8 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Six groups, free pi | 406,842 | 686,383 | 0.358 | 0.003 | 0.408 | 0.231 | 25 | 3,379 | 25 |
+| Six groups, fixed sparse pi | 406,842 | 686,383 | 0.940 | 0.020 | 0.030 | 0.010 | 8 | 329 | 6 |
+| Strict three groups, free pi | 16,161 | 210,250 | 0.504 | 0.029 | 0.263 | 0.204 | 26 | 795 | 24 |
+| Strict three groups, fixed sparse pi | 16,161 | 210,250 | 0.940 | 0.020 | 0.030 | 0.010 | 9 | 166 | 8 |
+
+The strict three-group plus sparse-prior analysis gives the cleanest
+preliminary result: the schizophrenia list contracts substantially while the
+top autism and schizophrenia genes remain enriched for known biology.
+
+## External Validation
+
+Autism genes were compared with the SFARI gene-scoring database. SFARI score 1
+genes were treated as high-confidence autism-risk genes for this exploratory
+check.
+
+Schizophrenia genes were compared with published SCHEMA exome-significant genes:
+
+```text
+SETD1A, CUL1, XPO7, TRIO, CACNA1G, SP4, GRIA3, GRIN2A,
+HERC1, RB1CC1, STAG1, ZNF136
+```
+
+The first ten genes come from the SCHEMA exome-sequencing study; STAG1 and
+ZNF136 were added from the later SCHEMA expansion.
+
+| Analysis | Top-25 validation result |
+|---|---:|
+| Six-group joint autism ranking vs. SFARI score 1 | 22 / 25 |
+| Strict three-group joint autism ranking vs. SFARI score 1 | 21 / 25 |
+| Six-group joint SCHEMA ranking vs. known SCZ genes | 5 / 25 |
+| Strict three-group joint SCHEMA ranking vs. known SCZ genes | 5 / 25 |
+| Strict three-group, sparse-prior joint SCHEMA ranking vs. known SCZ genes | 7 / 25 |
+
+## Interpretation
+
+This exploration supports three practical conclusions.
+
+First, ASC and SCHEMA should be joined by the union of variant indices rather
+than by the exact variant intersection. Exact rare-variant overlap is almost
+zero, but gene-level overlap is high.
+
+Second, the autism signal is robust and biologically credible. The top autism
+genes are highly enriched for SFARI score-1 genes.
+
+Third, SCHEMA requires calibration. With freely estimated gene-risk proportions,
+the model assigns high posterior probability to too many schizophrenia genes.
+Using a stricter damaging-variant set and a sparse gene-state prior gives a more
+interpretable result while retaining known schizophrenia genes near the top.
+
+## Current Recommendation
+
+The most useful real-data analysis setting for continued development is:
+
+```text
+Trait 1: ASC autism
+Trait 2: SCHEMA schizophrenia
+Variant input: union variant index
+Variant groups: strict three groups
+Gene-state prior: sparse fixed pi
+```
+
+This should be treated as a preliminary calibrated real-data exploration, not
+as a finalized discovery analysis.
+
