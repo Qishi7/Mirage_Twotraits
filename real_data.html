@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<title>Real Data Exploration</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+
+<style>
+h1 {font-size: 34px;}
+h1.title {font-size: 38px;}
+h2 {font-size: 30px;}
+h3 {font-size: 24px;}
+code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+pre:not([class]) { background-color: white }
+div.section { padding-top: 12px; }
+.main-container { max-width: 940px; margin-left: auto; margin-right: auto; }
+img { max-width:100%; }
+.toc-content { padding-left: 30px; padding-right: 40px; }
+table { width: auto; }
+</style>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  href = window.location.pathname;
+  href = href.substr(href.lastIndexOf('/') + 1);
+  if (href === "") href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) {
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else {
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MIRAGE Two Trait Extension</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="method.html">Method</a></li>
+        <li><a href="simulation.html">Simulation</a></li>
+        <li><a href="real_data.html">Real Data</a></li>
+        <li><a href="implementation.html">Implementation</a></li>
+        <li><a href="notes.html">Notes</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right"></ul>
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title toc-ignore">Real Data Exploration</h1>
+</div>
+
+<div id="objective" class="section level2">
+<h2>Objective</h2>
+<p>This page summarizes a preliminary real-data exploration of the two-trait MIRAGE extension using autism as trait 1 and schizophrenia as trait 2.</p>
+<p>The goal is not to present a finalized association analysis. Instead, the goal is to test whether the two public summary VCFs can be converted into a common variant-level input matrix, whether joint MIRAGE can run on the resulting data, and whether the top-ranked genes agree with external knowledge.</p>
+</div>
+
+<div id="data-sources" class="section level2">
+<h2>Data Sources</h2>
+<p>Trait 1 uses the Autism Sequencing Consortium (ASC) summary VCF. Trait 2 uses the SCHEMA schizophrenia summary VCF.</p>
+<p>The analysis uses summary allele counts only:</p>
+<table class="table table-condensed">
+<thead><tr><th>Trait</th><th>Case count field</th><th>Control count field</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>ASC autism</td><td><code>ac_case</code></td><td><code>ac_ctrl</code></td><td>Array-valued fields were summed over entries with <code>in_analysis=1</code>.</td></tr>
+<tr><td>SCHEMA schizophrenia</td><td><code>ac_case</code></td><td><code>ac_ctrl</code></td><td>Only variants with <code>in_analysis=1</code> were used.</td></tr>
+</tbody>
+</table>
+<p>De novo counts were not used. For SCHEMA, the <code>n_de_novo</code> field was ignored.</p>
+</div>
+
+<div id="variant-groups" class="section level2">
+<h2>Variant Groups</h2>
+<p>Both traits were mapped to the same six annotation groups used in the original MIRAGE ASD analysis:</p>
+<table class="table table-condensed">
+<thead><tr><th>Group</th><th>Definition</th></tr></thead>
+<tbody>
+<tr><td>LoF, low LOEUF</td><td>Loss-of-function variant in a gene with LOEUF decile 1</td></tr>
+<tr><td>LoF, medium LOEUF</td><td>Loss-of-function variant in a gene with LOEUF decile 2-3</td></tr>
+<tr><td>LoF, high LOEUF</td><td>Loss-of-function variant in a gene with LOEUF decile 4-10</td></tr>
+<tr><td>Missense, high MPC</td><td>Missense variant with <code>MPC &gt;= 2</code></td></tr>
+<tr><td>Missense, medium MPC</td><td>Missense variant with <code>1 &lt;= MPC &lt; 2</code></td></tr>
+<tr><td>Missense, low MPC</td><td>Missense variant with <code>MPC &lt; 1</code></td></tr>
+</tbody>
+</table>
+<p>LOEUF deciles were assigned from the gnomAD v2.1.1 gene constraint table. The ASC and SCHEMA VCFs contain <code>consequence</code> and <code>mpc</code>, but not a direct gnomAD allele-frequency field. The working rare-variant filter therefore used the within-cohort pooled allele frequency, <code>AF &lt;= 0.1%</code>.</p>
+</div>
+
+<div id="variant-overlap" class="section level2">
+<h2>Variant Overlap</h2>
+<p>The correct joint input uses the union of variant indices, not only shared variants. A variant index is defined as:</p>
+<pre><code>chromosome + position + reference allele + alternate allele</code></pre>
+<p>If a variant appears only in ASC, its SCHEMA case/control counts are set to zero. If a variant appears only in SCHEMA, its ASC case/control counts are set to zero.</p>
+<p>Using only the exact variant intersection would discard nearly all rare variants.</p>
+<table class="table table-condensed">
+<thead><tr><th>Quantity</th><th>Count</th></tr></thead>
+<tbody>
+<tr><td>ASC variants after filtering</td><td>406,842</td></tr>
+<tr><td>SCHEMA variants after filtering</td><td>686,383</td></tr>
+<tr><td>Union variant indices</td><td>1,093,122</td></tr>
+<tr><td>Exact shared variant indices</td><td>103</td></tr>
+<tr><td>ASC genes</td><td>17,581</td></tr>
+<tr><td>SCHEMA genes</td><td>18,009</td></tr>
+<tr><td>Shared genes</td><td>16,560</td></tr>
+</tbody>
+</table>
+<table class="table table-condensed">
+<thead><tr><th>Denominator</th><th>Exact variant overlap</th></tr></thead>
+<tbody>
+<tr><td>Shared variants / ASC variants</td><td>0.025%</td></tr>
+<tr><td>Shared variants / SCHEMA variants</td><td>0.015%</td></tr>
+</tbody>
+</table>
+<p>This is expected for rare variants: two studies may implicate the same gene while observing different rare variants within that gene.</p>
+</div>
+
+<div id="initial-joint-mirage-run" class="section level2">
+<h2>Initial Joint MIRAGE Run</h2>
+<p>The first joint run used all six annotation groups and estimated the four gene-state proportions freely.</p>
+<table class="table table-condensed">
+<thead><tr><th>State</th><th>Estimate</th><th>Interpretation</th></tr></thead>
+<tbody>
+<tr><td><code>pi00</code></td><td>0.358</td><td>Neither trait</td></tr>
+<tr><td><code>pi10</code></td><td>0.003</td><td>Autism only</td></tr>
+<tr><td><code>pi01</code></td><td>0.408</td><td>Schizophrenia only</td></tr>
+<tr><td><code>pi11</code></td><td>0.231</td><td>Shared autism-schizophrenia risk</td></tr>
+</tbody>
+</table>
+<p>This run recovered highly plausible autism genes, but the schizophrenia signal was too broad.</p>
+<table class="table table-condensed">
+<thead><tr><th>Criterion</th><th>Number of genes</th></tr></thead>
+<tbody>
+<tr><td>Autism posterior probability &gt; 0.8</td><td>25</td></tr>
+<tr><td>SCHEMA posterior probability &gt; 0.8</td><td>3,379</td></tr>
+<tr><td>Shared posterior probability &gt; 0.8</td><td>25</td></tr>
+</tbody>
+</table>
+<p>The top autism genes were strongly concordant with known autism-risk genes. Among the top 25 autism genes, 22 were SFARI score-1 genes.</p>
+<table class="table table-condensed">
+<thead><tr><th>Rank</th><th>Gene</th><th>Autism PP</th><th>SCHEMA PP</th><th>Shared PP</th><th>SFARI score</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>SCN2A</td><td>0.999</td><td>1.000</td><td>0.999</td><td>1</td></tr>
+<tr><td>2</td><td>POGZ</td><td>0.997</td><td>0.998</td><td>0.995</td><td>1</td></tr>
+<tr><td>3</td><td>ADNP</td><td>0.996</td><td>1.000</td><td>0.996</td><td>1</td></tr>
+<tr><td>4</td><td>CHD8</td><td>0.985</td><td>0.970</td><td>0.963</td><td>1</td></tr>
+<tr><td>5</td><td>SYNGAP1</td><td>0.983</td><td>0.991</td><td>0.978</td><td>1</td></tr>
+<tr><td>6</td><td>DYNC1H1</td><td>0.982</td><td>1.000</td><td>0.982</td><td>1</td></tr>
+<tr><td>7</td><td>GRIN2B</td><td>0.973</td><td>0.981</td><td>0.964</td><td>1</td></tr>
+<tr><td>8</td><td>DYRK1A</td><td>0.963</td><td>0.963</td><td>0.945</td><td>1</td></tr>
+<tr><td>9</td><td>SHANK3</td><td>0.952</td><td>1.000</td><td>0.952</td><td>1</td></tr>
+<tr><td>10</td><td>ANKRD11</td><td>0.952</td><td>0.999</td><td>0.951</td><td>1</td></tr>
+</tbody>
+</table>
+<p>The SCHEMA ranking also contained several known schizophrenia exome genes, but the number of high-posterior SCHEMA genes was too large for a credible final gene-discovery claim.</p>
+</div>
+
+<div id="separate-mirage-diagnostic" class="section level2">
+<h2>Separate MIRAGE Diagnostic</h2>
+<p>To determine whether the broad SCHEMA signal came from the joint layer or from the single-trait SCHEMA likelihood, separate MIRAGE fits were run for each trait.</p>
+<table class="table table-condensed">
+<thead><tr><th>Trait</th><th>Estimated risk-gene proportion</th><th>Genes with PP &gt; 0.8</th></tr></thead>
+<tbody>
+<tr><td>ASC autism</td><td>0.225</td><td>16</td></tr>
+<tr><td>SCHEMA schizophrenia</td><td>0.639</td><td>3,375</td></tr>
+</tbody>
+</table>
+<p>This shows that the broad SCHEMA signal is already present in the separate single-trait analysis. It is not created mainly by the joint shared state.</p>
+<p>The likely explanation is calibration: SCHEMA has many more observed variants and much larger allele numbers than ASC, and the six broad annotation groups allow background burden to be interpreted as widespread risk-gene signal.</p>
+</div>
+
+<div id="calibration-exploration" class="section level2">
+<h2>Calibration Exploration</h2>
+<p>Two simple calibration strategies were explored. First, the SCHEMA single-trait risk-gene proportion was fixed to sparse values instead of being freely estimated. Second, the variant set was restricted to the three strongest annotation groups:</p>
+<pre><code>LoF, LOEUF decile 1
+LoF, LOEUF decile 2-3
+Missense, MPC &gt;= 2</code></pre>
+<div id="schema-separate-fits" class="section level3">
+<h3>SCHEMA Separate Fits</h3>
+<table class="table table-condensed">
+<thead><tr><th>Setting</th><th>SCHEMA variants</th><th>Risk-gene proportion</th><th>Genes with PP &gt; 0.8</th><th>Known SCZ genes in top 25</th></tr></thead>
+<tbody>
+<tr><td>Six groups, free delta</td><td>686,383</td><td>0.639</td><td>3,375</td><td>5</td></tr>
+<tr><td>Six groups, fixed delta 0.01</td><td>686,383</td><td>0.010</td><td>163</td><td>7</td></tr>
+<tr><td>Six groups, fixed delta 0.03</td><td>686,383</td><td>0.030</td><td>278</td><td>7</td></tr>
+<tr><td>Six groups, fixed delta 0.05</td><td>686,383</td><td>0.050</td><td>367</td><td>7</td></tr>
+<tr><td>Six groups, fixed delta 0.10</td><td>686,383</td><td>0.100</td><td>540</td><td>7</td></tr>
+<tr><td>Strict three groups, free delta</td><td>210,250</td><td>0.468</td><td>800</td><td>6</td></tr>
+<tr><td>Strict three groups, fixed delta 0.01</td><td>210,250</td><td>0.010</td><td>98</td><td>8</td></tr>
+<tr><td>Strict three groups, fixed delta 0.03</td><td>210,250</td><td>0.030</td><td>136</td><td>7</td></tr>
+<tr><td>Strict three groups, fixed delta 0.05</td><td>210,250</td><td>0.050</td><td>176</td><td>7</td></tr>
+<tr><td>Strict three groups, fixed delta 0.10</td><td>210,250</td><td>0.100</td><td>259</td><td>7</td></tr>
+</tbody>
+</table>
+</div>
+<div id="joint-fits" class="section level3">
+<h3>Joint Fits</h3>
+<p>The sparse fixed prior used:</p>
+<pre><code>pi00 = 0.94
+pi10 = 0.02
+pi01 = 0.03
+pi11 = 0.01</code></pre>
+<p>This prior is sparse at the gene-state level. It means that most genes are assumed a priori to be null, with smaller prior mass assigned to autism-only, schizophrenia-only, and shared-risk states.</p>
+<table class="table table-condensed">
+<thead><tr><th>Joint setting</th><th>ASC variants</th><th>SCHEMA variants</th><th>pi00</th><th>pi10</th><th>pi01</th><th>pi11</th><th>Autism PP &gt; 0.8</th><th>SCHEMA PP &gt; 0.8</th><th>Shared PP &gt; 0.8</th></tr></thead>
+<tbody>
+<tr><td>Six groups, free pi</td><td>406,842</td><td>686,383</td><td>0.358</td><td>0.003</td><td>0.408</td><td>0.231</td><td>25</td><td>3,379</td><td>25</td></tr>
+<tr><td>Six groups, fixed sparse pi</td><td>406,842</td><td>686,383</td><td>0.940</td><td>0.020</td><td>0.030</td><td>0.010</td><td>8</td><td>329</td><td>6</td></tr>
+<tr><td>Strict three groups, free pi</td><td>16,161</td><td>210,250</td><td>0.504</td><td>0.029</td><td>0.263</td><td>0.204</td><td>26</td><td>795</td><td>24</td></tr>
+<tr><td>Strict three groups, fixed sparse pi</td><td>16,161</td><td>210,250</td><td>0.940</td><td>0.020</td><td>0.030</td><td>0.010</td><td>9</td><td>166</td><td>8</td></tr>
+</tbody>
+</table>
+<p>The strict three-group plus sparse-prior analysis gives the cleanest preliminary result: the schizophrenia list contracts substantially while the top autism and schizophrenia genes remain enriched for known biology.</p>
+</div>
+</div>
+
+<div id="external-validation" class="section level2">
+<h2>External Validation</h2>
+<p>Autism genes were compared with the <a href="https://gene.sfari.org/database/gene-scoring/">SFARI gene-scoring database</a>. SFARI score 1 genes were treated as high-confidence autism-risk genes for this exploratory check.</p>
+<p>Schizophrenia genes were compared with published SCHEMA exome-significant genes:</p>
+<pre><code>SETD1A, CUL1, XPO7, TRIO, CACNA1G, SP4, GRIA3, GRIN2A,
+HERC1, RB1CC1, STAG1, ZNF136</code></pre>
+<p>The first ten genes come from the SCHEMA exome-sequencing study; STAG1 and ZNF136 were added from the later SCHEMA expansion.</p>
+<table class="table table-condensed">
+<thead><tr><th>Analysis</th><th>Top-25 validation result</th></tr></thead>
+<tbody>
+<tr><td>Six-group joint autism ranking vs. SFARI score 1</td><td>22 / 25</td></tr>
+<tr><td>Strict three-group joint autism ranking vs. SFARI score 1</td><td>21 / 25</td></tr>
+<tr><td>Six-group joint SCHEMA ranking vs. known SCZ genes</td><td>5 / 25</td></tr>
+<tr><td>Strict three-group joint SCHEMA ranking vs. known SCZ genes</td><td>5 / 25</td></tr>
+<tr><td>Strict three-group, sparse-prior joint SCHEMA ranking vs. known SCZ genes</td><td>7 / 25</td></tr>
+</tbody>
+</table>
+</div>
+
+<div id="interpretation" class="section level2">
+<h2>Interpretation</h2>
+<p>This exploration supports three practical conclusions.</p>
+<p>First, ASC and SCHEMA should be joined by the union of variant indices rather than by the exact variant intersection. Exact rare-variant overlap is almost zero, but gene-level overlap is high.</p>
+<p>Second, the autism signal is robust and biologically credible. The top autism genes are highly enriched for SFARI score-1 genes.</p>
+<p>Third, SCHEMA requires calibration. With freely estimated gene-risk proportions, the model assigns high posterior probability to too many schizophrenia genes. Using a stricter damaging-variant set and a sparse gene-state prior gives a more interpretable result while retaining known schizophrenia genes near the top.</p>
+</div>
+
+<div id="current-recommendation" class="section level2">
+<h2>Current Recommendation</h2>
+<p>The most useful real-data analysis setting for continued development is:</p>
+<pre><code>Trait 1: ASC autism
+Trait 2: SCHEMA schizophrenia
+Variant input: union variant index
+Variant groups: strict three groups
+Gene-state prior: sparse fixed pi</code></pre>
+<p>This should be treated as a preliminary calibrated real-data exploration, not as a finalized discovery analysis.</p>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function ()  {
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+    $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+</body>
+</html>
