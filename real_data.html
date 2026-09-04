@@ -282,22 +282,40 @@ Missense, MPC &gt;= 2</code></pre>
 </div>
 <div id="joint-fits" class="section level3">
 <h3>Joint Fits</h3>
-<p>The sparse fixed prior used:</p>
+<p>Two fixed-prior strategies were compared.</p>
+<p>The first strategy fixed the full four-state prior:</p>
 <pre><code>pi00 = 0.94
 pi10 = 0.02
 pi01 = 0.03
 pi11 = 0.01</code></pre>
 <p>This prior is sparse at the gene-state level. It means that most genes are assumed a priori to be null, with smaller prior mass assigned to autism-only, schizophrenia-only, and shared-risk states.</p>
+<p>The second strategy fixed only the marginal schizophrenia risk-gene proportion:</p>
+<pre><code>pi01 + pi11 = 0.05</code></pre>
+<p>Under this partial constraint, the autism-only proportion, the split between schizophrenia-only and shared risk, and the null proportion were still estimated from the data.</p>
 <table class="table table-condensed">
-<thead><tr><th>Joint setting</th><th>ASC variants</th><th>SCHEMA variants</th><th>pi00</th><th>pi10</th><th>pi01</th><th>pi11</th><th>Autism PP &gt; 0.8</th><th>SCHEMA PP &gt; 0.8</th><th>Shared PP &gt; 0.8</th></tr></thead>
+<thead><tr><th>Joint setting</th><th>ASC variants</th><th>SCHEMA variants</th><th>pi00</th><th>pi10</th><th>pi01</th><th>pi11</th></tr></thead>
 <tbody>
-<tr><td>Six groups, free pi</td><td>406,842</td><td>686,383</td><td>0.358</td><td>0.003</td><td>0.408</td><td>0.231</td><td>25</td><td>3,379</td><td>25</td></tr>
-<tr><td>Six groups, fixed sparse pi</td><td>406,842</td><td>686,383</td><td>0.940</td><td>0.020</td><td>0.030</td><td>0.010</td><td>8</td><td>329</td><td>6</td></tr>
-<tr><td>Strict three groups, free pi</td><td>16,161</td><td>210,250</td><td>0.504</td><td>0.029</td><td>0.263</td><td>0.204</td><td>26</td><td>795</td><td>24</td></tr>
-<tr><td>Strict three groups, fixed sparse pi</td><td>16,161</td><td>210,250</td><td>0.940</td><td>0.020</td><td>0.030</td><td>0.010</td><td>9</td><td>166</td><td>8</td></tr>
+<tr><td>Six groups, free pi</td><td>406,842</td><td>686,383</td><td>0.358</td><td>0.003</td><td>0.408</td><td>0.231</td></tr>
+<tr><td>Six groups, fixed full sparse pi</td><td>406,842</td><td>686,383</td><td>0.940</td><td>0.020</td><td>0.030</td><td>0.010</td></tr>
+<tr><td>Six groups, fixed SCZ marginal 5%</td><td>406,842</td><td>686,383</td><td>0.852</td><td>0.098</td><td>0.018</td><td>0.032</td></tr>
+<tr><td>Strict three groups, free pi</td><td>16,161</td><td>210,250</td><td>0.504</td><td>0.029</td><td>0.263</td><td>0.204</td></tr>
+<tr><td>Strict three groups, fixed full sparse pi</td><td>16,161</td><td>210,250</td><td>0.940</td><td>0.020</td><td>0.030</td><td>0.010</td></tr>
+<tr><td>Strict three groups, fixed SCZ marginal 5%</td><td>16,161</td><td>210,250</td><td>0.791</td><td>0.159</td><td>0.019</td><td>0.031</td></tr>
 </tbody>
 </table>
-<p>The strict three-group plus sparse-prior analysis gives the cleanest preliminary result: the schizophrenia list contracts substantially while the top autism and schizophrenia genes remain enriched for known biology.</p>
+<p>Posterior-probability and Bayesian FDR summaries are shown below. Bayesian FDR was computed by sorting genes by posterior probability and averaging local FDR, <code>1 - PP</code>, over the selected set.</p>
+<table class="table table-condensed">
+<thead><tr><th>Joint setting</th><th>Autism PP &gt; 0.8</th><th>Autism FDR &lt; 5%</th><th>SCHEMA PP &gt; 0.8</th><th>SCHEMA FDR &lt; 5%</th><th>Shared PP &gt; 0.8</th><th>Shared FDR &lt; 5%</th></tr></thead>
+<tbody>
+<tr><td>Six groups, free pi</td><td>25</td><td>16</td><td>3,379</td><td>1,633</td><td>25</td><td>15</td></tr>
+<tr><td>Six groups, fixed full sparse pi</td><td>8</td><td>5</td><td>329</td><td>266</td><td>6</td><td>3</td></tr>
+<tr><td>Six groups, fixed SCZ marginal 5%</td><td>34</td><td>18</td><td>370</td><td>297</td><td>22</td><td>10</td></tr>
+<tr><td>Strict three groups, free pi</td><td>26</td><td>18</td><td>795</td><td>494</td><td>24</td><td>11</td></tr>
+<tr><td>Strict three groups, fixed full sparse pi</td><td>9</td><td>5</td><td>166</td><td>149</td><td>8</td><td>4</td></tr>
+<tr><td>Strict three groups, fixed SCZ marginal 5%</td><td>34</td><td>20</td><td>180</td><td>161</td><td>21</td><td>10</td></tr>
+</tbody>
+</table>
+<p>The strict three-group plus partial fixed-SCZ analysis gives the most useful preliminary balance. It keeps the schizophrenia list sparse by fixing its marginal risk-gene proportion at 5%, while still allowing the autism and shared components to be learned from the data.</p>
 </div>
 </div>
 
@@ -335,7 +353,7 @@ HERC1, RB1CC1, STAG1, ZNF136</code></pre>
 Trait 2: SCHEMA schizophrenia
 Variant input: union variant index
 Variant groups: strict three groups
-Gene-state prior: sparse fixed pi</code></pre>
+Gene-state prior: fix SCZ marginal risk at 5%, estimate the remaining pi values</code></pre>
 <p>This should be treated as a preliminary calibrated real-data exploration, not as a finalized discovery analysis.</p>
 </div>
 
