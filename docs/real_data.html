@@ -37,6 +37,35 @@ div.section { padding-top: 12px; }
 img { max-width:100%; }
 .toc-content { padding-left: 30px; padding-right: 40px; }
 table { width: auto; }
+div.main-container {
+  max-width: 1200px;
+}
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+.tocify ul,
+.tocify li {
+  line-height: 20px;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+.tocify .list-group-item {
+  border-radius: 0px;
+}
 </style>
 
 <script type="text/javascript">

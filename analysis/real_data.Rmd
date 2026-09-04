@@ -3,6 +3,44 @@ title: "Real Data Exploration"
 output: workflowr::wflow_html
 ---
 
+<style type="text/css">
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul,
+.tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+</style>
+
 ## Objective
 
 This page summarizes a preliminary real-data exploration of the two-trait
@@ -248,4 +286,3 @@ Gene-state prior: sparse fixed pi
 
 This should be treated as a preliminary calibrated real-data exploration, not
 as a finalized discovery analysis.
-
