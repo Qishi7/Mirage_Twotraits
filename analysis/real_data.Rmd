@@ -284,6 +284,57 @@ ZNF136 were added from the later SCHEMA expansion.
 | Strict three-group joint SCHEMA ranking vs. known SCZ genes | 5 / 25 |
 | Strict three-group, sparse-prior joint SCHEMA ranking vs. known SCZ genes | 7 / 25 |
 
+## Burden Test
+
+As a simple baseline, gene-level case-control burden tests were run separately
+for ASC and SCHEMA. For each gene, allele counts and allele numbers were summed
+across the six MIRAGE annotation groups, and a two-sided Fisher exact test was
+used to test:
+
+```text
+H0: case allele frequency = control allele frequency
+```
+
+This baseline produces only single-trait results. It can identify ASC burden
+genes and SCHEMA burden genes, but it does not estimate shared or pleiotropic
+gene states.
+
+| Baseline | Trait | Genes tested | Case-enriched p < 0.05 | Case-enriched p < 0.01 | Case-enriched BH FDR < 5% |
+|---|---|---:|---:|---:|---:|
+| All six groups combined | ASC autism | 17,581 | 105 | 13 | 0 |
+| All six groups combined | SCHEMA schizophrenia | 18,009 | 2,094 | 899 | 250 |
+
+The six-group joint MIRAGE fit with SCZ marginal risk fixed at 5% selected 18
+autism genes and 297 SCHEMA genes at Bayesian FDR < 5%. These were compared with
+the corresponding single-trait burden baselines:
+
+| Comparison | MIRAGE genes | Burden baseline | Overlap | Fraction of MIRAGE genes |
+|---|---:|---|---:|---:|
+| MIRAGE autism vs. ASC burden p < 0.05 | 18 | 105 ASC case-enriched genes | 3 | 16.7% |
+| MIRAGE autism vs. ASC burden p < 0.01 | 18 | 13 ASC case-enriched genes | 1 | 5.6% |
+| MIRAGE autism vs. ASC burden BH FDR < 5% | 18 | 0 ASC case-enriched genes | 0 | 0.0% |
+| MIRAGE SCHEMA vs. SCHEMA burden p < 0.05 | 297 | 2,094 SCHEMA case-enriched genes | 292 | 98.3% |
+| MIRAGE SCHEMA vs. SCHEMA burden p < 0.01 | 297 | 899 SCHEMA case-enriched genes | 268 | 90.2% |
+| MIRAGE SCHEMA vs. SCHEMA burden BH FDR < 5% | 297 | 250 SCHEMA case-enriched genes | 166 | 55.9% |
+
+The overlap pattern is asymmetric. SCHEMA MIRAGE results are highly concordant
+with ordinary case-control burden evidence, whereas ASC burden testing alone is
+much weaker. This suggests that MIRAGE adds the most beyond a simple burden test
+for autism gene prioritization, while SCHEMA is already strongly driven by
+single-trait burden enrichment.
+
+For completeness, the three LoF groups were also combined into a separate
+single-trait burden baseline:
+
+| Baseline | Trait | Genes tested | Case-enriched p < 0.05 | Case-enriched p < 0.01 | Case-enriched BH FDR < 5% |
+|---|---|---:|---:|---:|---:|
+| Three LoF groups combined | ASC autism | 11,465 | 116 | 14 | 0 |
+| Three LoF groups combined | SCHEMA schizophrenia | 17,553 | 1,921 | 716 | 137 |
+
+These LoF-only burden tests support the same conclusion: the SCHEMA
+case-control burden signal is strong, while the ASC burden signal is not strong
+enough to survive gene-level multiple testing.
+
 ## Interpretation
 
 This exploration supports three practical conclusions.
@@ -297,8 +348,8 @@ genes are highly enriched for SFARI score-1 genes.
 
 Third, SCHEMA requires calibration. With freely estimated gene-risk proportions,
 the model assigns high posterior probability to too many schizophrenia genes.
-Using a stricter damaging-variant set and a sparse gene-state prior gives a more
-interpretable result while retaining known schizophrenia genes near the top.
+Fixing the SCZ marginal risk-gene proportion at 5% gives a more interpretable
+joint result while retaining known schizophrenia genes near the top.
 
 ## Current Recommendation
 
@@ -308,7 +359,7 @@ The most useful real-data analysis setting for continued development is:
 Trait 1: ASC autism
 Trait 2: SCHEMA schizophrenia
 Variant input: union variant index
-Variant groups: strict three groups
+Variant groups: all six MIRAGE annotation groups
 Gene-state prior: fix SCZ marginal risk at 5%, estimate the remaining pi values
 ```
 
