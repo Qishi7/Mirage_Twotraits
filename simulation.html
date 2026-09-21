@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Simulation</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MIRAGE Two Trait Extension</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+<li>
+  <a href="method.html">Method</a>
+</li>
+<li>
+  <a href="simulation.html">Simulation</a>
+</li>
+<li>
+  <a href="real_data.html">Real Data</a>
+</li>
+<li>
+  <a href="implementation.html">Implementation</a>
+</li>
+<li>
+  <a href="notes.html">Notes</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Simulation</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-09-21
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>mirage_site_push_0921/</code>
+<span class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260611code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260611)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260611code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260611)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstreeee60b7582fd429c512498d39450a6751244109fdtargetblankee60b75a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/ee60b7582fd429c512498d39450a6751244109fd" target="_blank">ee60b75</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomQishi7MirageTwotraitstreeee60b7582fd429c512498d39450a6751244109fdtargetblankee60b75a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/Qishi7/Mirage_Twotraits/tree/ee60b7582fd429c512498d39450a6751244109fd" target="_blank">ee60b75</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+working directory clean
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/simulation.Rmd</code>) and HTML
+(<code>docs/simulation.html</code>) files. If you’ve configured a remote
+Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/4b7b9e7d84ad4abdb5dede85cb41da77e9f3db74/docs/simulation.html" target="_blank">4b7b9e7</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-09-03
+</td>
+<td>
+Add real data exploration page
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/1c131fcaa926f3e499c5e4e04c4d13b48fda6a65/analysis/simulation.Rmd" target="_blank">1c131fc</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-31
+</td>
+<td>
+Publish 100-rep rare-background results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/1c131fcaa926f3e499c5e4e04c4d13b48fda6a65/docs/simulation.html" target="_blank">1c131fc</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-31
+</td>
+<td>
+Publish 100-rep rare-background results
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/910eed3dadd99d7fdc24bc8f50775cb3a728beea/analysis/simulation.Rmd" target="_blank">910eed3</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-26
+</td>
+<td>
+Replace replicate list with single-rep design table
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/910eed3dadd99d7fdc24bc8f50775cb3a728beea/docs/simulation.html" target="_blank">910eed3</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-26
+</td>
+<td>
+Replace replicate list with single-rep design table
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/24bcfe929436eb28a22742ed7765479c36dbdd90/docs/simulation.html" target="_blank">24bcfe9</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-26
+</td>
+<td>
+Publish rare-background sensitivity page
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/4b5474e43b9e14906ae6ae7e58106b4c47df5bfb/analysis/simulation.Rmd" target="_blank">4b5474e</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-26
+</td>
+<td>
+Add rare-background sensitivity results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/aef99249eb819d398c02f0a04fbe6e84830aa71c/docs/simulation.html" target="_blank">aef9924</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-14
+</td>
+<td>
+Publish simulation design summary table
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/42200d71dc36b4394a4bea24b393f9dd4e9915f1/analysis/simulation.Rmd" target="_blank">42200d7</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-14
+</td>
+<td>
+Add simulation design summary table
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/d05840521d53c25371721c375d8607fb5b0b8d44/docs/simulation.html" target="_blank">d058405</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-14
+</td>
+<td>
+Publish variant-level MIRAGE exploration
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/5739dfe475e20248acb0194134254ca8825b4c1c/analysis/simulation.Rmd" target="_blank">5739dfe</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-08-14
+</td>
+<td>
+Add variant-level MIRAGE exploration results
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/190da6d7ba0f42b55e380da2fbaece7acbef9a0a/docs/simulation.html" target="_blank">190da6d</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-07-29
+</td>
+<td>
+Publish weak-signal simulation results
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/dd309fd8338d9edbdde27b3f9e8e41321c210668/analysis/simulation.Rmd" target="_blank">dd309fd</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-07-29
+</td>
+<td>
+Add weak-signal simulation metrics
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/01033c1d1659c2243fa289a19bfc5df86263f189/docs/simulation.html" target="_blank">01033c1</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-22
+</td>
+<td>
+Publish clarified simulation study
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/9ea6ab93e1e07f803e008e3c99b0e032cfcef718/analysis/simulation.Rmd" target="_blank">9ea6ab9</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-22
+</td>
+<td>
+Clarify mTADA simulation study
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/a68ca7e704c15cb1c30522fb47e2863afd2eb9b1/docs/simulation.html" target="_blank">a68ca7e</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-22
+</td>
+<td>
+Publish mTADA simulation results
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/c82fd2dec71f722cced0da6d477826e4bb634009/analysis/simulation.Rmd" target="_blank">c82fd2d</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-22
+</td>
+<td>
+Add mTADA-style simulation benchmark
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/fda97d57ad2ee1eac185da08146bdd99e9118bbe/docs/simulation.html" target="_blank">fda97d5</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Rebuild workflowr site from clean state
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/f9351037735561abcd2869a9e867be954805ae4e/docs/simulation.html" target="_blank">f935103</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/90b61414bb23993b47061528759bb99cf44cfacc/analysis/simulation.Rmd" target="_blank">90b6141</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Clarify method and simulation smoke check
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/46eecbc2847b016901e5d7b113b6dd75a01c9d3d/docs/simulation.html" target="_blank">46eecbc</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Qishi7/Mirage_Twotraits/bf4dd375e8432abd37837f4512870cb99930abc3/docs/simulation.html" target="_blank">bf4dd37</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Qishi7/Mirage_Twotraits/blob/1d54a173ce8905f44a1f816e6857e88aeafbc5af/analysis/simulation.Rmd" target="_blank">1d54a17</a>
+</td>
+<td>
+Qishi Zhan
+</td>
+<td>
+2026-06-12
+</td>
+<td>
+Update website for two-trait MIRAGE extension
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="study-objective" class="section level2">
+<h2>Study Objective</h2>
+<p>This simulation evaluates the two-trait MIRAGE extension using the
+same gene-level data-generating mechanism used in the mTADA paper. The
+comparison is performed on identical simulated datasets so that
+differences reflect the analysis methods rather than different data
+generation.</p>
+<p>This page distinguishes two types of information:</p>
+<ul>
+<li><strong>Taken from the public mTADA repository:</strong> gene names
+and mutation rates for 19,358 genes in two annotation categories.</li>
+<li><strong>Simulated for this study:</strong> four-state gene status,
+relative risks, and de novo mutation counts for the two traits.</li>
+</ul>
+<p>The observed disease mutation counts distributed with mTADA are not
+used as simulation outcomes. No ASD, schizophrenia, WES, dbGaP, SPARK,
+protected, or private individual-level data are included in this
+repository.</p>
+</div>
+<div id="data-source" class="section level2">
+<h2>Data Source</h2>
+<p>The mutation-rate profile is read locally from the public mTADA
+file:</p>
+<pre class="text"><code>mTADA/data/FullDataSet_DenovoMutations_for_mTADA.txt</code></pre>
+<p>Only these columns are used:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Gene</code></td>
+<td>Common gene identifier</td>
+</tr>
+<tr class="even">
+<td><code>mut_damaging</code></td>
+<td>Mutation rate for the damaging missense category</td>
+</tr>
+<tr class="odd">
+<td><code>mut_lof</code></td>
+<td>Mutation rate for the loss-of-function category</td>
+</tr>
+</tbody>
+</table>
+<p>The mTADA repository is treated as an external reference and is not
+copied into this GitHub repository.</p>
+</div>
+<div id="data-generating-mechanism" class="section level2">
+<h2>Data-Generating Mechanism</h2>
+<p>For every gene <span class="math inline">\(i\)</span>, a gene-level
+state is sampled:</p>
+<p><span class="math display">\[
+S_i \in \{00,10,01,11\}.
+\]</span></p>
+<p>The state probabilities are derived from the single-trait risk
+proportions <span class="math inline">\(\pi_1^S\)</span>, <span
+class="math inline">\(\pi_2^S\)</span>, and the shared-risk proportion
+<span class="math inline">\(\pi_{11}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\pi_{00} &amp;= 1-\pi_1^S-\pi_2^S+\pi_{11},\\
+\pi_{10} &amp;= \pi_1^S-\pi_{11},\\
+\pi_{01} &amp;= \pi_2^S-\pi_{11},\\
+\pi_{11} &amp;= \pi_{11}.
+\end{aligned}
+\]</span></p>
+<p>As in the mTADA simulation, <span
+class="math inline">\(\pi_1^S=0.05\)</span> and <span
+class="math inline">\(\pi_2^S=0.03\)</span>.</p>
+<p>For an active trait <span class="math inline">\(t\)</span> and
+annotation category <span class="math inline">\(c\)</span>, the
+gene-specific relative risk is generated from:</p>
+<p><span class="math display">\[
+\gamma_{itc}\sim
+\operatorname{Gamma}(\bar{\gamma}_{tc}\beta_{tc},\beta_{tc}).
+\]</span></p>
+<p>For an inactive trait, <span
+class="math inline">\(\gamma_{itc}=1\)</span>. Given mutation rate <span
+class="math inline">\(\mu_{ic}\)</span>, trio count <span
+class="math inline">\(N_t\)</span>, and relative risk <span
+class="math inline">\(\gamma_{itc}\)</span>, the de novo count is:</p>
+<p><span class="math display">\[
+X_{itc}\sim
+\operatorname{Poisson}(2N_t\mu_{ic}\gamma_{itc}).
+\]</span></p>
+<p>This is the mTADA de novo Poisson/Gamma mechanism. State <span
+class="math inline">\(11\)</span> is assigned at the gene level and does
+not require the same mutation category to drive both traits.</p>
+</div>
+<div id="analysis-workflow" class="section level2">
+<h2>Analysis Workflow</h2>
+<p>For each simulated gene-category count, the analytic TADA de novo
+Bayes factor is calculated:</p>
+<p><span class="math display">\[
+\mathrm{BF}_{itc}
+=
+\frac{
+\operatorname{NB}\left(
+X_{itc};
+\bar{\gamma}_{tc}\beta_{tc},
+\frac{\beta_{tc}}{\beta_{tc}+2N_t\mu_{ic}}
+\right)
+}{
+\operatorname{Poisson}(X_{itc};2N_t\mu_{ic})
+}.
+\]</span></p>
+<p>Category Bayes factors are combined within each gene on the log
+scale. The same simulated counts and mutation rates are then analyzed
+by:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Joint MIRAGE:</strong> the proposed gene-level four-state
+model.</li>
+<li><strong>Separate analyses:</strong> independent single-trait
+posterior analyses.</li>
+<li><strong>Original mTADA:</strong> the public <code>DN2traits</code>
+Stan/VB implementation.</li>
+</ol>
+<p>For this mTADA-based benchmark, category Bayes factors enter
+directly, which is equivalent to fixing MIRAGE <span
+class="math inline">\(\eta=1\)</span>. This benchmark therefore tests
+the joint four-state inference under the mTADA gene-category DGM. It
+does not pretend that mTADA gene-level DNM counts are variant-level
+case-control data.</p>
+</div>
+<div id="representative-run" class="section level2">
+<h2>Representative Run</h2>
+<p>One complete representative dataset was generated using the public
+mTADA mutation rates and the following settings:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Number of genes</td>
+<td>19,358</td>
+</tr>
+<tr class="even">
+<td>Annotation categories</td>
+<td>Damaging missense and LoF</td>
+</tr>
+<tr class="odd">
+<td>Trait 1 risk proportion</td>
+<td>0.05</td>
+</tr>
+<tr class="even">
+<td>Trait 2 risk proportion</td>
+<td>0.03</td>
+</tr>
+<tr class="odd">
+<td>Shared-risk proportion</td>
+<td>0.02</td>
+</tr>
+<tr class="even">
+<td>Trait 1 trios</td>
+<td>2,000</td>
+</tr>
+<tr class="odd">
+<td>Trait 2 trios</td>
+<td>2,000</td>
+</tr>
+<tr class="even">
+<td>Trait 1 mean RRs</td>
+<td>24 and 6</td>
+</tr>
+<tr class="odd">
+<td>Trait 2 mean RRs</td>
+<td>12 and 2</td>
+</tr>
+<tr class="even">
+<td>Gamma dispersion parameter</td>
+<td>1 for each category</td>
+</tr>
+<tr class="odd">
+<td>Simulation seed</td>
+<td>20200648</td>
+</tr>
+<tr class="even">
+<td>Original mTADA VB iterations</td>
+<td>5,000</td>
+</tr>
+</tbody>
+</table>
+<p>The true four-state proportions for this setting are:</p>
+<p><span class="math display">\[
+(\pi_{00},\pi_{10},\pi_{01},\pi_{11})
+=(0.94,0.03,0.01,0.02).
+\]</span></p>
+</div>
+<div id="representative-results" class="section level2">
+<h2>Representative Results</h2>
+<div id="auc" class="section level3">
+<h3>AUC</h3>
+<pre><code>          method     target    AUC
+1   Joint MIRAGE    Trait 1 0.6687
+2       Separate    Trait 1 0.6587
+3 Original mTADA    Trait 1 0.6685
+4   Joint MIRAGE    Trait 2 0.6463
+5       Separate    Trait 2 0.5839
+6 Original mTADA    Trait 2 0.6462
+7   Joint MIRAGE Pleiotropy 0.6886
+8       Separate Pleiotropy 0.6887
+9 Original mTADA Pleiotropy 0.6887</code></pre>
+<p>In this replicate, joint analysis improved Trait 2 AUC from 0.584 to
+0.646. Trait 1 AUC increased from 0.659 to 0.669. Joint MIRAGE and
+original mTADA produced very similar rankings because both use the same
+four-state likelihood structure in this benchmark.</p>
+</div>
+<div id="pp-threshold-of-0.8" class="section level3">
+<h3>PP Threshold of 0.8</h3>
+<pre><code>          method     target discoveries  power empirical_FDP
+1   Joint MIRAGE    Trait 1          53 0.0514        0.0377
+2       Separate    Trait 1          44 0.0444        0.0000
+3 Original mTADA    Trait 1          54 0.0524        0.0370
+4   Joint MIRAGE    Trait 2           9 0.0133        0.1111
+5       Separate    Trait 2           3 0.0050        0.0000
+6 Original mTADA    Trait 2          13 0.0183        0.1538
+7   Joint MIRAGE Pleiotropy           9 0.0193        0.1111
+8       Separate Pleiotropy           0 0.0000        0.0000
+9 Original mTADA Pleiotropy          13 0.0265        0.1538</code></pre>
+<p>Joint MIRAGE found more Trait 1 and Trait 2 genes than the separate
+analyses. For Trait 2, discoveries increased from 3 to 9. This gain came
+with one false discovery in this replicate, so both power and empirical
+FDP must be evaluated over repeated simulations.</p>
+</div>
+<div id="mixing-proportion-and-runtime" class="section level3">
+<h3>Mixing Proportion and Runtime</h3>
+<pre><code>          method true_pi11 estimated_pi11 runtime_seconds
+1   Joint MIRAGE      0.02         0.0217            11.0
+2 Original mTADA      0.02         0.0279           108.9</code></pre>
+<p>The separate analyses do not estimate a joint <span
+class="math inline">\(\pi_{11}\)</span>. The original mTADA Stan VB fit
+completed, but its legacy <code>locfit</code> HPD routine raised
+<code>HPD interval not closed</code> for this replicate. The reported
+mTADA estimate uses a bounded density-mode fallback applied to the
+original <code>p12</code> VB draws. This fallback is recorded in the
+task metadata rather than hidden.</p>
+<p>Runtime excludes the one-time Stan compilation cost, which was
+approximately 85 seconds on the development computer.</p>
+</div>
+<div id="bayesian-fdr-check" class="section level3">
+<h3>Bayesian FDR Check</h3>
+<p>At target Bayesian FDR 0.05:</p>
+<pre><code>          method  target estimated_BFDR empirical_FDP
+1   Joint MIRAGE Trait 1         0.0495        0.0217
+2       Separate Trait 1         0.0492        0.0000
+3 Original mTADA Trait 1         0.0497        0.0200
+4   Joint MIRAGE Trait 2         0.0358        0.1250
+5       Separate Trait 2         0.0439        0.0000
+6 Original mTADA Trait 2         0.0410        0.1111</code></pre>
+<p>This table is a diagnostic for one dataset, not an FDR-calibration
+result. Calibration requires averaging empirical FDP across many
+replicates at each simulation setting.</p>
+</div>
+</div>
+<div id="weak-signal-sensitivity-run-mrr-5-3-and-4-2"
+class="section level2">
+<h2>Weak-Signal Sensitivity Run: mRR (5, 3) and (4, 2)</h2>
+<p>This additional run uses the same mTADA data-generating mechanism,
+public gene-level mutation rates, four-state proportions, sample sizes,
+and random seed as the representative analysis above. It does not
+replace that analysis. Only the mean relative risks were reduced to
+create a deliberately weak-signal setting:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Genes</td>
+<td>19,358</td>
+</tr>
+<tr class="even">
+<td>Trait 1 mean RRs (MiD, LoF)</td>
+<td>(5, 3)</td>
+</tr>
+<tr class="odd">
+<td>Trait 2 mean RRs (MiD, LoF)</td>
+<td>(4, 2)</td>
+</tr>
+<tr class="even">
+<td>True pleiotropic proportion</td>
+<td>0.02</td>
+</tr>
+<tr class="odd">
+<td>Trait 1 and Trait 2 trios</td>
+<td>2,000 each</td>
+</tr>
+<tr class="even">
+<td>Simulation seed</td>
+<td>20200648</td>
+</tr>
+<tr class="odd">
+<td>Joint MIRAGE maximum EM iterations</td>
+<td>2,000</td>
+</tr>
+<tr class="even">
+<td>EM tolerance</td>
+<td>1e-6</td>
+</tr>
+</tbody>
+</table>
+<p>No model parameter was altered to force discoveries. Joint MIRAGE
+converged naturally after 1,891 iterations. The observed-data
+log-likelihood was non-decreasing, the final log-likelihood was
+2.006309, and the final maximum parameter change was 9.9973e-7. The
+estimated pleiotropic proportion was 0.003695 compared with the
+generating value of 0.02.</p>
+<div id="weak-signal-auc" class="section level3">
+<h3>Weak-Signal AUC</h3>
+<pre><code>          method     target    AUC
+1   Joint MIRAGE    Trait 1 0.5570
+2       Separate    Trait 1 0.5547
+3 Original mTADA    Trait 1 0.5571
+4   Joint MIRAGE    Trait 2 0.5697
+5       Separate    Trait 2 0.5410
+6 Original mTADA    Trait 2 0.5667
+7   Joint MIRAGE Pleiotropy 0.5846
+8       Separate Pleiotropy 0.5846
+9 Original mTADA Pleiotropy 0.5846</code></pre>
+<p>The joint analysis modestly improved Trait 2 ranking relative to the
+separate analysis in this replicate. The three methods had nearly
+identical pleiotropic ranking AUC. These are single-replicate
+observations rather than estimates of average performance.</p>
+</div>
+<div id="posterior-probability-and-bfdr-thresholds"
+class="section level3">
+<h3>Posterior-Probability and BFDR Thresholds</h3>
+<pre><code>          method     target discoveries_at_PP_0.5 discoveries_at_PP_0.7
+1   Joint MIRAGE    Trait 1                     0                     0
+2   Joint MIRAGE    Trait 2                     0                     0
+3   Joint MIRAGE Pleiotropy                     0                     0
+4       Separate    Trait 1                     2                     0
+5       Separate    Trait 2                     0                     0
+6       Separate Pleiotropy                     0                     0
+7 Original mTADA    Trait 1                     2                     0
+8 Original mTADA    Trait 2                     0                     0
+9 Original mTADA Pleiotropy                     0                     0
+  discoveries_at_PP_0.8
+1                     0
+2                     0
+3                     0
+4                     0
+5                     0
+6                     0
+7                     0
+8                     0
+9                     0</code></pre>
+<p>At Bayesian FDR at most 0.05, all three methods also selected zero
+genes for all three targets. Consequently, TPR and FPR are both zero at
+those fixed thresholds. This does not indicate perfect classification:
+it indicates that no posterior probability was high enough to form a
+discovery set under this weak-signal configuration.</p>
+</div>
+<div id="joint-mirage-top-k-ranking" class="section level3">
+<h3>Joint MIRAGE Top-K Ranking</h3>
+<p>When no genes cross a reporting threshold, top-K metrics still
+describe how well true risk genes are enriched near the top of the
+ranking. <a href="mailto:TP@K" class="email">TP@K</a> and <a
+href="mailto:FP@K" class="email">FP@K</a> are counts among the K highest
+posterior probabilities; <a href="mailto:TPR@K" class="email">TPR@K</a>
+uses all true risk genes as the denominator, while <a
+href="mailto:FPR@K" class="email">FPR@K</a> uses all non-risk genes.</p>
+<pre><code>      target   K TP  FP precision    TPR     FPR
+1    Trait 1  50 10  40     0.200 0.0101 0.00218
+2    Trait 1 100 20  80     0.200 0.0202 0.00436
+3    Trait 1 200 33 167     0.165 0.0333 0.00909
+4    Trait 2  50  7  43     0.140 0.0116 0.00229
+5    Trait 2 100 12  88     0.120 0.0200 0.00469
+6    Trait 2 200 21 179     0.105 0.0349 0.00954
+7 Pleiotropy  50  9  41     0.180 0.0217 0.00216
+8 Pleiotropy 100 12  88     0.120 0.0289 0.00465
+9 Pleiotropy 200 18 182     0.090 0.0434 0.00961</code></pre>
+<p>For example, 9 of the top 50 pleiotropy-ranked genes were truly
+pleiotropic, giving <a href="mailto:precision@50"
+class="email">precision@50</a> of 0.18. These ranking results show weak
+enrichment, but they do not turn the top-K lists into
+posterior-probability discoveries.</p>
+<p>The simulation summary pipeline now records PP thresholds 0.5, 0.7,
+and 0.8; BFDR diagnostics; and TP, FP, precision, TPR, and FPR at K =
+50, 100, and 200 for every target and method. The prior result files
+remain unchanged. ## Full mTADA Paper Grid</p>
+<p>The implemented full grid follows the parameter combinations shown in
+the mTADA paper:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Shared-risk proportion</td>
+<td><span class="math inline">\(\pi_{11}=0, 0.02\)</span></td>
+</tr>
+<tr class="even">
+<td>Trait 1 mean RRs</td>
+<td><span class="math inline">\((105,29)\)</span> or <span
+class="math inline">\((24,6)\)</span></td>
+</tr>
+<tr class="odd">
+<td>Trait 2 mean RRs</td>
+<td><span class="math inline">\((12,2)\)</span> or <span
+class="math inline">\((87,23)\)</span></td>
+</tr>
+<tr class="even">
+<td>Trio counts</td>
+<td>All nine pairs formed from 1,000, 2,000, and 5,000</td>
+</tr>
+<tr class="odd">
+<td>Repeated seeds</td>
+<td>100 per setting</td>
+</tr>
+</tbody>
+</table>
+<p>The full design contains:</p>
+<p><span class="math display">\[
+2\times4\times9\times100=7{,}200
+\]</span></p>
+<p>simulated datasets. For every dataset the pipeline records:</p>
+<ul>
+<li>AUC for Trait 1, Trait 2, and pleiotropy;</li>
+<li>power, TPR, FPR, precision, and empirical FDP at PP at least 0.5,
+0.7, and 0.8;</li>
+<li>estimated BFDR and empirical FDP at targets 0.01, 0.05, 0.10, and
+0.20;</li>
+<li>TP, FP, precision, TPR, and FPR at K = 50, 100, and 200;</li>
+<li>recovery of <span class="math inline">\(\pi_{11}\)</span>;</li>
+<li>runtime and fitting errors.</li>
+</ul>
+<p>The runner uses one checkpoint per dataset and supports
+non-overlapping task ranges for parallel execution. The full
+7,200-dataset experiment has been implemented but has not yet completed.
+Therefore, the representative result above demonstrates that the data
+generation and all three analysis paths work; it is not a final method
+comparison or calibration claim.</p>
+</div>
+</div>
+<div id="variant-level-mirage-style-exploration" class="section level2">
+<h2>Variant-Level MIRAGE-Style Exploration</h2>
+<p>After the mTADA-style gene-category simulation above, we also
+explored two variant-level case-control simulations. These are closer to
+the original single-trait MIRAGE simulation structure because the raw
+data contain one row per variant rather than one row per gene-category
+count.</p>
+<p>Both explorations used the same gene-level four-state truth:</p>
+<table>
+<colgroup>
+<col width="42%" />
+<col width="57%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Quantity</th>
+<th align="right">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Replicates</td>
+<td align="right">30</td>
+</tr>
+<tr class="even">
+<td>Genes per replicate</td>
+<td align="right">500</td>
+</tr>
+<tr class="odd">
+<td>Variants per gene per trait</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td>Variant rows per trait per replicate</td>
+<td align="right">7,500</td>
+</tr>
+<tr class="odd">
+<td>Variant rows across two traits per replicate</td>
+<td align="right">15,000</td>
+</tr>
+<tr class="even">
+<td>Variant rows across 30 replicates</td>
+<td align="right">450,000</td>
+</tr>
+<tr class="odd">
+<td>Exact gene-state counts per replicate</td>
+<td align="right">470 <code>00</code>, 20 <code>10</code>, 5
+<code>01</code>, 5 <code>11</code></td>
+</tr>
+<tr class="even">
+<td>Trait 1 risk genes</td>
+<td align="right">25</td>
+</tr>
+<tr class="odd">
+<td>Trait 2 risk genes</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td>Pleiotropic genes</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td>Cases and controls per trait</td>
+<td align="right">3,000 cases and 3,000 controls</td>
+</tr>
+<tr class="even">
+<td>Annotation categories</td>
+<td align="right"><code>C1</code>, <code>C2</code>, <code>C3</code></td>
+</tr>
+<tr class="odd">
+<td>Category probabilities</td>
+<td align="right">0.60, 0.30, 0.10</td>
+</tr>
+<tr class="even">
+<td>Trait 1 eta values</td>
+<td align="right">0.05, 0.20, 0.50</td>
+</tr>
+<tr class="odd">
+<td>Trait 2 eta values</td>
+<td align="right">0.03, 0.15, 0.40</td>
+</tr>
+<tr class="even">
+<td>Mean relative risks</td>
+<td align="right">3, 3, 5</td>
+</tr>
+<tr class="odd">
+<td>Gamma dispersion</td>
+<td align="right">1 for each category</td>
+</tr>
+</tbody>
+</table>
+<p>The methods compared were:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Joint MIRAGE:</strong> the two-trait MIRAGE model with <span
+class="math inline">\(\pi\)</span> and <span
+class="math inline">\(\eta\)</span> estimated.</li>
+<li><strong>Separate MIRAGE:</strong> two single-trait MIRAGE-style
+analyses with an independent four-state prior.</li>
+<li><strong>Aggregated mTADA:</strong> the original mTADA implementation
+applied after aggregating variant-level case counts and baseline rates
+to gene-category counts.</li>
+</ol>
+<p>The aggregated mTADA analysis is included as a stress-test
+comparator. It is not the native data format for this variant-level
+case-control design because it does not use the control counts.</p>
+<div id="paper-like-variant-level-design" class="section level3">
+<h3>Paper-Like Variant-Level Design</h3>
+<p>The first variant-level design follows the earlier MIRAGE-style
+setup:</p>
+<ul>
+<li>baseline allele rates were generated for each variant;</li>
+<li>active genes contained risk variants according to the
+category-specific <span class="math inline">\(\eta\)</span> values;</li>
+<li>risk variants increased case counts through their relative
+risks;</li>
+<li>controls were generated from the same baseline rate without disease
+enrichment;</li>
+<li>there were no deliberately inflated noncausal background
+variants.</li>
+</ul>
+<p>Mean AUC over 30 replicates:</p>
+<pre><code>            method     target mean_AUC
+1     Joint MIRAGE    Trait 1    0.712
+2  Separate MIRAGE    Trait 1    0.704
+3 Aggregated mTADA    Trait 1    0.736
+4     Joint MIRAGE    Trait 2    0.671
+5  Separate MIRAGE    Trait 2    0.629
+6 Aggregated mTADA    Trait 2    0.720
+7     Joint MIRAGE Pleiotropy    0.749
+8  Separate MIRAGE Pleiotropy    0.732
+9 Aggregated mTADA Pleiotropy    0.791</code></pre>
+<p>Selected parameter learning:</p>
+<pre><code>            method true_pi11 mean_estimated_pi11
+1     Joint MIRAGE      0.01               0.048
+2  Separate MIRAGE      0.01               0.001
+3 Aggregated mTADA      0.01               0.011</code></pre>
+<p>In this paper-like variant-level design, aggregated mTADA still had
+the highest mean AUC. This is expected because after aggregation the
+main signal is still a gene-category burden signal, which is favorable
+to mTADA.</p>
+</div>
+<div id="control-informative-variant-level-design"
+class="section level3">
+<h3>Control-Informative Variant-Level Design</h3>
+<p>The second variant-level design was constructed to represent a
+setting where the control counts carry information that should not be
+discarded:</p>
+<ul>
+<li>the same 500 genes, 15 variants per gene, 30 replicates, and
+four-state truth were used;</li>
+<li>18% of variants were assigned to a high-background noncausal
+group;</li>
+<li>those background variants had their case and control
+count-generating rate multiplied by 8;</li>
+<li>the mTADA aggregation still used the baseline variant rate, not the
+inflated count-generating rate;</li>
+<li>true disease variants increased case counts, while high-background
+variants increased both case and control counts.</li>
+</ul>
+<p>This design creates variants that look large in case-count burden but
+are not case-enriched relative to controls. MIRAGE can use the control
+counts to down-weight them; aggregated mTADA cannot.</p>
+<p>Mean AUC over 30 replicates:</p>
+<pre><code>            method     target mean_AUC
+1     Joint MIRAGE    Trait 1    0.747
+2  Separate MIRAGE    Trait 1    0.741
+3 Aggregated mTADA    Trait 1    0.605
+4     Joint MIRAGE    Trait 2    0.688
+5  Separate MIRAGE    Trait 2    0.666
+6 Aggregated mTADA    Trait 2    0.580
+7     Joint MIRAGE Pleiotropy    0.790
+8  Separate MIRAGE Pleiotropy    0.778
+9 Aggregated mTADA Pleiotropy    0.593</code></pre>
+<p>At posterior probability at least 0.8:</p>
+<pre><code>            method     target mean_discoveries empirical_FDP
+1     Joint MIRAGE    Trait 1             5.07         0.084
+2  Separate MIRAGE    Trait 1             4.50         0.047
+3 Aggregated mTADA    Trait 1           270.50         0.939
+4     Joint MIRAGE    Trait 2             1.80         0.128
+5  Separate MIRAGE    Trait 2             1.23         0.033
+6 Aggregated mTADA    Trait 2           251.27         0.976
+7     Joint MIRAGE Pleiotropy             0.63         0.106
+8  Separate MIRAGE Pleiotropy             0.03         0.000
+9 Aggregated mTADA Pleiotropy           152.30         0.988</code></pre>
+<p>Selected parameter learning:</p>
+<pre><code>            method true_pi11 mean_estimated_pi11
+1     Joint MIRAGE      0.01               0.023
+2  Separate MIRAGE      0.01               0.001
+3 Aggregated mTADA      0.01               0.009</code></pre>
+<p>Under this control-informative design, joint MIRAGE clearly
+outperformed the aggregated mTADA comparator in ranking for both
+marginal trait discovery and pleiotropy. Aggregated mTADA also produced
+many high-posterior discoveries with very high empirical FDP because the
+high-background noncausal variants were interpreted as disease burden
+after aggregation.</p>
+</div>
+<div id="rare-variant-background-frequency-sensitivity"
+class="section level3">
+<h3>Rare-Variant Background-Frequency Sensitivity</h3>
+<p>The original control-informative run used an 18% high-background
+variant proportion and an 8-fold background-rate multiplier. To make the
+design more conservative for rare-variant analysis, we performed a
+sensitivity analysis that reduced both the proportion of high-background
+variants and the per-variant background frequency.</p>
+<p>The selected conservative setting was:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th align="right">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Replicates</td>
+<td align="right">100</td>
+</tr>
+<tr class="even">
+<td>Genes per replicate</td>
+<td align="right">500</td>
+</tr>
+<tr class="odd">
+<td>Traits</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Variants per gene per trait</td>
+<td align="right">15</td>
+</tr>
+<tr class="odd">
+<td>Variant rows per trait per replicate</td>
+<td align="right">7,500</td>
+</tr>
+<tr class="even">
+<td>Variant rows across two traits per replicate</td>
+<td align="right">15,000</td>
+</tr>
+<tr class="odd">
+<td>Cases and controls per trait</td>
+<td align="right">3,000 cases and 3,000 controls</td>
+</tr>
+<tr class="even">
+<td>High-background variant probability</td>
+<td align="right">5%</td>
+</tr>
+<tr class="odd">
+<td>High-background rate multiplier</td>
+<td align="right">5</td>
+</tr>
+</tbody>
+</table>
+<p>Under this setting, high-background variants remain rare on average:
+the mean case allele frequency among high-background variants is
+approximately 0.087%.</p>
+<p>Mean AUC over 100 replicates for the selected 5% / 5x setting:</p>
+<pre><code>            method     target mean_AUC sd_AUC   n
+1 Aggregated mTADA pleiotropy    0.726  0.115 100
+2     Joint MIRAGE pleiotropy    0.737  0.119 100
+3  Separate MIRAGE pleiotropy    0.731  0.121 100
+4 Aggregated mTADA     trait1    0.706  0.062 100
+5     Joint MIRAGE     trait1    0.704  0.058 100
+6  Separate MIRAGE     trait1    0.701  0.059 100
+7 Aggregated mTADA     trait2    0.656  0.084 100
+8     Joint MIRAGE     trait2    0.671  0.097 100
+9  Separate MIRAGE     trait2    0.638  0.089 100</code></pre>
+<p>The corresponding replicate-level AUC distributions are shown
+below:</p>
+<p><img src="figure/rare_background_auc_boxplot_100rep.png" alt="AUC distribution over 100 replicates for the selected 5% high-background variant probability and 5x background-rate multiplier setting." style="width:100%; max-width:100%;" /></p>
+<p class="caption">
+AUC distribution over 100 replicates for the selected 5% high-background
+variant probability and 5x background-rate multiplier setting.
+</p>
+<p>The multiplier sensitivity fixed the high-background variant
+probability at 5% and varied the background-rate multiplier:</p>
+<pre><code>  multiplier replicates mean_AUC_joint_MIRAGE mean_AUC_mTADA
+1          2         10                 0.693          0.754
+2          3         10                 0.665          0.712
+3          4         10                 0.693          0.693
+4          5        100                 0.704          0.696
+5          6         10                 0.746          0.702
+6          8         30                 0.717          0.677
+  delta_MIRAGE_minus_mTADA
+1                   -0.061
+2                   -0.047
+3                    0.000
+4                    0.008
+5                    0.043
+6                    0.040</code></pre>
+<p>The boundary occurs around multiplier 4–5. Multiplier 4 was
+approximately tied with aggregated mTADA in the 10-replicate coarse run.
+Multiplier 5 was expanded to 100 replicates: joint MIRAGE remained
+slightly better on average across the three AUC targets, with higher AUC
+for Trait 2 and pleiotropy and a near tie for Trait 1, while keeping the
+mean high-background variant allele frequency below 0.1%.</p>
+<p>The 100 replicates used the same data-generating setup. The table
+below shows one concrete replicate, so the data size and high-background
+construction are explicit without listing all 100 random repeats:</p>
+<pre><code>                                                  quantity  value
+1                                          Replicate shown      1
+2                                                    Genes    500
+3                                                   Traits      2
+4                              Variants per gene per trait     15
+5                                   Variant rows per trait   7500
+6                           Variant rows across two traits  15000
+7                                          Cases per trait   3000
+8                                       Controls per trait   3000
+9                      High-background variant probability     5%
+10                         High-background rate multiplier     5x
+11                       Observed high-background variants    737
+12                                Observed causal variants     67
+13                Observed high-background causal variants      4
+14                     Observed high-background case count   4103
+15                  Observed high-background control count   4011
+16                  Case count per high-background variant   5.57
+17               Control count per high-background variant   5.44
+18    Case allele frequency among high-background variants 0.093%
+19 Control allele frequency among high-background variants 0.091%</code></pre>
+</div>
+</div>
+<div id="reproducible-commands" class="section level2">
+<h2>Reproducible Commands</h2>
+<p>The full runner is <code>code/run_mtada_full_grid.R</code>. For
+example:</p>
+<pre class="r"><code>Sys.setenv(
+  MTADA_REFERENCE_DIR = &quot;D:/path/to/mTADA&quot;,
+  MIRAGE_TASK_START = &quot;1&quot;,
+  MIRAGE_TASK_END = &quot;900&quot;,
+  MIRAGE_RUN_ORIGINAL_MTADA = &quot;true&quot;
+)
+source(&quot;code/run_mtada_full_grid.R&quot;)</code></pre>
+<p>Completed checkpoints are summarized with:</p>
+<pre class="r"><code>source(&quot;code/summarize_mtada_full_grid.R&quot;)</code></pre>
+</div>
+<div id="internal-software-smoke-test" class="section level2">
+<h2>Internal Software Smoke Test</h2>
+<p>Before the mTADA-based benchmark was added, a small 120-gene
+synthetic test was used only to verify EM convergence, posterior
+normalization, and end-to-end execution. That internal test remains in
+the automated test suite, but it is not the scientific simulation study
+reported on this page.</p>
+</div>
+<div id="simulation-design-summary" class="section level2">
+<h2>Simulation Design Summary</h2>
+<table>
+<colgroup>
+<col width="21%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">No.</th>
+<th>Simulation</th>
+<th>Data size</th>
+<th>Core design</th>
+<th>Main result</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td>mTADA-style gene-count</td>
+<td>19,358 genes, 2 categories</td>
+<td>mTADA DNM Poisson/Gamma gene-category counts</td>
+<td>Joint MIRAGE <span class="math inline">\(\approx\)</span> mTADA
+<span class="math inline">\(&gt;\)</span> Separate</td>
+<td>The joint layer is correct, but this design does not test MIRAGE’s
+variant-level advantage.</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td>Weak-signal mTADA-style</td>
+<td>19,358 genes, 100 reps</td>
+<td>Mean RRs reduced to Trait 1 <span
+class="math inline">\((5,3)\)</span>, Trait 2 <span
+class="math inline">\((4,2)\)</span></td>
+<td>All methods had low AUC and almost no discoveries</td>
+<td>This is a difficult weak-signal setting rather than a
+MIRAGE-favorable setting.</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td>Paper-like variant-level</td>
+<td>500 genes, 15 variants/gene/trait, 30 reps</td>
+<td>Variant-level case/control data with ordinary burden-like
+signal</td>
+<td>mTADA <span class="math inline">\(&gt;\)</span> Joint MIRAGE <span
+class="math inline">\(&gt;\)</span> Separate</td>
+<td>Aggregation preserves most of the signal, so mTADA remains
+strong.</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td>Control-informative variant-level</td>
+<td>500 genes, 15 variants/gene/trait, 30 reps</td>
+<td>18% high-background noncausal variants added</td>
+<td>Joint MIRAGE <span class="math inline">\(\gg\)</span> mTADA</td>
+<td>Control counts become informative; MIRAGE can down-weight background
+variants and gains a clear advantage.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="reference" class="section level2">
+<h2>Reference</h2>
+<p>Nguyen TH, Dobbyn A, Brown RC, et al. mTADA is a framework for
+identifying risk genes from de novo mutations in multiple traits.
+<em>Nature Communications</em>. 2020;11:2929. <a
+href="doi:10.1038/s41467-020-16487-z"
+class="uri">doi:10.1038/s41467-020-16487-z</a>.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.4.1 (2024-06-14)
+Platform: aarch64-apple-darwin20
+Running under: macOS 15.0.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C.UTF-8/C/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: America/New_York
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] jsonlite_2.0.0    compiler_4.4.1    promises_1.3.2    Rcpp_1.1.1       
+ [5] stringr_1.5.1     git2r_0.36.2      callr_3.7.6       later_1.4.1      
+ [9] jquerylib_0.1.4   yaml_2.3.10       fastmap_1.2.0     R6_2.5.1         
+[13] knitr_1.51        rprojroot_2.0.4   bslib_0.9.0       rlang_1.3.0      
+[17] cachem_1.1.0      stringi_1.8.4     httpuv_1.6.15     xfun_0.57        
+[21] getPass_0.2-4     fs_1.6.5          sass_0.4.9        magrittr_2.0.3   
+[25] ps_1.9.0          digest_0.6.37     processx_3.8.6    rstudioapi_0.17.1
+[29] lifecycle_1.0.5   vctrs_0.7.1       evaluate_1.0.3    glue_1.8.0       
+[33] whisker_0.4.1     rmarkdown_2.29    httr_1.4.8        tools_4.4.1      
+[37] htmltools_0.5.8.1</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
