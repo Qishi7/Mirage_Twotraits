@@ -335,6 +335,43 @@ These LoF-only burden tests support the same conclusion: the SCHEMA
 case-control burden signal is strong, while the ASC burden signal is not strong
 enough to survive gene-level multiple testing.
 
+## Enrichment Analysis
+
+Following the suggestion to focus on genes selected at FDR < 5%, GO enrichment
+analysis was run with `clusterProfiler` for the joint mMIRAGE gene sets from
+the fixed-SCZ-prior analysis. The tested universe was the full set of genes
+available in the real-data matrix.
+
+| Gene set | FDR < 5% genes | Mapped Entrez genes |
+|---|---:|---:|
+| Autism | 18 | 18 |
+| SCZ | 297 | 299 |
+| Shared autism-SCZ risk | 10 | 10 |
+| Tested universe | 19,030 | 18,560 |
+
+The number of significant GO terms at BH FDR < 5% was:
+
+| Gene set | Biological process | Cellular component | Molecular function |
+|---|---:|---:|---:|
+| Autism | 72 | 3 | 5 |
+| SCZ | 17 | 18 | 2 |
+| Shared autism-SCZ risk | 33 | 17 | 0 |
+
+Representative enriched terms were consistent with neurodevelopmental and
+synaptic disease biology. The autism gene set was enriched for learning or
+memory, cognition, excitatory synaptic regulation, synaptic membrane, and
+chromatin or histone regulation. The SCZ gene set was enriched for synaptic
+membrane, dendritic spine, neuron spine, postsynaptic density, and ion
+transporter activity. The shared-risk gene set was enriched for neuronal wiring
+and synapse formation terms, including axon development, axon guidance, synapse
+assembly, synaptic membrane, and neuronal cell body.
+
+The full enrichment result tables are saved in:
+
+```text
+manuscript/biometrics/enrichment_results/
+```
+
 ## Interpretation
 
 This exploration supports three practical conclusions.
