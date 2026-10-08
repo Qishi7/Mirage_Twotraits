@@ -335,6 +335,100 @@ These LoF-only burden tests support the same conclusion: the SCHEMA
 case-control burden signal is strong, while the ASC burden signal is not strong
 enough to survive gene-level multiple testing.
 
+## Single-Trait MIRAGE vs Joint mMIRAGE
+
+To directly evaluate whether combining autism and schizophrenia improves power,
+single-trait MIRAGE was compared with the calibrated joint mMIRAGE fit. The
+joint fit used all six annotation groups and fixed only the marginal SCZ
+risk-gene proportion at 5%.
+
+For autism, the single-trait MIRAGE model selected 12 genes at Bayesian
+FDR < 5%. Joint mMIRAGE selected 18 autism genes at Bayesian FDR < 5%. The two
+lists overlapped at 11 genes, meaning that joint mMIRAGE retained almost all of
+the single-trait autism signal while adding 7 genes.
+
+For SCZ, the comparison used the matched single-trait MIRAGE fit with
+`delta = 5%` fixed. Single-trait MIRAGE selected 286 SCZ genes at Bayesian
+FDR < 5%, while joint mMIRAGE selected 297 SCZ genes. The two lists overlapped
+at 283 genes.
+
+| Comparison | Single-trait MIRAGE FDR < 5% | Joint mMIRAGE FDR < 5% | Overlap | Single-trait genes retained | Joint genes also in single-trait list | Added by joint mMIRAGE |
+|---|---:|---:|---:|---:|---:|---:|
+| Autism | 12 | 18 | 11 | 91.7% | 61.1% | 7 |
+| SCZ, single-trait `delta = 5%` | 286 | 297 | 283 | 99.0% | 95.3% | 14 |
+
+The autism gains are particularly encouraging. Among the 7 autism genes added
+by joint mMIRAGE beyond single-trait MIRAGE, 5 were SFARI score-1 genes:
+
+```text
+CHD2, ASH1L, DSCAM, NRXN1, TRIO
+```
+
+The full FDR < 5% comparison tables are saved in:
+
+```text
+explorations/asc_schema_six_group_combine_in_analysis/single_vs_joint_comparison/
+```
+
+Together with the burden-test baseline, these results support the intended
+power hierarchy:
+
+| Method | Autism FDR < 5% | SCZ FDR < 5% | Shared FDR < 5% |
+|---|---:|---:|---:|
+| Burden test | 0 | 255 | NA |
+| Single-trait MIRAGE | 12 | 286 | NA |
+| Joint mMIRAGE | 18 | 297 | 10 |
+
+This pattern suggests that joint mMIRAGE is not replacing the single-trait
+signal with an unrelated ranking. Instead, it largely preserves the
+single-trait MIRAGE discoveries and adds extra genes supported by cross-trait
+information.
+
+## mTADA-like Real-data Comparator
+
+The original mTADA model is designed for gene-category de novo mutation counts
+with external mutation rates. The ASC and SCHEMA inputs used here are
+case-control inherited-variant summary counts, so original mTADA is not directly
+matched to the real-data format. As a diagnostic comparator, an mTADA-like
+aggregation was run by collapsing variant-level counts to gene-category case
+counts and estimating the background rate from control allele counts. This is
+therefore a case-control aggregation comparator, not a direct original-mTADA
+analysis.
+
+Two versions were fit: one estimated the four gene-state proportions freely, and
+one fixed the marginal SCZ risk-gene proportion at 5%, matching the main
+calibrated mMIRAGE analysis.
+
+| Method | Autism FDR < 5% | SCZ FDR < 5% | Shared FDR < 5% | Known autism hits | Known SCZ hits |
+|---|---:|---:|---:|---:|---:|
+| mTADA-like, free pi | 4 | 172 | 1 | 2 | 8 |
+| mTADA-like, fixed SCZ delta 5% | 4 | 228 | 1 | 2 | 8 |
+| Joint mMIRAGE, fixed SCZ delta 5% | 18 | 297 | 10 | 16 | 10 |
+
+The mTADA-like comparator selected far fewer autism genes and almost no shared
+genes. Under the fixed-SCZ-delta version, only four autism genes passed FDR <
+5%: `ADNP`, `OR52M1`, `SCN2A`, and `GPR21`; two of these were SFARI score-1
+genes. The shared list contained only `SCN2A`.
+
+The estimated state proportions also showed little shared signal:
+
+| Setting | `pi00` | `pi10` | `pi01` | `pi11` |
+|---|---:|---:|---:|---:|
+| mTADA-like, free pi | 0.986 | 0.0006 | 0.013 | 0.0002 |
+| mTADA-like, fixed SCZ delta 5% | 0.949 | 0.0006 | 0.049 | 0.0005 |
+| Joint mMIRAGE, fixed SCZ delta 5% | 0.852 | 0.098 | 0.018 | 0.032 |
+
+These results are consistent with the simulation motivation: collapsing
+case-control variant data to gene-category burden counts loses information that
+mMIRAGE uses at the variant level, especially for autism and shared-risk gene
+ranking.
+
+The mTADA-like real-data output is saved in:
+
+```text
+explorations/asc_schema_six_group_combine_in_analysis/mtada_like_real_data/
+```
+
 ## Enrichment Analysis
 
 Following the suggestion to focus on genes selected at FDR < 5%, GO enrichment
