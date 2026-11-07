@@ -1,0 +1,10 @@
+"gene_set","ontology","significant_terms","tested_terms"
+"autism","BP",76,660
+"schizophrenia","BP",17,3290
+"shared","BP",18,369
+"autism","CC",3,95
+"schizophrenia","CC",18,397
+"shared","CC",13,47
+"autism","MF",15,123
+"schizophrenia","MF",12,599
+"shared","MF",0,56

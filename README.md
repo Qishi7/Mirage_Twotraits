@@ -6,6 +6,27 @@ Website: https://qishi7.github.io/Mirage_Twotraits/
 
 Repository: https://github.com/Qishi7/Mirage_Twotraits
 
+## Current software and manuscript summaries
+
+The installable R package is in [`mmirage/`](mmirage/README.md) (version 0.2.0).
+It retains the conditional four-state EM model and now returns detailed
+[convergence, constrained stationarity and optional information-matrix diagnostics](documentation/convergence.md).
+These checks do not change the estimator or establish posterior calibration.
+
+```r
+remotes::install_github("Qishi7/Mirage_Twotraits", subdir = "mmirage")
+library(mmirage)
+# After fitting with mirage_two_trait(...):
+print(fit)
+fit$diagnostics$convergence
+mirage_convergence(fit, hessian = TRUE)
+```
+
+[Current result summaries](results/current/README.md) supersede the historical
+pilot numbers below and on older website pages. Historical experiments are
+retained. The software API does not silently impose manuscript-specific
+constraints or perform random restarts.
+
 ## Model Direction
 
 The first implementation uses a gene-level four-state model:
