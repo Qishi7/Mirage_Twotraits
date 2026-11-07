@@ -1,0 +1,17 @@
+parameter,estimate
+pi00,0.788643756015024
+pi10,0.161356243984976
+pi01,0.0201488373646105
+pi11,0.0298511626353895
+eta1_lof_loeuf_decile_1,1
+eta1_lof_loeuf_decile_2_3,1.63120473043002e-77
+eta1_lof_loeuf_decile_4_10,5.07574404808518e-185
+eta1_missense_mpc_ge_2,2.65824050002363e-46
+eta1_missense_mpc_1_2,3.31843209557359e-111
+eta1_missense_mpc_lt_1,5.3187885390351e-129
+eta2_lof_loeuf_decile_1,0.665886560789227
+eta2_lof_loeuf_decile_2_3,0.379892408484598
+eta2_lof_loeuf_decile_4_10,0.21227151688186
+eta2_missense_mpc_ge_2,0.511930064252825
+eta2_missense_mpc_1_2,0.394171885067586
+eta2_missense_mpc_lt_1,0.32139129889837

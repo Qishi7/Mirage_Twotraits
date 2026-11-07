@@ -1,5 +1,3 @@
-if (exists("repo_root")) source(file.path(repo_root, "R", "optimization_stability.R"))
-
 stored_optimization_fit <- function() {
   x <- readRDS(testthat::test_path("fixtures", "optimization_stored.rds"))
   mirage_two_trait(x$trait1, x$trait2, 12000, 12000, 12000, 12000,

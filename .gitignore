@@ -1,37 +1,21 @@
-Rlib/
 .Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
+*.Rcheck/
+*.tar.gz
 *.log
-*.tmp
-*.bak
-mirage2026.pdf
-mirage_todo_summary.md
-workflowr_setup.R
-two_trait_mirage_codex_todo.md
-two_trait_mirage_technical_specification.pdf
-two_trait_mirage_technical_specification.tex
-design/two_trait_mirage_implementation_plan.md
-vcf_exploration_report.md
-.tmp_mtada_reference/
-.tmp_mtada_*
-simulation_results/
+*.aux
+*.out
+*.blg
 
-# Keep protected or large study data out of the website repository.
+# Study inputs and generated runs are not distributed with the software.
 data/
+local/
 *.vcf
 *.vcf.gz
-*.bcf
+*.vcf.bgz
 *.bam
 *.cram
-*.fastq
-*.fastq.gz
-*.fq
-*.fq.gz
-*.bed
-*.bim
-*.fam
-*.pgen
-*.pvar
-*.psam
+*.fastq*

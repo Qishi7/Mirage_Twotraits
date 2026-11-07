@@ -1,2 +1,0 @@
-"start","starting_fit","converged","monotone","iterations","ll","seconds","max_parameter_change","relative_ll_change","legacy_relative_ll_change","constrained_pi_FW_gap","pi00","pi10","pi01","pi11"
-"strict_sensitivity","random_fixed_seed",TRUE,TRUE,1658,2185.84716663375,2.588,9.98434201981979e-09,4.57482437371344e-15,8.94170218498544e-15,0.00109521866397699,0.788643756015024,0.161356243984976,0.0201488373646105,0.0298511626353895

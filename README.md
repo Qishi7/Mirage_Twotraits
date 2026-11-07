@@ -1,115 +1,97 @@
-# Mirage_Twotraits
+# mMIRAGE
 
-This repository hosts the MIRAGE Two Trait Extension: a two-trait extension of MIRAGE for joint gene-level rare-variant analysis. The motivating first use case is autism as trait 1 and schizophrenia as trait 2.
+An R package for joint rare-variant gene discovery from two traits using
+variant-level case-control allele counts.
 
-Website: https://qishi7.github.io/Mirage_Twotraits/
+mMIRAGE combines trait-specific conditional MIRAGE likelihoods through four
+gene-risk states: neither trait (`00`), trait 1 (`10`), trait 2 (`01`), and both
+traits (`11`). Shared genes do not require identical causal variants in both
+studies. Model parameters are estimated by EM with Gamma-integrated variant
+Bayes factors.
 
-Repository: https://github.com/Qishi7/Mirage_Twotraits
-
-## Current software and manuscript summaries
-
-The installable R package is in [`mmirage/`](mmirage/README.md) (version 0.2.0).
-It retains the conditional four-state EM model and now returns detailed
-[convergence, constrained stationarity and optional information-matrix diagnostics](documentation/convergence.md).
-These checks do not change the estimator or establish posterior calibration.
+## Installation
 
 ```r
-remotes::install_github("Qishi7/Mirage_Twotraits", subdir = "mmirage")
+remotes::install_github("Qishi7/Mirage_Twotraits")
+```
+
+Or clone the repository and run `R CMD INSTALL .`.
+
+## Usage
+
+Each input is a data frame with `Gene`, `ID`, `No.case`, `No.contr`, and
+`category` columns. Provide case and control sample sizes for each trait and
+scientifically justified Gamma relative-risk parameters.
+
+```r
 library(mmirage)
-# After fitting with mirage_two_trait(...):
+fit <- mirage_two_trait(
+  trait1, trait2,
+  n1_trait1 = 3000, n0_trait1 = 3000,
+  n1_trait2 = 3000, n0_trait2 = 3000,
+  gamma_trait1 = 3, sigma_trait1 = 1,
+  gamma_trait2 = 3, sigma_trait2 = 1,
+  max_iter = 10000
+)
 print(fit)
+head(fit$posterior)
+fit$bfdr$trait1
 fit$diagnostics$convergence
-mirage_convergence(fit, hessian = TRUE)
 ```
 
-[Current result summaries](results/current/README.md) supersede the historical
-pilot numbers below and on older website pages. Historical experiments are
-retained. The software API does not silently impose manuscript-specific
-constraints or perform random restarts.
+A [runnable example](examples/fit_case_control.R) illustrates the input format.
+Supplied log-BF columns are used unchanged; omitting them computes integrated
+BFs from counts. Gamma is parameterized by mean and rate (shape = mean × rate).
+The example hyperparameters are illustrative, not estimates for a new study.
 
-## Model Direction
+## Convergence diagnostics
 
-The first implementation uses a gene-level four-state model:
+The fit reports the stopping reason, iteration count, final parameter and
+relative likelihood changes, objective monotonicity, parameter boundaries, and
+constrained first-order stationarity. Optional local curvature is available:
 
-- `00`: neither trait
-- `10`: trait 1 only
-- `01`: trait 2 only
-- `11`: both traits
-
-State `11` represents gene-level pleiotropy. It does not require the same variants to affect both traits. Conditional on gene state, the two trait-specific likelihoods are independent products of trait-specific MIRAGE likelihoods.
-
-## Repository Contents
-
-- `R/`: first R implementation of the two-trait MIRAGE EM model and toy simulation helper.
-- `R/mtada_style_simulation.R`: synthetic de novo simulation and benchmarking
-  patterned after the mTADA study design.
-- `code/run_mtada_style_benchmark.R`: paper-profile synthetic pilot runner.
-- `code/run_mtada_full_grid.R`: resumable 7,200-dataset mTADA paper grid.
-- `code/summarize_mtada_full_grid.R`: aggregate AUC, power, FDP, BFDR,
-  parameter recovery, and runtime across completed tasks.
-- `tests/testthat/`: unit tests and synthetic simulation smoke checks.
-- `analysis/`: workflowr source pages.
-- `docs/`: rendered GitHub Pages website.
-- `Mirage_Twotraits.Rproj`: RStudio project file.
-
-## Data Privacy
-
-No real ASD, schizophrenia, WES, dbGaP, SPARK, protected, private, or large data files should be committed. Tests and examples use toy or simulated data only. Local reference documents such as papers, technical specifications, TODO files, VCF exploration reports, and implementation plans are excluded from version control.
-
-## Running Tests
-
-From the repository root, run:
-
-```powershell
-Rscript --vanilla tests/testthat.R
+```r
+checks <- mirage_convergence(fit, hessian = TRUE)
+checks$information
+checks$warnings
 ```
 
-On the development Windows machine used for the first build, the explicit local command was:
+Small EM updates do not establish stationarity, parameter identification or
+FDR calibration. See the [convergence guide](documentation/convergence.md) for
+interpretation. The optional `mirage_refine()` optimizer returns a separate ML
+result and never replaces the original EM fit automatically.
 
-```powershell
-& 'D:\software\R-4.4.2\bin\Rscript.exe' --vanilla tests/testthat.R
+## Current analyses
+
+- [Simulation](documentation/simulation.md): 500 genes, 100 variants/gene/trait,
+  N=1000/3000/5000 cases and controls, 100 paired replicates, five random EM starts.
+- [Real data](documentation/real_data.md): exploratory autism and schizophrenia
+  analysis, with numerical convergence and input limitations stated explicitly.
+- [Results and figures](results/README.md): current aggregate tables and the
+  three manuscript figures.
+- [Project website](https://qishi7.github.io/Mirage_Twotraits/).
+
+## Repository structure
+
+```text
+R/               Inference, Bayes factors, diagnostics and evaluation utilities
+man/             R function reference
+examples/        Runnable input and fitting example
+tests/           Software tests and small synthetic fixtures
+documentation/   Model, input requirements and diagnostic interpretation
+results/         Current manuscript summary tables and figures
 ```
 
-Run the synthetic mTADA-style paper-profile pilot with:
+## Testing
 
-```powershell
-Rscript --vanilla code/run_mtada_style_benchmark.R
+```r
+# From the repository root:
+pkgload::load_all()
+testthat::test_local()
 ```
 
-Set `MIRAGE_BENCHMARK_OUTPUT=none` to print results without writing CSV files.
+Package validation: `R CMD build .`, followed by
+`R CMD check --no-manual mmirage_0.3.0.tar.gz`.
 
-## Full mTADA Paper Grid
-
-The full comparison uses the public mutation-rate table from the mTADA
-repository without committing that table here. Clone mTADA outside the tracked
-project files, or point `MTADA_REFERENCE_DIR` to an existing local clone.
-
-The exact Figure 2 grid contains 7,200 datasets:
-
-- `pi_11`: 0 and 0.02
-- trait-specific mRR pairs: `(105,29)/(12,2)`, `(105,29)/(87,23)`,
-  `(24,6)/(12,2)`, and `(24,6)/(87,23)`
-- trio counts: all nine pairs formed from 1,000, 2,000, and 5,000
-- 100 repeated seeds per setting
-
-Run a task shard on Windows:
-
-```powershell
-$env:MTADA_REFERENCE_DIR='D:\path\to\mTADA'
-$env:MIRAGE_TASK_START='1'
-$env:MIRAGE_TASK_END='900'
-$env:MIRAGE_RUN_ORIGINAL_MTADA='true'
-Rscript --vanilla code/run_mtada_full_grid.R
-```
-
-Use non-overlapping task ranges for parallel workers. Each task is saved
-separately, so interrupted runs resume without repeating completed datasets.
-After all shards finish:
-
-```powershell
-Rscript --vanilla code/summarize_mtada_full_grid.R
-```
-
-The original mTADA Stan model is compiled once per worker. On the development
-machine, a full 19,358-gene mTADA VB fit with 5,000 iterations took about
-3.5 minutes, so the original method is the dominant computational cost.
+Raw study inputs and generated analysis runs are not distributed in this
+software repository. License: MIT.

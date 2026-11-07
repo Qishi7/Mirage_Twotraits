@@ -1,0 +1,12 @@
+^\.git$
+^documentation$
+^results$
+^examples$
+^docs$
+^index\.html$
+^\.github$
+^\.gitignore$
+^\.gitattributes$
+^\.nojekyll$
+^.*\.Rcheck$
+^mmirage_.*\.tar\.gz$

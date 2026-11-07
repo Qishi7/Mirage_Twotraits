@@ -1,0 +1,24 @@
+Package: mmirage
+Type: Package
+Title: Two-Trait MIRAGE for Joint Rare-Variant Gene Discovery
+Version: 0.3.0
+Authors@R: c(
+    person("Qishi", "Zhan", email = "qishi.zhan@marquette.edu", role = c("aut", "cre")),
+    person("Shengtong", "Han", email = "shengtong.han@marquette.edu", role = "aut")
+  )
+Description: Implements mMIRAGE, a two-trait extension of MIRAGE for
+    gene-level rare-variant analysis from variant-level case-control summary
+    counts. The package includes the four-state joint empirical-Bayes model,
+    Bayesian FDR utilities, convergence diagnostics, and a simple
+    gene-level burden-test baseline.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    stats,
+    utils
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

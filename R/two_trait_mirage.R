@@ -1,6 +1,6 @@
 # Two-trait MIRAGE gene-level four-state model.
 #
-# This first implementation keeps pleiotropy at the gene level. Variant risk
+# Pleiotropy is modeled at the gene level. Variant risk
 # probabilities and relative-risk priors are trait specific.
 
 log_sum_exp <- function(x) {

@@ -1,9 +1,9 @@
-name: R software tests
+name: R package checks
 on:
   push:
-    paths: ['R/**', 'mmirage/**', 'tests/**', '.github/workflows/r-tests.yml']
+    paths: ['R/**', 'man/**', 'tests/**', 'DESCRIPTION', 'NAMESPACE', '.Rbuildignore', '.github/workflows/r-tests.yml']
   pull_request:
-    paths: ['R/**', 'mmirage/**', 'tests/**', '.github/workflows/r-tests.yml']
+    paths: ['R/**', 'man/**', 'tests/**', 'DESCRIPTION', 'NAMESPACE', '.Rbuildignore', '.github/workflows/r-tests.yml']
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -14,16 +14,9 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          working-directory: mmirage
           extra-packages: any::rcmdcheck
           needs: check
-      - name: Check source mirrors and repository tests
+      - name: Check R package
         shell: Rscript {0}
         run: |
-          stopifnot(identical(readLines("R/two_trait_mirage.R"),
-                              readLines("mmirage/R/two_trait_mirage.R")))
-          source("tests/testthat.R")
-      - name: Check installable package
-        shell: Rscript {0}
-        run: |
-          rcmdcheck::rcmdcheck("mmirage", args = "--no-manual", error_on = "warning")
+          rcmdcheck::rcmdcheck(".", args = "--no-manual", error_on = "warning")

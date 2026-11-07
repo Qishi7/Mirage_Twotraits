@@ -16,7 +16,7 @@ test_that("EM observed log likelihood is nondecreasing", {
 })
 
 test_that("fixed independent prior reproduces separate single-trait posterior", {
-  sim <- simulate_two_trait_mirage(n_genes = 60, variants_per_gene = 5, seed = 2)
+  sim <- core_test_data(n_genes = 60, variants_per_gene = 5, seed = 2)
   pi <- c("00" = 0.72, "10" = 0.18, "01" = 0.08, "11" = 0.02)
   # This pi factorizes with delta1 = 0.20 and delta2 = 0.10.
   fit <- mirage_two_trait(
@@ -36,7 +36,7 @@ test_that("fixed independent prior reproduces separate single-trait posterior", 
 })
 
 test_that("uninformative second trait does not change trait 1 under independent pi", {
-  sim <- simulate_two_trait_mirage(n_genes = 60, variants_per_gene = 5, seed = 3)
+  sim <- core_test_data(n_genes = 60, variants_per_gene = 5, seed = 3)
   sim$trait2$log_bf <- 0
   pi <- c("00" = 0.72, "10" = 0.18, "01" = 0.08, "11" = 0.02)
   fit <- mirage_two_trait(
@@ -54,7 +54,7 @@ test_that("uninformative second trait does not change trait 1 under independent 
 })
 
 test_that("swapping traits swaps 10 and 01 states", {
-  sim <- simulate_two_trait_mirage(n_genes = 50, variants_per_gene = 5, seed = 4)
+  sim <- core_test_data(n_genes = 50, variants_per_gene = 5, seed = 4)
   args <- list(
     n1_trait1 = 500, n0_trait1 = 500, n1_trait2 = 500, n0_trait2 = 500,
     log_bf_col_trait1 = "log_bf", log_bf_col_trait2 = "log_bf",
